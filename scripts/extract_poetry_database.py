@@ -11,6 +11,7 @@ from typing import Any
 from xml.etree import ElementTree as ET
 
 BOOK_MARKERS = [
+    ("美国现代诗选", "", ""),
     ("王尔德诗选", "奥斯卡·王尔德", "Oscar Wilde"),
     ("丁尼生诗选", "阿尔弗雷德·丁尼生", "Alfred, Lord Tennyson"),
     ("约翰·但恩诗选", "约翰·但恩", "John Donne"),
@@ -50,7 +51,7 @@ CN_ANNOTATION_LINE_RE = re.compile(
     r"(原诗(?:韵式|抑扬格)|译诗每行|译文依|这首诗|出版于|亦译作|"
     r"古罗马宗教|北纬|南纬|指(?:的是|：)|注释|译者按)"
 )
-CN_TRAILING_LINE_NUMBER_RE = re.compile(r"\s+\d{1,3}$")
+CN_TRAILING_LINE_NUMBER_RE = re.compile(r"(?<=[。！？；：])\s*\d{1,3}$")
 COMPLETE_CN_END_RE = re.compile(r"[。！？][”’）》）】」』]*$")
 ROMAN_RE = re.compile(r"^(?=[MDCLXVI]+\b)[MDCLXVI]+(?:[.、\s].*)?$", re.I)
 ARABIC_RE = re.compile(r"^\d{1,3}$")
@@ -238,6 +239,18 @@ def parse_toc(zf: zipfile.ZipFile) -> list[dict[str, Any]]:
                 }
                 break
 
+        if current_book and current_book["bookMarker"] == "美国现代诗选":
+            author_match = re.match(r"(.+?)（([^（）]+),\s*(\d{4})[—–-](\d{4})）", label)
+            if author_match:
+                current_book = {
+                    **current_book,
+                    "author": author_match.group(1).strip(),
+                    "authorEn": author_match.group(2).split(",", 1)[0].strip(),
+                    "dates": f"{author_match.group(3)}–{author_match.group(4)}",
+                }
+
+        book = dict(current_book) if current_book else None
+
         entries.append({
             "tocIndex": index,
             "label": label,
@@ -245,7 +258,7 @@ def parse_toc(zf: zipfile.ZipFile) -> list[dict[str, Any]]:
             "file": src.split("#", 1)[0],
             "fragment": src.split("#", 1)[1] if "#" in src else "",
             "fileNumber": text_file_number(src),
-            "book": current_book,
+            "book": book,
         })
     return entries
 
@@ -395,6 +408,7 @@ def pair_poems(pairs: list[tuple[dict[str, Any], dict[str, Any]]], html_cache: d
                 "zh": zh_lines,
                 "en": en_lines,
             },
+            "stanzas": [{"zh": zh_lines, "en": en_lines}],
         })
     return poems
 
@@ -466,6 +480,7 @@ def make_poem(
             "zh": zh_lines,
             "en": en_lines,
         },
+        "stanzas": [{"zh": zh_lines, "en": en_lines}],
     }
 
 
@@ -626,6 +641,7 @@ def choose_quotes(poems: list[dict[str, Any]], max_per_poem: int = 1) -> list[di
             quote_id = stable_id(poem["id"], text, str(candidate["lineStart"]))
             quotes.append({
                 "id": quote_id,
+                "poemId": poem["id"],
                 "text": text,
                 "lines": candidate["quoteLines"],
                 "author": poem["author"],
@@ -647,6 +663,7 @@ def write_ts_quotes(path: Path, json_relative: str) -> None:
         "import poetryData from './" + json_relative + "';\n\n"
         "export interface PoetryQuote {\n"
         "  id: string;\n"
+        "  poemId: string;\n"
         "  text: string;\n"
         "  lines: string[];\n"
         "  author: string;\n"
@@ -678,7 +695,7 @@ def main() -> None:
     quotes = choose_quotes(poems, args.max_per_poem)
     authors = sorted({poem["author"] for poem in poems})
     summary = {
-        "epub": str(epub_path),
+        "source": epub_path.name,
         "poems": len(poems),
         "quotes": len(quotes),
         "authors": authors,

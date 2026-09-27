@@ -15,3 +15,6 @@ dist/
 # python
 __pycache__/
 *.pyc
+
+# source books are local inputs and are not published with the site
+/data/
