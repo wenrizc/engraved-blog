@@ -236,8 +236,11 @@ main {
 
 .poem-lines {
   display: block;
-  white-space: pre-line;
   font: italic 18px/1.65 var(--serif);
+}
+
+.poem-line {
+  display: block;
 }
 
 .poem-meta {
@@ -245,6 +248,67 @@ main {
   margin-top: 12px;
   color: var(--muted);
   font: 10px var(--mono);
+}
+
+.poetry-page {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.poetry-header {
+  max-width: 760px;
+  padding: 34px 0 48px;
+}
+
+.poetry-header h1 {
+  margin: 8px 0 4px;
+  font: 500 clamp(34px, 5vw, 64px) / 1.05 var(--serif);
+  letter-spacing: -0.04em;
+}
+
+.poetry-title-en {
+  margin: 0;
+  color: var(--muted);
+  font: italic 20px/1.5 var(--serif);
+}
+
+.poetry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 22px;
+  color: var(--muted);
+  font: 11px/1.5 var(--mono);
+}
+
+.poetry-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 6vw, 84px);
+  border-top: 1px solid var(--rule);
+  padding-top: 30px;
+}
+
+.poetry-language h2 {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font: 11px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.poetry-stanza {
+  margin: 0 0 28px;
+}
+
+.poetry-line {
+  min-height: 1.7em;
+  font: 18px/1.7 var(--serif);
+  overflow-wrap: anywhere;
+}
+
+.poetry-language:first-child .poetry-line {
+  font-size: 19px;
 }
 
 .hero-plate {
@@ -795,6 +859,16 @@ main {
   .home-photo-grid,
   .photo-grid {
     grid-template-columns: 1fr;
+  }
+
+  .poetry-columns {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  .poetry-language + .poetry-language {
+    border-top: 1px solid var(--rule);
+    padding-top: 30px;
   }
 
   .photo-grid .photo-card.is-priority {

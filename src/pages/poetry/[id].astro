@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import poetryData from '../../data/generated/poetry-poems.json';
+
+export function getStaticPaths() {
+  return poetryData.poems.map((poem) => ({
+    params: { id: poem.id },
+    props: { poem }
+  }));
+}
+
+interface Poem {
+  title: string;
+  titleEn: string;
+  author: string;
+  authorEn: string;
+  dates: string;
+  collection: string;
+  stanzas: Array<{ zh: string[]; en: string[] }>;
+}
+
+const { poem } = Astro.props as { poem: Poem };
+---
+
+<BaseLayout
+  title={`${poem.title} — ${poem.author} | 文日小栈`}
+  description={`${poem.title}：${poem.author} 的中英对照诗歌。`}
+  type="article"
+>
+  <article class="poetry-page page-shell">
+    <a class="section-header__back" href="/">
+      ← 返回首页
+    </a>
+    <header class="poetry-header">
+      <p class="eyebrow">POETRY / BILINGUAL EDITION</p>
+      <h1>{poem.title}</h1>
+      <p class="poetry-title-en">{poem.titleEn}</p>
+      <div class="poetry-meta">
+        <span>{poem.author}</span>
+        <span>{poem.authorEn}</span>
+        {poem.dates && <span>{poem.dates}</span>}
+        <span>{poem.collection}</span>
+      </div>
+    </header>
+
+    <div class="poetry-columns">
+      <section class="poetry-language" aria-labelledby="poetry-zh-title">
+        <h2 id="poetry-zh-title">中文译文</h2>
+        {poem.stanzas.map((stanza) => (
+          <div class="poetry-stanza">
+            {stanza.zh.map((line) => (
+              <div class="poetry-line">{line}</div>
+            ))}
+          </div>
+        ))}
+      </section>
+      <section class="poetry-language" aria-labelledby="poetry-en-title">
+        <h2 id="poetry-en-title">English Original</h2>
+        {poem.stanzas.map((stanza) => (
+          <div class="poetry-stanza">
+            {stanza.en.map((line) => (
+              <div class="poetry-line">{line}</div>
+            ))}
+          </div>
+        ))}
+      </section>
+    </div>
+  </article>
+</BaseLayout>

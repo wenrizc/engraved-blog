@@ -11,7 +11,8 @@ import durerPrint from '../assets/prints/durer-adam-and-eve.jpg';
 const posts = await getPublishedArticles();
 const photos = await getPhotos();
 const featured = posts[0];
-const poemOptions = poetryQuotes.map(({ text, lines, author, work }) => ({
+const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => ({
+  poemId,
   text,
   lines,
   author,
@@ -26,7 +27,7 @@ const poemOptions = poetryQuotes.map(({ text, lines, author, work }) => ({
         <h1 id="site-title">文日小栈</h1>
         <a
           class="masthead-poem"
-          href="/article/"
+          href={poemOptions[0] ? `/poetry/${poemOptions[0].poemId}/` : '/poetry/'}
           data-poems={JSON.stringify(poemOptions)}
           aria-label="阅读诗歌"
         >
@@ -90,12 +91,26 @@ const poemOptions = poetryQuotes.map(({ text, lines, author, work }) => ({
 <script>
   const poemLink = document.querySelector('.masthead-poem');
   if (poemLink instanceof HTMLElement) {
-    const poems = JSON.parse(poemLink.dataset.poems || '[]');
+    const poems: Array<{
+      poemId: string;
+      text: string;
+      lines: string[];
+      author: string;
+      work: string;
+    }> = JSON.parse(poemLink.dataset.poems || '[]');
     const lines = poemLink.querySelector('.poem-lines');
     const meta = poemLink.querySelector('.poem-meta');
     if (poems.length && lines && meta) {
       const poem = poems[Math.floor(Math.random() * poems.length)];
-      lines.textContent = Array.isArray(poem.lines) ? poem.lines.join('\n') : poem.text;
+      poemLink.setAttribute('href', `/poetry/${poem.poemId}/`);
+      lines.replaceChildren(
+        ...(Array.isArray(poem.lines) ? poem.lines : [poem.text]).map((line: string) => {
+          const element = document.createElement('span');
+          element.className = 'poem-line';
+          element.textContent = line;
+          return element;
+        })
+      );
       meta.textContent = `— ${poem.author}${poem.work ? `，《${poem.work}》` : ''}`;
     }
   }
