@@ -93,7 +93,10 @@ class XHTMLTextParser(HTMLParser):
         if tag == "title":
             self.in_title = False
         if tag in self.block_tags:
+            had_text = bool(normalize_space(" ".join(self.current)))
             self.flush()
+            if tag == "p" and not had_text and (not self.lines or self.lines[-1] != ""):
+                self.lines.append("")
 
     def handle_data(self, data: str) -> None:
         if self.skip_depth:
@@ -158,7 +161,10 @@ def parse_xhtml_text(raw: str) -> tuple[str, list[str]]:
     parser = XHTMLTextParser()
     parser.feed(raw)
     parser.close()
-    return parser.title, [normalize_space(line) for line in parser.lines if normalize_space(line)]
+    # Keep empty paragraphs so the stanza builder can reconstruct the source
+    # stanza boundaries. Consumers that only need readable lines remove empty
+    # entries in ``clean_lines``.
+    return parser.title, [normalize_space(line) for line in parser.lines]
 
 
 def find_fragment_position(raw: str, fragment: str) -> int:
@@ -340,6 +346,20 @@ def clean_lines(lines: list[str], title: str, book_title: str | None, language: 
     return cleaned
 
 
+def clean_stanzas(lines: list[str], title: str, book_title: str | None, language: str) -> list[list[str]]:
+    stanzas: list[list[str]] = []
+    current: list[str] = []
+    for line in lines + [""]:
+        if not normalize_space(line):
+            cleaned = clean_lines(current, title, book_title, language)
+            if cleaned:
+                stanzas.append(cleaned)
+            current = []
+        else:
+            current.append(line)
+    return stanzas
+
+
 def clean_line(line: str) -> str:
     line = normalize_space(line)
     line = re.sub(r"\s*[①②③④⑤⑥⑦⑧⑨⑩]+\s*", "", line)
@@ -382,8 +402,10 @@ def pair_poems(pairs: list[tuple[dict[str, Any], dict[str, Any]]], html_cache: d
         _, zh_lines_raw = html_cache.get(zh["src"], ("", []))
         book = en["book"]
         assert book is not None
-        en_lines = clean_lines(en_lines_raw, en_title, book.get("bookTitle"), "en")
-        zh_lines = clean_lines(zh_lines_raw, zh_title, book.get("bookTitle"), "zh")
+        en_stanzas = clean_stanzas(en_lines_raw, en_title, book.get("bookTitle"), "en")
+        zh_stanzas = clean_stanzas(zh_lines_raw, zh_title, book.get("bookTitle"), "zh")
+        en_lines = [line for stanza in en_stanzas for line in stanza]
+        zh_lines = [line for stanza in zh_stanzas for line in stanza]
         if len(en_lines) < 1 or len(zh_lines) < 1:
             continue
 
@@ -392,6 +414,7 @@ def pair_poems(pairs: list[tuple[dict[str, Any], dict[str, Any]]], html_cache: d
             "id": poem_id,
             "author": book["author"],
             "authorEn": book["authorEn"],
+            "dates": book.get("dates", ""),
             "collection": book["bookTitle"],
             "collectionKey": book["bookMarker"],
             "title": zh_title,
@@ -408,7 +431,13 @@ def pair_poems(pairs: list[tuple[dict[str, Any], dict[str, Any]]], html_cache: d
                 "zh": zh_lines,
                 "en": en_lines,
             },
-            "stanzas": [{"zh": zh_lines, "en": en_lines}],
+            "stanzas": [
+                {
+                    "zh": zh_stanzas[index] if index < len(zh_stanzas) else [],
+                    "en": en_stanzas[index] if index < len(en_stanzas) else [],
+                }
+                for index in range(max(len(en_stanzas), len(zh_stanzas)))
+            ],
         })
     return poems
 
@@ -470,6 +499,7 @@ def make_poem(
         "id": poem_id,
         "author": book["author"],
         "authorEn": book["authorEn"],
+        "dates": book.get("dates", ""),
         "collection": book["bookTitle"],
         "collectionKey": book["bookMarker"],
         "title": title_zh,
@@ -627,7 +657,16 @@ def choose_quotes(poems: list[dict[str, Any]], max_per_poem: int = 1) -> list[di
     quotes: list[dict[str, Any]] = []
     seen_texts: set[str] = set()
     for poem in poems:
-        candidates = split_cn_sentences(poem["lines"]["zh"])
+        candidates: list[dict[str, Any]] = []
+        line_offset = 0
+        stanzas = poem.get("stanzas") or [{"zh": poem["lines"]["zh"]}]
+        for stanza in stanzas:
+            stanza_candidates = split_cn_sentences(stanza.get("zh", []))
+            for candidate in stanza_candidates:
+                candidate["lineStart"] += line_offset
+                candidate["lineEnd"] += line_offset
+            candidates.extend(stanza_candidates)
+            line_offset += len(stanza.get("zh", []))
         if not candidates:
             continue
         ranked = sorted(candidates, key=lambda item: score_quote(item["text"], poem), reverse=True)
@@ -674,16 +713,41 @@ def write_ts_quotes(path: Path, json_relative: str) -> None:
     )
 
 
+def resolve_epub_path(value: str | None) -> Path:
+    if value:
+        epub_path = Path(value)
+    else:
+        candidates = sorted(Path(".").glob("*.epub"))
+        if not candidates:
+            raise SystemExit("未找到 EPUB，请在命令后传入 EPUB 文件路径。")
+        epub_path = candidates[0]
+
+    if not epub_path.is_file():
+        raise SystemExit(f"找不到输入文件：{epub_path}")
+    if epub_path.suffix.lower() != ".epub":
+        raise SystemExit(
+            "当前提取器读取 EPUB。AZW3 需要先转换为 EPUB，再将转换后的文件路径传给脚本。"
+        )
+    if not zipfile.is_zipfile(epub_path):
+        raise SystemExit(f"输入文件不是有效的 EPUB 压缩包：{epub_path}")
+    return epub_path
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Extract bilingual poetry database and display quote candidates from an EPUB.")
-    parser.add_argument("epub", nargs="?", default=None, help="Path to EPUB. Defaults to the first .epub in the project root.")
+    parser = argparse.ArgumentParser(description="Extract a bilingual poetry database and quote candidates from an EPUB.")
+    parser.add_argument(
+        "epub",
+        nargs="?",
+        default=None,
+        help="Path to EPUB. Defaults to the first .epub in the project root.",
+    )
     parser.add_argument("--poems-out", default="src/data/generated/poetry-poems.json")
     parser.add_argument("--quotes-out", default="src/data/generated/poetry-quotes.json")
     parser.add_argument("--ts-out", default="src/data/poetryQuotes.ts")
     parser.add_argument("--max-per-poem", type=int, default=1)
     args = parser.parse_args()
 
-    epub_path = Path(args.epub) if args.epub else next(Path(".").glob("*.epub"))
+    epub_path = resolve_epub_path(args.epub)
     with zipfile.ZipFile(epub_path) as zf:
         toc = parse_toc(zf)
         pairs = collect_candidate_pairs(toc)

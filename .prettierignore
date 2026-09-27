@@ -1,5 +1,6 @@
 node_modules
 dist
 public/generated
+src/data/generated
 screenshots
 package-lock.json

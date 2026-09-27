@@ -111,7 +111,7 @@ const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => 
           return element;
         })
       );
-      meta.textContent = `— ${poem.author}${poem.work ? `，《${poem.work}》` : ''}`;
+      meta.textContent = `— ${poem.author}${poem.work ? `，${poem.work}` : ''}`;
     }
   }
 </script>
