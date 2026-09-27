@@ -1,0 +1,124 @@
+---
+interface Props {
+  title?: string;
+}
+const { title = 'Expanded photo' } = Astro.props;
+---
+
+<dialog class="photo-lightbox" id="photo-lightbox" aria-label={title}>
+  <button class="photo-lightbox-close" type="button" aria-label="关闭">
+    ×
+  </button>
+  <div class="photo-lightbox-stage">
+    <img alt="" />
+  </div>
+</dialog>
+<script>
+  const lightbox = document.querySelector('#photo-lightbox');
+  const stage = lightbox?.querySelector('.photo-lightbox-stage');
+  const image = lightbox?.querySelector('img');
+  const close = lightbox?.querySelector('.photo-lightbox-close');
+
+  if (
+    lightbox instanceof HTMLDialogElement &&
+    stage instanceof HTMLElement &&
+    image instanceof HTMLImageElement
+  ) {
+    let zoom = 1;
+    let panX = 0;
+    let panY = 0;
+    let dragging = false;
+    let pointerId: number | undefined;
+    let startX = 0;
+    let startY = 0;
+    let startPanX = 0;
+    let startPanY = 0;
+    let returnFocus: HTMLElement | null = null;
+
+    const bounds = () => ({
+      x: Math.max(0, (image.offsetWidth * zoom - stage.clientWidth) / 2),
+      y: Math.max(0, (image.offsetHeight * zoom - stage.clientHeight) / 2)
+    });
+    const render = () => {
+      const limit = bounds();
+      panX = Math.min(limit.x, Math.max(-limit.x, panX));
+      panY = Math.min(limit.y, Math.max(-limit.y, panY));
+      image.style.setProperty('--photo-zoom', String(zoom));
+      image.style.setProperty('--photo-pan-x', `${panX}px`);
+      image.style.setProperty('--photo-pan-y', `${panY}px`);
+    };
+    const reset = () => {
+      zoom = 1;
+      panX = 0;
+      panY = 0;
+      dragging = false;
+      pointerId = undefined;
+      lightbox.classList.remove('is-dragging');
+      render();
+    };
+    const closeLightbox = () => {
+      if (lightbox.open) lightbox.close();
+    };
+
+    document.querySelectorAll('[data-photo-lightbox-trigger]').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const source = trigger.querySelector('img');
+        if (!(source instanceof HTMLImageElement)) return;
+        returnFocus = trigger instanceof HTMLElement ? trigger : null;
+        image.src = source.currentSrc || source.src;
+        image.alt = source.alt;
+        reset();
+        lightbox.showModal();
+        if (close instanceof HTMLElement) close.focus();
+      });
+    });
+    stage.addEventListener(
+      'wheel',
+      (event) => {
+        event.preventDefault();
+        zoom = Math.min(4, Math.max(1, zoom + (event.deltaY < 0 ? 0.25 : -0.25)));
+        render();
+      },
+      { passive: false }
+    );
+    stage.addEventListener('pointerdown', (event) => {
+      if (zoom <= 1 || event.button !== 0) return;
+      dragging = true;
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startY = event.clientY;
+      startPanX = panX;
+      startPanY = panY;
+      stage.setPointerCapture(event.pointerId);
+      lightbox.classList.add('is-dragging');
+      event.preventDefault();
+    });
+    stage.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      panX = startPanX + event.clientX - startX;
+      panY = startPanY + event.clientY - startY;
+      render();
+    });
+    const stopDragging = () => {
+      dragging = false;
+      pointerId = undefined;
+      lightbox.classList.remove('is-dragging');
+    };
+    stage.addEventListener('pointerup', stopDragging);
+    stage.addEventListener('pointercancel', stopDragging);
+    stage.addEventListener('lostpointercapture', stopDragging);
+    image.addEventListener('load', render);
+    window.addEventListener('resize', render);
+    close?.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) closeLightbox();
+    });
+    lightbox.addEventListener('close', () => {
+      if (pointerId !== undefined && stage.hasPointerCapture(pointerId))
+        stage.releasePointerCapture(pointerId);
+      reset();
+      returnFocus?.focus();
+      returnFocus = null;
+    });
+  }
+</script>

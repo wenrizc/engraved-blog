@@ -1,0 +1,53 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from './BaseLayout.astro';
+import PhotoFrame from '../components/PhotoFrame.astro';
+import PhotoLightbox from '../components/PhotoLightbox.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { formatDate, tagUrl, type PhotoEntry } from '../lib/content';
+
+interface Props {
+  entry: PhotoEntry;
+}
+const { entry } = Astro.props;
+const { title, description, date, cover, gallery, tags } = entry.data;
+const images = gallery.length > 0 ? gallery : cover ? [{ src: cover, caption: undefined }] : [];
+const hasBody = typeof entry.body === 'string' && entry.body.trim().length > 0;
+---
+
+<BaseLayout title={`${title} / Photo`} description={description || title} type="article">
+  <article class="article-shell">
+    <SectionHeader title={title} subtitle="Photo" backHref="/photography/" backLabel="返回摄影" />
+    <div class="article-header-meta">
+      <span>post @ {formatDate(date)}</span>
+      {tags.length > 0 && (
+        <div class="tag-row">
+          {tags.map((tag) => (
+            <a href={tagUrl(tag)}>#{tag}</a>
+          ))}
+        </div>
+      )}
+    </div>
+    {description && <p class="photo-description">{description}</p>}
+    {images.length > 0 && (
+      <section class="photo-gallery" aria-label={`${title} gallery`}>
+        {images.map((item, index) => (
+          <PhotoFrame caption={item.caption} index={index + 1} title={title}>
+            <Image
+              src={item.src}
+              alt={item.caption || title}
+              widths={[640, 960, 1280, 1600]}
+              sizes="(max-width: 900px) 100vw, 720px"
+            />
+          </PhotoFrame>
+        ))}
+      </section>
+    )}
+    {hasBody && (
+      <div class="article-content photo-note">
+        <slot />
+      </div>
+    )}
+  </article>
+  {images.length > 0 && <PhotoLightbox title={`放大 ${title}`} />}
+</BaseLayout>

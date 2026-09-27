@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets';
+import { formatDate, photoUrl, tagUrl, type PhotoEntry } from '../lib/content';
+
+interface Props {
+  photo: PhotoEntry;
+  priority?: boolean;
+}
+const { photo, priority = false } = Astro.props;
+const thumbnail = photo.data.cover ?? photo.data.gallery[0]?.src;
+const href = photoUrl(photo.slug);
+---
+
+<article class:list={['photo-card', priority && 'is-priority']}>
+  <a href={href} class="photo-link">
+    {thumbnail && (
+      <Image
+        src={thumbnail}
+        alt={photo.data.title}
+        widths={[360, 640, 960, 1200]}
+        sizes={priority ? '(max-width: 900px) 100vw, 58vw' : '(max-width: 900px) 100vw, 30vw'}
+      />
+    )}
+  </a>
+  <div class="photo-caption">
+    <div>
+      <p class="card-meta">{formatDate(photo.data.date)}</p>
+      <h3>
+        <a href={href}>{photo.data.title}</a>
+      </h3>
+      {photo.data.description && <p>{photo.data.description}</p>}
+      {photo.data.tags.length > 0 && (
+        <div class="tag-row">
+          {photo.data.tags.map((tag) => (
+            <a href={tagUrl(tag)}>#{tag}</a>
+          ))}
+        </div>
+      )}
+    </div>
+    <a class="card-arrow" href={href} aria-label={`查看 ${photo.data.title}`}>
+      ↗
+    </a>
+  </div>
+</article>

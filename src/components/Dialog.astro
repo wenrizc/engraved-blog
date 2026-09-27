@@ -1,0 +1,25 @@
+---
+interface Props {
+  title: string;
+  id?: string;
+  class?: string;
+}
+const { title, id = 'dialog', class: className } = Astro.props;
+---
+
+<dialog id={id} class:list={['ui-dialog', className]} aria-labelledby={`${id}-title`}>
+  <div class="ui-dialog__header">
+    <h2 id={`${id}-title`}>{title}</h2>
+    <button class="ui-dialog__close" type="button" data-dialog-close aria-label="关闭">
+      ×
+    </button>
+  </div>
+  <div class="ui-dialog__body">
+    <slot />
+  </div>
+</dialog>
+<script>
+  document.querySelectorAll('[data-dialog-close]').forEach((button) => {
+    button.addEventListener('click', () => button.closest('dialog')?.close());
+  });
+</script>

@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import PhotoCard from '../../components/PhotoCard.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { getPhotos } from '../../lib/content';
+
+const photos = await getPhotos();
+---
+
+<BaseLayout title="Photo" description="Photo">
+  <section class="page-shell">
+    <SectionHeader title="Photo" />
+    {photos.length > 0 ? (
+      <div class="photo-grid">
+        {photos.map((photo, index) => (
+          <PhotoCard photo={photo} priority={index === 0} />
+        ))}
+      </div>
+    ) : (
+      <EmptyState>新的照片正在准备中。</EmptyState>
+    )}
+  </section>
+</BaseLayout>

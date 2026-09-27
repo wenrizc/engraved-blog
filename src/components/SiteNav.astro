@@ -1,0 +1,27 @@
+---
+const nav = [
+  { href: '/', label: '首页', en: 'INDEX' },
+  { href: '/article/', label: '文章', en: 'ESSAYS' },
+  { href: '/photography/', label: '摄影', en: 'IMAGES' },
+  { href: '/archive/', label: '档案', en: 'ARCHIVE' },
+  { href: '/tags/', label: '主题', en: 'TOPICS' },
+  { href: '/about/', label: '关于', en: 'ABOUT' }
+];
+---
+
+<nav class="site-nav" aria-label="主导航">
+  {nav.map((item) => {
+    const current =
+      item.href === '/' ? Astro.url.pathname === '/' : Astro.url.pathname.startsWith(item.href);
+    return (
+      <a
+        href={item.href}
+        aria-current={current ? 'page' : undefined}
+        class:list={{ active: current }}
+      >
+        <span>{item.label}</span>
+        <small>{item.en}</small>
+      </a>
+    );
+  })}
+</nav>

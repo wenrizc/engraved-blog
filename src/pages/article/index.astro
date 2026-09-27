@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import PostCard from '../../components/PostCard.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { getPublishedArticles } from '../../lib/content';
+
+const posts = await getPublishedArticles();
+---
+
+<BaseLayout title="Article" description="Article">
+  <section class="page-shell">
+    <SectionHeader title="Article" />
+    {posts.length > 0 ? (
+      <div class="post-list">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    ) : (
+      <EmptyState>新的文章正在准备中。</EmptyState>
+    )}
+  </section>
+</BaseLayout>

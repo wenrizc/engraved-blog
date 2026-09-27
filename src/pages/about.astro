@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+---
+
+<BaseLayout title="About" description="About">
+  <section class="page-shell">
+    <SectionHeader title="About" />
+    <div class="about-copy article-content">
+      <p>热爱摄影、骑行、二次元</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-copy {
+    margin-top: 18px;
+  }
+
+  .about-copy p {
+    margin: 0;
+    font-size: clamp(1.08rem, 2vw, 1.32rem);
+  }
+</style>

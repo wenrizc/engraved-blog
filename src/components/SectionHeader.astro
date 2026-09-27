@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  backHref?: string;
+  backLabel?: string;
+}
+const { title, subtitle, description, backHref, backLabel = '返回' } = Astro.props;
+---
+
+<header class="section-header">
+  {backHref && (
+    <a class="back-link section-header__back" href={backHref}>
+      ← {backLabel}
+    </a>
+  )}
+  <div class="section-header__title">
+    <h1>{title}</h1>
+    {subtitle && <span>{subtitle}</span>}
+  </div>
+  {description && <p>{description}</p>}
+</header>

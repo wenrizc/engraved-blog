@@ -1,0 +1,21 @@
+---
+interface Props {
+  caption?: string;
+  index?: number;
+  title?: string;
+  class?: string;
+}
+const { caption, index = 1, title = '照片', class: className } = Astro.props;
+---
+
+<figure class:list={['photo-frame', className]}>
+  <button
+    class="photo-zoom-trigger"
+    type="button"
+    data-photo-lightbox-trigger
+    aria-label={`放大${title} ${index}`}
+  >
+    <slot />
+  </button>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

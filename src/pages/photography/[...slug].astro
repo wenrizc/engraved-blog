@@ -1,0 +1,17 @@
+---
+import { render } from 'astro:content';
+import PhotoLayout from '../../layouts/PhotoLayout.astro';
+import { getPhotos } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const photos = await getPhotos();
+  return photos.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<PhotoLayout entry={entry}>
+  <Content />
+</PhotoLayout>

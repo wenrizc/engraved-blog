@@ -1,0 +1,29 @@
+---
+import { articleUrl, formatDate, tagUrl, type ArticleEntry } from '../lib/content';
+
+interface Props {
+  post: ArticleEntry;
+}
+const { post } = Astro.props;
+const href = articleUrl(post.slug);
+---
+
+<article class="post-card">
+  <div class="post-card-body">
+    <p class="card-meta">{formatDate(post.data.date)}</p>
+    <h3>
+      <a href={href}>{post.data.title}</a>
+    </h3>
+    {post.data.description && <p>{post.data.description}</p>}
+    {post.data.tags.length > 0 && (
+      <div class="tag-row">
+        {post.data.tags.map((tag) => (
+          <a href={tagUrl(tag)}>#{tag}</a>
+        ))}
+      </div>
+    )}
+  </div>
+  <a class="card-arrow" href={href} aria-label={`阅读 ${post.data.title}`}>
+    ↗
+  </a>
+</article>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { formatDate, tagUrl, type ArticleEntry } from '../lib/content';
+
+interface Props {
+  entry: ArticleEntry;
+}
+const { entry } = Astro.props;
+const { title, description, date, tags } = entry.data;
+---
+
+<BaseLayout title={`${title} / Article`} description={description || title} type="article">
+  <article class="article-shell">
+    <SectionHeader title={title} subtitle="Article" backHref="/article/" backLabel="返回文章" />
+    <div class="article-header-meta">
+      <span>post @ {formatDate(date)}</span>
+      {tags.length > 0 && (
+        <div class="tag-row">
+          {tags.map((tag) => (
+            <a href={tagUrl(tag)}>#{tag}</a>
+          ))}
+        </div>
+      )}
+    </div>
+    <div class="article-content">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

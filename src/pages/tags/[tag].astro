@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import PostCard from '../../components/PostCard.astro';
+import PhotoCard from '../../components/PhotoCard.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { getAllTags, getEntriesByTag } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const tags = await getAllTags();
+  return tags.map((tag) => ({ params: { tag }, props: { tag } }));
+}
+const { tag } = Astro.props;
+const { articles, photos } = await getEntriesByTag(tag);
+---
+
+<BaseLayout title={`#${tag}`} description={`包含 ${tag} 的文日小栈内容。`}>
+  <section class="page-shell">
+    <SectionHeader title={`#${tag}`} subtitle="主题" backHref="/tags/" backLabel="返回主题" />
+    {photos.length > 0 && (
+      <div class="photo-grid">
+        {photos.map((photo) => (
+          <PhotoCard photo={photo} />
+        ))}
+      </div>
+    )}
+    {articles.length > 0 && (
+      <div class="post-list">
+        {articles.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    )}
+    {photos.length === 0 && articles.length === 0 && <EmptyState />}
+  </section>
+</BaseLayout>

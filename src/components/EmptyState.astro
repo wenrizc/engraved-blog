@@ -1,0 +1,10 @@
+---
+interface Props {
+  children?: string;
+}
+const { children = '这里还没有内容。' } = Astro.props;
+---
+
+<p class="empty-note" role="status">
+  {children}
+</p>

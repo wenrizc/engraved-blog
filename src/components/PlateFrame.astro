@@ -1,0 +1,20 @@
+---
+interface Props {
+  caption?: string;
+  meta?: string;
+  class?: string;
+}
+const { caption, meta, class: className } = Astro.props;
+---
+
+<figure class:list={['plate-frame', className]}>
+  <div class="plate-frame__image">
+    <slot />
+  </div>
+  {(caption || meta) && (
+    <figcaption class="plate-caption">
+      <span>{caption}</span>
+      <span>{meta}</span>
+    </figcaption>
+  )}
+</figure>

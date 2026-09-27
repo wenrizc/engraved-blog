@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import PlateFrame from '../components/PlateFrame.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import PhotoCard from '../components/PhotoCard.astro';
+import { poetryQuotes } from '../data/poetryQuotes';
+import { getPhotos, getPublishedArticles } from '../lib/content';
+import durerPrint from '../assets/prints/durer-adam-and-eve.jpg';
+
+const posts = await getPublishedArticles();
+const photos = await getPhotos();
+const featured = posts[0];
+const poemOptions = poetryQuotes.map(({ text, lines, author, work }) => ({
+  text,
+  lines,
+  author,
+  work
+}));
+---
+
+<BaseLayout title="文日小栈 — 印痕" description="文日小栈：文章、摄影与日常观察。">
+  <div class="masthead-wrap">
+    <section class="masthead" aria-labelledby="site-title">
+      <div class="masthead-copy">
+        <h1 id="site-title">文日小栈</h1>
+        <a
+          class="masthead-poem"
+          href="/article/"
+          data-poems={JSON.stringify(poemOptions)}
+          aria-label="阅读诗歌"
+        >
+          <span class="poem-lines"></span>
+          <span class="poem-meta"></span>
+        </a>
+      </div>
+      <PlateFrame class="hero-plate paper-grain" caption="图版 01" meta="ADAM AND EVE · 1504">
+        <Image
+          src={durerPrint}
+          alt="丢勒 1504 年铜版画《亚当与夏娃》局部"
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 760px) 90vw, 42vw"
+        />
+      </PlateFrame>
+    </section>
+  </div>
+
+  <section class="home-content">
+    <div class="feature-column">
+      <header class="editorial-heading">
+        <h2>文章</h2>
+      </header>
+      {featured ? (
+        <article class="lead-story">
+          <h3>
+            <a href={`/article/${featured.slug}/`}>{featured.data.title}</a>
+          </h3>
+          <p class="story-description">{featured.data.description}</p>
+          <div class="story-foot">
+            <span>
+              {new Intl.DateTimeFormat('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              }).format(featured.data.date)}
+            </span>
+          </div>
+        </article>
+      ) : (
+        <p class="empty-note">新的篇章正在准备中。</p>
+      )}
+      <div class="secondary-stories">
+        {posts.slice(1, 4).map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    </div>
+    <div class="photo-column">
+      <header class="editorial-heading">
+        <h2>摄影</h2>
+      </header>
+      <div class="home-photo-grid">
+        {photos.slice(0, 2).map((photo, index) => (
+          <PhotoCard photo={photo} priority={index === 0} />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  const poemLink = document.querySelector('.masthead-poem');
+  if (poemLink instanceof HTMLElement) {
+    const poems = JSON.parse(poemLink.dataset.poems || '[]');
+    const lines = poemLink.querySelector('.poem-lines');
+    const meta = poemLink.querySelector('.poem-meta');
+    if (poems.length && lines && meta) {
+      const poem = poems[Math.floor(Math.random() * poems.length)];
+      lines.textContent = Array.isArray(poem.lines) ? poem.lines.join('\n') : poem.text;
+      meta.textContent = `— ${poem.author}${poem.work ? `，《${poem.work}》` : ''}`;
+    }
+  }
+</script>

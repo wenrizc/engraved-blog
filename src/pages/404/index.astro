@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+---
+
+<BaseLayout title="404" description="Page not found.">
+  <section class="page-shell">
+    <SectionHeader title="404" subtitle="Not Found" />
+    <div class="article-content">
+      <p>路径不存在，或者这份档案还没有写入磁盘。</p>
+      <p>
+        <a class="back-link" href="/">
+          返回首页
+        </a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
