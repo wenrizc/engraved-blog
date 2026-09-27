@@ -15,7 +15,6 @@ interface Poem {
   author: string;
   authorEn: string;
   dates: string;
-  collection: string;
   stanzas: Array<{ zh: string[]; en: string[] }>;
 }
 
@@ -32,20 +31,17 @@ const { poem } = Astro.props as { poem: Poem };
       ← 返回首页
     </a>
     <header class="poetry-header">
-      <p class="eyebrow">POETRY / BILINGUAL EDITION</p>
       <h1>{poem.title}</h1>
       <p class="poetry-title-en">{poem.titleEn}</p>
       <div class="poetry-meta">
         <span>{poem.author}</span>
         <span>{poem.authorEn}</span>
         {poem.dates && <span>{poem.dates}</span>}
-        <span>{poem.collection}</span>
       </div>
     </header>
 
     <div class="poetry-columns">
-      <section class="poetry-language" aria-labelledby="poetry-zh-title">
-        <h2 id="poetry-zh-title">中文译文</h2>
+      <section class="poetry-language" aria-label="中文">
         {poem.stanzas.map((stanza) => (
           <div class="poetry-stanza">
             {stanza.zh.map((line) => (
@@ -54,8 +50,7 @@ const { poem } = Astro.props as { poem: Poem };
           </div>
         ))}
       </section>
-      <section class="poetry-language" aria-labelledby="poetry-en-title">
-        <h2 id="poetry-en-title">English Original</h2>
+      <section class="poetry-language" aria-label="English">
         {poem.stanzas.map((stanza) => (
           <div class="poetry-stanza">
             {stanza.en.map((line) => (

@@ -2,7 +2,8 @@ import { spawn } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
 const poetryData = JSON.parse(readFileSync('src/data/generated/poetry-poems.json', 'utf8'));
-const samplePoetryRoute = `/poetry/${poetryData.poems[0].id}/`;
+const samplePoem = poetryData.poems[0];
+const samplePoetryRoute = `/poetry/${samplePoem.id}/`;
 
 const port = 4327;
 const routes = [
@@ -68,9 +69,9 @@ try {
       throw new Error(`${route}: missing photo lightbox trigger`);
     if (
       route === samplePoetryRoute &&
-      (!html.includes('中文译文') || !html.includes('English Original'))
+      (!html.includes(samplePoem.title) || !html.includes(samplePoem.titleEn))
     ) {
-      throw new Error(`${route}: missing bilingual poem content`);
+      throw new Error(`${route}: missing bilingual poem titles`);
     }
   }
   console.log(`smoke: ${routes.length} routes passed`);

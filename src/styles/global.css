@@ -289,14 +289,6 @@ main {
   padding-top: 30px;
 }
 
-.poetry-language h2 {
-  margin: 0 0 24px;
-  color: var(--muted);
-  font: 11px var(--mono);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .poetry-stanza {
   margin: 0 0 28px;
 }
