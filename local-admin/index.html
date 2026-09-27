@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>文日小栈 Admin</title>
+    <style>
+      :root {
+        --bg: #050704;
+        --bg-deep: #010201;
+        --panel-2: #0c190f;
+        --text: #d9ffe0;
+        --muted: #8ea88f;
+        --line: #314436;
+        --line-strong: #73ff8d;
+        --yellow: #ffbf42;
+        --green: #43ff78;
+        --danger: #ff5c6c;
+        --content-max: 1280px;
+        --page-gutter: 32px;
+        --content: min(var(--content-max), calc(100% - var(--page-gutter)));
+        --sidebar-width: 340px;
+        --layout-gap: 22px;
+        --panel-padding: 18px;
+        --control-height: 39px;
+        color-scheme: dark;
+        font-family: 'Courier New', 'Microsoft YaHei', monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        overflow-y: scroll;
+        scrollbar-gutter: stable;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 50% 18%, rgba(67, 255, 120, 0.08), transparent 36%),
+          linear-gradient(rgba(67, 255, 120, 0.026) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(67, 255, 120, 0.018) 1px, transparent 1px), var(--bg);
+        background-size:
+          100% 100%,
+          100% 4px,
+          12px 100%,
+          100% 100%;
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px max(calc(var(--page-gutter) / 2), calc((100% - var(--content-max)) / 2));
+        background: var(--bg-deep);
+        border-bottom: 1px solid var(--line-strong);
+        box-shadow:
+          0 1px 0 #000,
+          0 0 18px rgba(67, 255, 120, 0.14);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 0;
+        color: var(--green);
+        font-size: clamp(20px, 4vw, 34px);
+        line-height: 1.2;
+        text-shadow: 0 0 8px rgba(67, 255, 120, 0.45);
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      button {
+        min-height: 34px;
+        padding: 5px 10px;
+        border: 1px solid var(--line-strong);
+        background: #020302;
+        color: var(--green);
+        box-shadow: inset 0 0 14px rgba(67, 255, 120, 0.08);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:hover,
+      button:focus-visible {
+        background: var(--green);
+        color: var(--bg-deep);
+      }
+
+      button.secondary {
+        background: var(--bg-deep);
+        color: var(--yellow);
+        border-color: var(--yellow);
+      }
+
+      button.danger {
+        background: var(--danger);
+        color: var(--bg-deep);
+        border-color: var(--danger);
+      }
+
+      main {
+        width: var(--content);
+        margin: 24px auto 64px;
+        display: grid;
+        grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+        gap: var(--layout-gap);
+        align-items: stretch;
+      }
+
+      .panel {
+        width: 100%;
+        min-width: 0;
+        padding: var(--panel-padding);
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(rgba(67, 255, 120, 0.045), rgba(67, 255, 120, 0.012)),
+          rgba(8, 17, 10, 0.9);
+        box-shadow: inset 0 0 24px rgba(67, 255, 120, 0.045);
+      }
+
+      .editor-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-content: start;
+      }
+
+      .sidebar-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-content: start;
+        gap: 14px;
+      }
+
+      .sidebar-panel > * {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        width: 100%;
+      }
+
+      .tabs button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+        text-align: center;
+      }
+
+      .tabs button[aria-pressed='true'] {
+        background: var(--green);
+        color: var(--bg-deep);
+      }
+
+      .search-box {
+        margin: 0;
+      }
+
+      .entry-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .entry {
+        padding: 12px;
+        border-left: 4px solid var(--green);
+        border-top: 1px solid var(--line);
+        background:
+          linear-gradient(rgba(67, 255, 120, 0.045), rgba(67, 255, 120, 0.012)), var(--panel-2);
+        box-shadow: inset 0 0 18px rgba(67, 255, 120, 0.035);
+        cursor: pointer;
+      }
+
+      .entry.active {
+        outline: 2px solid var(--yellow);
+      }
+
+      .entry strong,
+      .entry span {
+        display: block;
+      }
+
+      .entry span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .empty-state,
+      .summary {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .summary {
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--line);
+      }
+
+      form {
+        display: grid;
+        width: 100%;
+        min-width: 0;
+        gap: 14px;
+      }
+
+      .grid {
+        display: grid;
+        width: 100%;
+        min-width: 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        min-width: 0;
+      }
+
+      input,
+      textarea,
+      select {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        padding: 9px 10px;
+        border: 1px solid var(--line);
+        background: var(--bg-deep);
+        color: var(--text);
+      }
+
+      input,
+      select {
+        height: var(--control-height);
+        line-height: 1.35;
+      }
+
+      input[type='file'] {
+        height: var(--control-height);
+        padding: 6px 10px;
+        line-height: 1.35;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: 2px solid var(--green);
+        outline-offset: 2px;
+        border-color: var(--green);
+      }
+
+      textarea {
+        min-height: 280px;
+        resize: vertical;
+        line-height: 1.7;
+      }
+
+      .body-field {
+        grid-column: 1 / -1;
+      }
+
+      .gallery-editor {
+        display: grid;
+        gap: 12px;
+      }
+
+      .gallery-item {
+        display: grid;
+        grid-template-columns: 140px minmax(0, 1fr);
+        gap: 12px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(rgba(67, 255, 120, 0.045), rgba(67, 255, 120, 0.012)), var(--panel-2);
+      }
+
+      .gallery-item img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        background: var(--bg-deep);
+        border: 1px solid var(--line);
+      }
+
+      .gallery-fields {
+        display: grid;
+        gap: 8px;
+      }
+
+      .gallery-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .cover-badge {
+        color: var(--green);
+        font-weight: 700;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .status {
+        color: var(--green);
+        min-height: 1.6em;
+      }
+
+      .hint {
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 14px;
+      }
+
+      .command-line {
+        margin: 4px 0 0;
+        color: var(--muted);
+      }
+
+      .photo-only {
+        display: none;
+      }
+
+      body[data-type='photography'] .photo-only {
+        display: grid;
+      }
+
+      body[data-type='photography'] .article-only {
+        display: none;
+      }
+
+      @media (max-width: 900px) {
+        main {
+          grid-template-columns: 1fr;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body data-type="article">
+    <header>
+      <div>
+        <h1>文日小栈 Admin<span style="color: var(--green)">█</span></h1>
+        <p class="command-line">$ edit ./content --local</p>
+      </div>
+      <div class="actions">
+        <button type="button" id="new-entry">新建</button>
+      </div>
+    </header>
+
+    <main>
+      <aside class="panel sidebar-panel">
+        <div class="tabs">
+          <button type="button" data-tab="article" aria-pressed="true">文章</button>
+          <button type="button" data-tab="photography" aria-pressed="false">照片</button>
+        </div>
+        <label class="search-box">
+          筛选
+          <input id="filter" name="filter" placeholder="标题、标签" autocomplete="off" />
+        </label>
+        <div id="entries" class="entry-list"></div>
+        <div id="summary" class="summary"></div>
+      </aside>
+
+      <section class="panel editor-panel">
+        <form id="editor">
+          <div class="grid">
+            <label>
+              标题
+              <input id="title" name="title" required />
+            </label>
+            <label>
+              摘要（可选）
+              <input id="description" name="description" />
+            </label>
+            <label>
+              日期
+              <input id="date" name="date" type="date" required />
+            </label>
+            <label>
+              标签
+              <input id="tags" name="tags" placeholder="street, night, city" />
+            </label>
+            <label>
+              草稿
+              <select id="draft" name="draft">
+                <option value="false">否</option>
+                <option value="true">是</option>
+              </select>
+            </label>
+            <label class="photo-only">
+              封面路径
+              <input
+                id="cover"
+                name="cover"
+                placeholder="../../assets/photos/example.jpg"
+                readonly
+              />
+            </label>
+            <label class="photo-only">
+              选择照片
+              <input id="photo-files" name="photo-files" type="file" accept="image/*" multiple />
+            </label>
+            <label class="body-field photo-only">
+              图库
+              <div id="gallery-editor" class="gallery-editor"></div>
+            </label>
+            <label class="body-field">
+              正文
+              <textarea id="body" name="body"></textarea>
+            </label>
+          </div>
+          <div class="actions">
+            <button type="submit">保存 Markdown</button>
+            <button type="button" class="secondary photo-only" id="upload-photos">
+              上传所选照片
+            </button>
+            <button type="button" class="danger" id="delete-entry">删除内容</button>
+            <span class="status" id="status"></span>
+          </div>
+          <p class="hint">
+            回收站：<code>.local-admin-trash</code> / 校验：<code>npm run build</code>
+          </p>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const state = {
+        type: 'article',
+        entries: [],
+        current: null,
+        filter: ''
+      };
+      const typeLabels = {
+        article: '文章',
+        photography: '照片'
+      };
+
+      const fields = ['title', 'description', 'date', 'tags', 'draft', 'cover', 'body'];
+
+      const $ = (id) => document.getElementById(id);
+
+      function today() {
+        return new Date().toISOString().slice(0, 10);
+      }
+
+      function setStatus(message) {
+        $('status').textContent = message;
+        window.clearTimeout(setStatus.timer);
+        setStatus.timer = window.setTimeout(() => {
+          $('status').textContent = '';
+        }, 4000);
+      }
+
+      function parseTags(value) {
+        return value
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter(Boolean);
+      }
+
+      function slugifyClient(input) {
+        return String(input || '')
+          .trim()
+          .toLowerCase()
+          .normalize('NFKD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      }
+
+      function generatedSlug() {
+        const date = toDateInput($('date').value) || today();
+        const title = slugifyClient($('title').value) || 'untitled';
+        return `${date}-${title}`;
+      }
+
+      function toDateInput(value) {
+        if (!value) return '';
+        return String(value).slice(0, 10);
+      }
+
+      function fill(entry) {
+        state.current = entry;
+        for (const id of fields) $(id).value = '';
+        $('title').value = entry?.data?.title || '';
+        $('description').value = entry?.data?.description || '';
+        $('date').value = toDateInput(entry?.data?.date) || today();
+        $('tags').value = Array.isArray(entry?.data?.tags) ? entry.data.tags.join(', ') : '';
+        $('draft').value = String(Boolean(entry?.data?.draft));
+        $('cover').value = entry?.data?.cover || '';
+        $('body').value = entry?.body || '';
+        renderGallery(
+          Array.isArray(entry?.data?.gallery)
+            ? entry.data.gallery
+            : entry?.data?.cover
+              ? [{ src: entry.data.cover, caption: '' }]
+              : []
+        );
+        renderEntries();
+      }
+
+      function previewPath(src) {
+        return src.replace('../../assets/photos/', '/src/assets/photos/');
+      }
+
+      function escapeHtml(value) {
+        return String(value || '').replace(
+          /[&<>"']/g,
+          (char) =>
+            ({
+              '&': '&amp;',
+              '<': '&lt;',
+              '>': '&gt;',
+              '"': '&quot;',
+              "'": '&#039;'
+            })[char]
+        );
+      }
+
+      function renderGallery(items) {
+        const editor = $('gallery-editor');
+        editor.innerHTML = '';
+        const selectedCover = $('cover').value;
+        for (const [index, item] of items.entries()) {
+          const isCover = item.src && item.src === selectedCover;
+          const row = document.createElement('div');
+          row.className = 'gallery-item';
+          row.dataset.index = String(index);
+          row.innerHTML = `
+            <img src="${escapeHtml(previewPath(item.src || ''))}" alt="">
+            <div class="gallery-fields">
+              <label>图片路径<input data-gallery-field="src" value="${escapeHtml(item.src || '')}" readonly></label>
+              <label>说明<input data-gallery-field="caption" value="${escapeHtml(item.caption || '')}"></label>
+              <div class="gallery-actions">
+                <button type="button" class="secondary" data-cover-gallery="${index}">设为封面</button>
+                <button type="button" class="danger" data-remove-gallery="${index}">移除图片</button>
+                <span class="cover-badge">${isCover ? '当前封面' : ''}</span>
+              </div>
+            </div>
+          `;
+          editor.appendChild(row);
+        }
+        editor.querySelectorAll('[data-cover-gallery]').forEach((button) => {
+          button.addEventListener('click', () => {
+            const index = Number(button.dataset.coverGallery);
+            const next = collectGallery();
+            $('cover').value = next[index]?.src || next[0]?.src || '';
+            renderGallery(next);
+          });
+        });
+        editor.querySelectorAll('[data-remove-gallery]').forEach((button) => {
+          button.addEventListener('click', () => {
+            const index = Number(button.dataset.removeGallery);
+            const currentCover = $('cover').value;
+            const removed = collectGallery()[index]?.src;
+            const next = collectGallery().filter((_, itemIndex) => itemIndex !== index);
+            $('cover').value = removed === currentCover ? next[0]?.src || '' : currentCover;
+            renderGallery(next);
+          });
+        });
+      }
+
+      function collectGallery() {
+        return Array.from(document.querySelectorAll('.gallery-item'))
+          .map((row) => {
+            const find = (name) =>
+              row.querySelector(`[data-gallery-field="${name}"]`)?.value.trim() || '';
+            return {
+              src: find('src'),
+              caption: find('caption') || undefined
+            };
+          })
+          .filter((item) => item.src);
+      }
+
+      function renderEntries() {
+        const list = $('entries');
+        list.innerHTML = '';
+        const query = state.filter.trim().toLowerCase();
+        const filtered = state.entries.filter((entry) => {
+          if (!query) return true;
+          const haystack = [
+            entry.slug,
+            entry.data.title,
+            entry.data.description,
+            entry.data.date,
+            ...(Array.isArray(entry.data.tags) ? entry.data.tags : [])
+          ]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase();
+          return haystack.includes(query);
+        });
+        for (const entry of filtered) {
+          const button = document.createElement('div');
+          button.className = `entry ${state.current?.slug === entry.slug ? 'active' : ''}`;
+          button.innerHTML = `<strong>${entry.data.title || entry.slug}</strong><span>${entry.data.date || ''} / ${entry.slug}</span>`;
+          button.addEventListener('click', () => fill(entry));
+          list.appendChild(button);
+        }
+        if (filtered.length === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.textContent = query ? '没有匹配内容。' : '还没有内容。';
+          list.appendChild(empty);
+        }
+        $('summary').textContent =
+          `${filtered.length}/${state.entries.length} 条${typeLabels[state.type]}内容`;
+      }
+
+      async function loadEntries() {
+        document.body.dataset.type = state.type;
+        document.querySelectorAll('[data-tab]').forEach((tab) => {
+          tab.setAttribute('aria-pressed', String(tab.dataset.tab === state.type));
+        });
+        const res = await fetch(`/api/entries?type=${state.type}`);
+        state.entries = await res.json();
+        fill(state.entries[0] || null);
+      }
+
+      function collectPayload() {
+        const originalSlug = state.current?.slug || '';
+        const slug = generatedSlug();
+        if (state.type === 'article') {
+          return {
+            type: state.type,
+            slug,
+            originalSlug,
+            data: {
+              title: $('title').value,
+              description: $('description').value || undefined,
+              date: $('date').value,
+              tags: parseTags($('tags').value),
+              draft: $('draft').value === 'true'
+            },
+            body: $('body').value
+          };
+        }
+        return {
+          type: state.type,
+          slug,
+          originalSlug,
+          data: {
+            title: $('title').value,
+            description: $('description').value || undefined,
+            date: $('date').value,
+            tags: parseTags($('tags').value),
+            draft: $('draft').value === 'true',
+            cover: $('cover').value || collectGallery()[0]?.src,
+            gallery: collectGallery()
+          },
+          body: $('body').value
+        };
+      }
+
+      document.querySelectorAll('[data-tab]').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          state.type = tab.dataset.tab;
+          loadEntries();
+        });
+      });
+
+      $('filter').addEventListener('input', (event) => {
+        state.filter = event.target.value;
+        renderEntries();
+      });
+      $('new-entry').addEventListener('click', () =>
+        fill({
+          slug: '',
+          data: { date: today(), tags: [], draft: false },
+          body: ''
+        })
+      );
+
+      $('editor').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        try {
+          const res = await fetch('/api/entry', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(collectPayload())
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || '保存失败');
+          setStatus(`已保存 ${data.file}`);
+          await loadEntries();
+        } catch (error) {
+          setStatus(error.message || '保存失败');
+        }
+      });
+
+      $('upload-photos').addEventListener('click', async () => {
+        const input = $('photo-files');
+        const files = Array.from(input.files || []);
+        if (files.length === 0) return setStatus('请先选择一张或多张照片。');
+        const encoded = await Promise.all(
+          files.map(async (file) => {
+            const buffer = await file.arrayBuffer();
+            const bytes = new Uint8Array(buffer);
+            let binary = '';
+            for (let index = 0; index < bytes.length; index += 1)
+              binary += String.fromCharCode(bytes[index]);
+            return {
+              name: file.name,
+              slug: generatedSlug() || file.name,
+              data: btoa(binary)
+            };
+          })
+        );
+        const res = await fetch('/api/photos', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ files: encoded })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '上传失败');
+        const next = [...collectGallery(), ...data.gallery];
+        if (!$('cover').value) $('cover').value = next[0]?.src || '';
+        renderGallery(next);
+        input.value = '';
+        setStatus(`已上传 ${data.gallery.length} 张照片`);
+      });
+
+      $('delete-entry').addEventListener('click', async () => {
+        const slug = state.current?.slug || '';
+        if (!slug || !confirm(`将${typeLabels[state.type]} ${slug}.md 移到 .local-admin-trash？`))
+          return;
+        const res = await fetch('/api/delete', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ type: state.type, slug })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '删除失败');
+        setStatus(data.deleted ? `已归档 ${slug}.md` : '未找到文件。');
+        await loadEntries();
+      });
+
+      window.addEventListener('error', (event) => setStatus(event.message));
+      loadEntries();
+    </script>
+  </body>
+</html>
