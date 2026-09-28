@@ -151,6 +151,11 @@ class XHTMLTextParser(HTMLParser):
                 self.flush()
             self.suppress_depth = 1
             return
+        if classes & {"suptext", "tableline", "linenum-float-right"}:
+            if tag in self.block_tags:
+                self.flush()
+            self.suppress_depth = 1
+            return
         if self.suppress_metadata and (
             any(
                 cls.startswith(prefix)
@@ -249,7 +254,17 @@ class ParagraphBlockParser(HTMLParser):
             self.current_tag = tag
             self.current_class = (attr_map.get("class") or "").lower()
         classes = set((dict(attrs).get("class") or "").lower().split())
-        if classes & {"linenum-float-right", "note", "note1", "footnote", "footnotes", "suptext"}:
+        if classes & {
+            "linenum-float-right",
+            "note",
+            "note1",
+            "footnote",
+            "footnotes",
+            "footnote-link",
+            "footnote-anchor",
+            "suptext",
+            "tableline",
+        }:
             self.suppress_depth = 1
             return
         if tag == "br" and self.current:
