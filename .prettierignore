@@ -4,3 +4,5 @@ public/generated
 src/data/generated
 screenshots
 package-lock.json
+test-results
+playwright-report
