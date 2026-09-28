@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage, Image } from 'astro:assets';
 import BaseLayout from './BaseLayout.astro';
 import PhotoFrame from '../components/PhotoFrame.astro';
 import PhotoLightbox from '../components/PhotoLightbox.astro';
@@ -11,33 +11,57 @@ interface Props {
 }
 const { entry } = Astro.props;
 const { title, description, date, cover, gallery, tags } = entry.data;
-const images = gallery.length > 0 ? gallery : cover ? [{ src: cover, caption: undefined }] : [];
+const images = [...gallery];
+if (cover && !images.some((item) => item.src.src === cover.src)) {
+  images.unshift({ src: cover, caption: undefined });
+}
+const displayImages = await Promise.all(
+  images.map(async (item) => {
+    const scale = Math.min(1, 3840 / Math.max(item.src.width, item.src.height));
+    const fullImage = await getImage({
+      src: item.src,
+      width: Math.max(1, Math.round(item.src.width * scale)),
+      format: 'webp'
+    });
+    return { ...item, fullSrc: fullImage.src, isPortrait: item.src.width < item.src.height };
+  })
+);
 const hasBody = typeof entry.body === 'string' && entry.body.trim().length > 0;
 ---
 
-<BaseLayout title={`${title} / Photo`} description={description || title} type="article">
+<BaseLayout title={`${title} | 文日小栈`} description={description || title} type="article">
   <article class="article-shell">
-    <SectionHeader title={title} subtitle="Photo" backHref="/photography/" backLabel="返回摄影" />
+    <SectionHeader title={title} backHref="/photography/" backLabel="返回摄影" />
     <div class="article-header-meta">
-      <span>post @ {formatDate(date)}</span>
+      <span>发布于 {formatDate(date)}</span>
       {tags.length > 0 && (
         <div class="tag-row">
           {tags.map((tag) => (
-            <a href={tagUrl(tag)}>#{tag}</a>
+            <a href={tagUrl(tag)}>{tag}</a>
           ))}
         </div>
       )}
     </div>
     {description && <p class="photo-description">{description}</p>}
-    {images.length > 0 && (
-      <section class="photo-gallery" aria-label={`${title} gallery`}>
-        {images.map((item, index) => (
-          <PhotoFrame caption={item.caption} index={index + 1} title={title}>
+    {displayImages.length > 0 && (
+      <section class="photo-gallery" aria-label={`${title}的照片`}>
+        {displayImages.map((item, index) => (
+          <PhotoFrame
+            caption={item.caption}
+            index={index + 1}
+            title={title}
+            fullSrc={item.fullSrc}
+            class={item.isPortrait ? 'is-portrait' : undefined}
+          >
             <Image
               src={item.src}
               alt={item.caption || title}
-              widths={[640, 960, 1280, 1600]}
-              sizes="(max-width: 900px) 100vw, 720px"
+              widths={[640, 960, 1280, 1600, 1920]}
+              sizes={
+                item.isPortrait
+                  ? '(max-width: 760px) calc(100vw - 68px), 680px'
+                  : '(max-width: 760px) calc(100vw - 68px), (max-width: 1180px) calc(100vw - 90px), 1090px'
+              }
             />
           </PhotoFrame>
         ))}
@@ -49,5 +73,5 @@ const hasBody = typeof entry.body === 'string' && entry.body.trim().length > 0;
       </div>
     )}
   </article>
-  {images.length > 0 && <PhotoLightbox title={`放大 ${title}`} />}
+  {displayImages.length > 0 && <PhotoLightbox title={`放大 ${title}`} />}
 </BaseLayout>

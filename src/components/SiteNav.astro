@@ -1,11 +1,18 @@
 ---
 const nav = [
-  { href: '/', label: '首页', en: 'INDEX' },
-  { href: '/article/', label: '文章', en: 'ESSAYS' },
-  { href: '/photography/', label: '摄影', en: 'IMAGES' },
+  { href: '/', label: '首页', en: 'HOME' },
+  { href: '/article/', label: '文章', en: 'ARTICLE' },
+  { href: '/photography/', label: '摄影', en: 'PHOTOGRAPHY' },
   { href: '/archive/', label: '档案', en: 'ARCHIVE' },
-  { href: '/tags/', label: '主题', en: 'TOPICS' },
+  { href: '/tags/', label: '主题', en: 'TAGS' },
   { href: '/about/', label: '关于', en: 'ABOUT' }
+];
+
+const externalLinks = [
+  {
+    href: 'https://wenrizc.github.io/technical-article-site/',
+    label: '技术文章收集站'
+  }
 ];
 ---
 
@@ -24,4 +31,55 @@ const nav = [
       </a>
     );
   })}
+  <div class="nav-links" data-nav-links>
+    <button
+      type="button"
+      class="nav-links__trigger"
+      aria-haspopup="true"
+      aria-expanded="false"
+      aria-controls="nav-links-menu"
+    >
+      <span>链接</span>
+      <small>LINKS</small>
+    </button>
+    <div class="nav-links__menu" id="nav-links-menu">
+      {externalLinks.map((link) => (
+        <a
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${link.label}（新窗口打开）`}
+        >
+          <span>{link.label}</span>
+          <span class="nav-links__arrow" aria-hidden="true">
+            ↗
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
 </nav>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-nav-links]').forEach((linksNav) => {
+    const trigger = linksNav.querySelector<HTMLButtonElement>('.nav-links__trigger');
+    if (!trigger) return;
+
+    const setOpen = (open: boolean) => {
+      linksNav.classList.toggle('is-open', open);
+      trigger.setAttribute('aria-expanded', String(open));
+    };
+
+    trigger.addEventListener('click', () => {
+      setOpen(!linksNav.classList.contains('is-open'));
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!linksNav.contains(event.target as Node)) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setOpen(false);
+    });
+  });
+</script>

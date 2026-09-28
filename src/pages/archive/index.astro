@@ -6,15 +6,15 @@ import { formatDate, getArchiveItems } from '../../lib/content';
 const items = await getArchiveItems();
 ---
 
-<BaseLayout title="Archive" description="文日小栈内容档案。">
+<BaseLayout title="档案 | 文日小栈" description="文日小栈内容档案。">
   <section class="page-shell">
-    <SectionHeader title="Archive" subtitle="档案" />
+    <SectionHeader title="档案" />
     {items.length > 0 ? (
       <ol class="archive-list">
         {items.map((item) => (
           <li>
             <time datetime={item.date.toISOString()}>{formatDate(item.date)}</time>
-            <span>{item.kind}</span>
+            <span>{item.kind === 'article' ? '文章' : '摄影'}</span>
             <a href={item.href}>{item.title}</a>
           </li>
         ))}

@@ -5,9 +5,13 @@ import { formatDate, photoUrl, tagUrl, type PhotoEntry } from '../lib/content';
 interface Props {
   photo: PhotoEntry;
   priority?: boolean;
+  list?: boolean;
 }
-const { photo, priority = false } = Astro.props;
+const { photo, priority = false, list = false } = Astro.props;
 const thumbnail = photo.data.cover ?? photo.data.gallery[0]?.src;
+const thumbnailAspect = thumbnail
+  ? Math.min(2.2, Math.max(1, thumbnail.width / thumbnail.height))
+  : 1.5;
 const href = photoUrl(photo.slug);
 ---
 
@@ -17,8 +21,15 @@ const href = photoUrl(photo.slug);
       <Image
         src={thumbnail}
         alt={photo.data.title}
+        style={`--photo-aspect: ${thumbnailAspect}`}
         widths={[360, 640, 960, 1200]}
-        sizes={priority ? '(max-width: 900px) 100vw, 58vw' : '(max-width: 900px) 100vw, 30vw'}
+        sizes={
+          list
+            ? '(max-width: 760px) 100vw, (max-width: 1180px) 58vw, 670px'
+            : priority
+              ? '(max-width: 900px) 100vw, 58vw'
+              : '(max-width: 900px) 100vw, 30vw'
+        }
       />
     )}
   </a>
@@ -32,7 +43,7 @@ const href = photoUrl(photo.slug);
       {photo.data.tags.length > 0 && (
         <div class="tag-row">
           {photo.data.tags.map((tag) => (
-            <a href={tagUrl(tag)}>#{tag}</a>
+            <a href={tagUrl(tag)}>{tag}</a>
           ))}
         </div>
       )}

@@ -19,6 +19,27 @@ interface Poem {
 }
 
 const { poem } = Astro.props as { poem: Poem };
+const sectionMarker = /^[一二三四五六七八九十百〇○零]{1,6}[、.]?$/;
+const stanzas = poem.stanzas.map((stanza, index) => {
+  let marker = '';
+  let inlineMarker = '';
+  const zh = [] as Array<{ text: string; marker: string }>;
+  stanza.zh.forEach((line, lineIndex) => {
+    const value = line.trim();
+    if (lineIndex < stanza.zh.length - 1 && sectionMarker.test(value)) {
+      if (lineIndex === 0) marker = value;
+      else inlineMarker = value;
+      return;
+    }
+    zh.push({ text: line, marker: inlineMarker });
+    inlineMarker = '';
+  });
+  return {
+    ...stanza,
+    zh,
+    marker: index === 0 && poem.title.startsWith(`${marker}、`) ? '' : marker
+  };
+});
 ---
 
 <BaseLayout
@@ -41,24 +62,24 @@ const { poem } = Astro.props as { poem: Poem };
     </header>
 
     <div class="poetry-columns">
-      <section class="poetry-language" aria-label="中文">
-        {poem.stanzas.map((stanza) => (
-          <div class="poetry-stanza">
+      {stanzas.map((stanza) => (
+        <div class="poetry-stanza-pair">
+          {stanza.marker && <div class="poetry-section-label">{stanza.marker}</div>}
+          <section class="poetry-language" aria-label="中文">
             {stanza.zh.map((line) => (
-              <div class="poetry-line">{line}</div>
+              <div class="poetry-line">
+                {line.marker && <span class="poetry-inline-marker">{line.marker}</span>}
+                {line.text}
+              </div>
             ))}
-          </div>
-        ))}
-      </section>
-      <section class="poetry-language" aria-label="English">
-        {poem.stanzas.map((stanza) => (
-          <div class="poetry-stanza">
+          </section>
+          <section class="poetry-language" aria-label="English">
             {stanza.en.map((line) => (
               <div class="poetry-line">{line}</div>
             ))}
-          </div>
-        ))}
-      </section>
+          </section>
+        </div>
+      ))}
     </div>
   </article>
 </BaseLayout>

@@ -14,9 +14,9 @@ const { tag } = Astro.props;
 const { articles, photos } = await getEntriesByTag(tag);
 ---
 
-<BaseLayout title={`#${tag}`} description={`包含 ${tag} 的文日小栈内容。`}>
+<BaseLayout title={tag} description={`包含 ${tag} 的文日小栈内容。`}>
   <section class="page-shell">
-    <SectionHeader title={`#${tag}`} subtitle="主题" backHref="/tags/" backLabel="返回主题" />
+    <SectionHeader title={tag} subtitle="主题" backHref="/tags/" backLabel="返回主题" />
     {photos.length > 0 && (
       <div class="photo-grid">
         {photos.map((photo) => (

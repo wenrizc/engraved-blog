@@ -1,1 +1,27 @@
-/* Page layout rules live with the visual system for the engraved theme. */
+/* Shared page geometry. Component CSS owns only its internal layout. */
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+.header-inner,
+.masthead-wrap,
+.home-content,
+.page-shell,
+.article-shell,
+.site-footer {
+  width: 100%;
+  max-width: var(--content);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+.page-shell,
+.article-shell {
+  padding-block: var(--page-top) var(--page-bottom);
+}

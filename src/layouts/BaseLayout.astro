@@ -26,13 +26,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg?v=sunrise-1" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
     <meta property="og:url" content={canonical} />
     {image && <meta property="og:image" content={new URL(image, Astro.url).href} />}
-    <title>{title}</title>
+    <title>文日小栈</title>
   </head>
   <body id="top">
     <SiteHeader />

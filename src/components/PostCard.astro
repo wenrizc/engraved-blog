@@ -18,7 +18,7 @@ const href = articleUrl(post.slug);
     {post.data.tags.length > 0 && (
       <div class="tag-row">
         {post.data.tags.map((tag) => (
-          <a href={tagUrl(tag)}>#{tag}</a>
+          <a href={tagUrl(tag)}>{tag}</a>
         ))}
       </div>
     )}

@@ -21,6 +21,9 @@ const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => 
 ---
 
 <BaseLayout title="文日小栈 — 印痕" description="文日小栈：文章、摄影与日常观察。">
+  <script is:inline>
+    document.documentElement.classList.add('has-js');
+  </script>
   <div class="masthead-wrap">
     <section class="masthead" aria-labelledby="site-title">
       <div class="masthead-copy">
@@ -29,11 +32,44 @@ const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => 
           class="masthead-poem"
           href={poemOptions[0] ? `/poetry/${poemOptions[0].poemId}/` : '/poetry/'}
           data-poems={JSON.stringify(poemOptions)}
+          data-poem-pending
           aria-label="阅读诗歌"
         >
-          <span class="poem-lines"></span>
-          <span class="poem-meta"></span>
+          <span class="poem-lines">
+            {poemOptions[0]?.lines.map((line) => (
+              <span class="poem-line">{line}</span>
+            ))}
+          </span>
+          <span class="poem-meta">
+            {poemOptions[0] &&
+              `— ${poemOptions[0].author}${poemOptions[0].work ? `，${poemOptions[0].work}` : ''}`}
+          </span>
         </a>
+        <script is:inline>
+          const poemLink = document.currentScript.previousElementSibling;
+          if (poemLink instanceof HTMLAnchorElement) {
+            try {
+              const poems = JSON.parse(poemLink.dataset.poems || '[]');
+              const lines = poemLink.querySelector('.poem-lines');
+              const meta = poemLink.querySelector('.poem-meta');
+              if (poems.length && lines && meta) {
+                const poem = poems[Math.floor(Math.random() * poems.length)];
+                poemLink.href = `/poetry/${poem.poemId}/`;
+                lines.replaceChildren(
+                  ...(Array.isArray(poem.lines) ? poem.lines : [poem.text]).map((line) => {
+                    const element = document.createElement('span');
+                    element.className = 'poem-line';
+                    element.textContent = line;
+                    return element;
+                  })
+                );
+                meta.textContent = `— ${poem.author}${poem.work ? `，${poem.work}` : ''}`;
+              }
+            } finally {
+              poemLink.removeAttribute('data-poem-pending');
+            }
+          }
+        </script>
       </div>
       <PlateFrame class="hero-plate paper-grain" caption="图版 01" meta="ADAM AND EVE · 1504">
         <Image
@@ -41,6 +77,8 @@ const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => 
           alt="丢勒 1504 年铜版画《亚当与夏娃》局部"
           widths={[640, 960, 1280]}
           sizes="(max-width: 760px) 90vw, 42vw"
+          loading="eager"
+          fetchpriority="high"
         />
       </PlateFrame>
     </section>
@@ -88,30 +126,3 @@ const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => 
     </div>
   </section>
 </BaseLayout>
-<script>
-  const poemLink = document.querySelector('.masthead-poem');
-  if (poemLink instanceof HTMLElement) {
-    const poems: Array<{
-      poemId: string;
-      text: string;
-      lines: string[];
-      author: string;
-      work: string;
-    }> = JSON.parse(poemLink.dataset.poems || '[]');
-    const lines = poemLink.querySelector('.poem-lines');
-    const meta = poemLink.querySelector('.poem-meta');
-    if (poems.length && lines && meta) {
-      const poem = poems[Math.floor(Math.random() * poems.length)];
-      poemLink.setAttribute('href', `/poetry/${poem.poemId}/`);
-      lines.replaceChildren(
-        ...(Array.isArray(poem.lines) ? poem.lines : [poem.text]).map((line: string) => {
-          const element = document.createElement('span');
-          element.className = 'poem-line';
-          element.textContent = line;
-          return element;
-        })
-      );
-      meta.textContent = `— ${poem.author}${poem.work ? `，${poem.work}` : ''}`;
-    }
-  }
-</script>

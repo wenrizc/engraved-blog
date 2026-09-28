@@ -8,13 +8,13 @@ import { getPhotos } from '../../lib/content';
 const photos = await getPhotos();
 ---
 
-<BaseLayout title="Photo" description="Photo">
+<BaseLayout title="摄影 | 文日小栈" description="文日小栈的摄影作品。">
   <section class="page-shell">
-    <SectionHeader title="Photo" />
+    <SectionHeader title="摄影" />
     {photos.length > 0 ? (
-      <div class="photo-grid">
-        {photos.map((photo, index) => (
-          <PhotoCard photo={photo} priority={index === 0} />
+      <div class="photo-list">
+        {photos.map((photo) => (
+          <PhotoCard photo={photo} list />
         ))}
       </div>
     ) : (

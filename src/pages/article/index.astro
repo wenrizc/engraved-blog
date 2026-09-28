@@ -8,9 +8,9 @@ import { getPublishedArticles } from '../../lib/content';
 const posts = await getPublishedArticles();
 ---
 
-<BaseLayout title="Article" description="Article">
+<BaseLayout title="文章 | 文日小栈" description="文日小栈的文章。">
   <section class="page-shell">
-    <SectionHeader title="Article" />
+    <SectionHeader title="文章" />
     {posts.length > 0 ? (
       <div class="post-list">
         {posts.map((post) => (

@@ -1,4 +1,13 @@
 :root {
+  --paper: #f1ede5;
+  --paper-deep: #e6dfd3;
+  --ink: #292a27;
+  --muted: #777169;
+  --rule: #aaa297;
+  --accent: #96392c;
+  --copper: #78817b;
+  --engraved-line: rgba(41, 42, 39, 0.52);
+  --engraved-height: 12px;
   --space-1: 0.35rem;
   --space-2: 0.65rem;
   --space-3: 1rem;
@@ -6,4 +15,18 @@
   --space-5: 2.5rem;
   --space-6: 4rem;
   --content: 1180px;
+  --page-gutter: 28px;
+  --page-top: 65px;
+  --page-bottom: 90px;
+  --poem-height: 18rem;
+  --serif: 'Newsreader', 'Noto Serif SC', serif;
+  --mono: 'DM Mono', monospace;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --page-gutter: 18px;
+    --page-top: 44px;
+    --page-bottom: 70px;
+  }
 }

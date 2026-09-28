@@ -65,7 +65,10 @@ const { title = 'Expanded photo' } = Astro.props;
         const source = trigger.querySelector('img');
         if (!(source instanceof HTMLImageElement)) return;
         returnFocus = trigger instanceof HTMLElement ? trigger : null;
-        image.src = source.currentSrc || source.src;
+        image.src =
+          (trigger instanceof HTMLElement && trigger.dataset.photoLightboxSrc) ||
+          source.currentSrc ||
+          source.src;
         image.alt = source.alt;
         reset();
         lightbox.showModal();

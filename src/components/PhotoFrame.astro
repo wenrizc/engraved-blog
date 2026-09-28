@@ -4,8 +4,9 @@ interface Props {
   index?: number;
   title?: string;
   class?: string;
+  fullSrc?: string;
 }
-const { caption, index = 1, title = '照片', class: className } = Astro.props;
+const { caption, index = 1, title = '照片', class: className, fullSrc } = Astro.props;
 ---
 
 <figure class:list={['photo-frame', className]}>
@@ -13,6 +14,7 @@ const { caption, index = 1, title = '照片', class: className } = Astro.props;
     class="photo-zoom-trigger"
     type="button"
     data-photo-lightbox-trigger
+    data-photo-lightbox-src={fullSrc}
     aria-label={`放大${title} ${index}`}
   >
     <slot />

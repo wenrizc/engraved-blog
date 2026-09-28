@@ -6,13 +6,13 @@ import { getAllTags, tagUrl } from '../../lib/content';
 const tags = await getAllTags();
 ---
 
-<BaseLayout title="Tags" description="文日小栈主题标签。">
+<BaseLayout title="主题 | 文日小栈" description="文日小栈主题标签。">
   <section class="page-shell">
-    <SectionHeader title="Tags" subtitle="主题" />
+    <SectionHeader title="主题" />
     {tags.length > 0 ? (
       <div class="tag-cloud">
         {tags.map((tag) => (
-          <a href={tagUrl(tag)}>#{tag}</a>
+          <a href={tagUrl(tag)}>{tag}</a>
         ))}
       </div>
     ) : (
