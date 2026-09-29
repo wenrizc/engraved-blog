@@ -444,17 +444,50 @@
 .plate-image img,
 .plate-frame img {
   width: 100%;
+  /* Fixed frame keeps the plate geometry stable; `contain` shows the whole
+     print so both portrait and landscape impressions stay uncropped. */
   aspect-ratio: 4 / 5;
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--paper);
+}
+
+.has-js .hero-plate[data-plate-pending] .plate-frame__image {
+  visibility: hidden;
+}
+
+.plate-zoom-trigger {
+  line-height: 0;
 }
 
 .hero-plate figcaption {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 3px;
   padding-top: 10px;
+  height: 70px;
+  box-sizing: border-box;
+  overflow: hidden;
   color: var(--muted);
   font: 9px var(--mono);
   letter-spacing: 0.08em;
+}
+
+.hero-plate .plate-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.hero-plate .plate-artist {
+  opacity: 0.82;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .home-content {

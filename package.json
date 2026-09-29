@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "admin": "node local-admin/server.mjs",
     "extract:poetry": "python scripts/extract_poetry_database.py",
+    "fetch:plates": "node scripts/fetch_plates.mjs",
     "check": "astro check",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -30,6 +31,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-astro": "^1.7.0",
     "prettier": "^3.9.9",
-    "prettier-plugin-astro": "^1.1.0"
+    "prettier-plugin-astro": "^1.1.0",
+    "sharp": "^0.34.5"
   }
 }

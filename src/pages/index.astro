@@ -1,12 +1,13 @@
 ---
-import { Image } from 'astro:assets';
-import PlateFrame from '../components/PlateFrame.astro';
+import { getImage, Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PostCard from '../components/PostCard.astro';
 import PhotoCard from '../components/PhotoCard.astro';
+import PhotoLightbox from '../components/PhotoLightbox.astro';
+import PlateFrame from '../components/PlateFrame.astro';
+import PostCard from '../components/PostCard.astro';
+import { plates } from '../data/plates';
 import { poetryQuotes } from '../data/poetryQuotes';
 import { getPhotos, getPublishedArticles } from '../lib/content';
-import durerPrint from '../assets/prints/durer-adam-and-eve.jpg';
 
 const posts = await getPublishedArticles();
 const photos = await getPhotos();
@@ -18,6 +19,38 @@ const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => 
   author,
   work
 }));
+
+// Hero plate follows the poem pattern: the first plate is rendered on the
+// server, then a random one is swapped in on the client. srcset is precomputed
+// for every plate so only the chosen image is fetched and shown in full.
+const HERO_PLATE_WIDTHS = [480, 640, 960, 1280];
+if (plates.length === 0) {
+  throw new Error('No plates found. Run `npm run fetch:plates` to mirror the print collection.');
+}
+const plateOptions = await Promise.all(
+  plates.map(async (plate) => {
+    const optimized = await getImage({
+      src: plate.image,
+      widths: HERO_PLATE_WIDTHS,
+      format: 'webp',
+      quality: 82
+    });
+    // Full-size source for the zoom lightbox, mirroring the photo gallery.
+    const full = await getImage({ src: plate.image, width: plate.image.width, format: 'webp' });
+    return {
+      title: plate.title,
+      artist: plate.artist,
+      alt: plate.alt,
+      orientation: plate.orientation,
+      src: optimized.src,
+      srcset: optimized.srcSet.attribute,
+      width: optimized.attributes.width,
+      height: optimized.attributes.height,
+      full: full.src
+    };
+  })
+);
+const heroPlate = plates[0];
 ---
 
 <BaseLayout title="文日小栈 — 印痕" description="文日小栈：文章、摄影与日常观察。">
@@ -71,16 +104,78 @@ const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => 
           }
         </script>
       </div>
-      <PlateFrame class="hero-plate paper-grain" caption="图版 01" meta="ADAM AND EVE · 1504">
+      <PlateFrame
+        class="hero-plate paper-grain"
+        title={heroPlate.title}
+        artist={heroPlate.artist}
+        full={plateOptions[0].full}
+        data-plates={JSON.stringify(plateOptions)}
+        data-plate-pending="true"
+      >
         <Image
-          src={durerPrint}
-          alt="丢勒 1504 年铜版画《亚当与夏娃》局部"
-          widths={[640, 960, 1280]}
+          src={heroPlate.image}
+          alt={heroPlate.alt}
+          widths={HERO_PLATE_WIDTHS}
           sizes="(max-width: 760px) 90vw, 42vw"
           loading="eager"
           fetchpriority="high"
         />
       </PlateFrame>
+      <script is:inline>
+        (() => {
+          const figure = document.querySelector('.hero-plate[data-plates]');
+          if (!(figure instanceof HTMLElement)) return;
+          const reveal = () => figure.removeAttribute('data-plate-pending');
+
+          let options = [];
+          try {
+            options = JSON.parse(figure.dataset.plates || '[]');
+          } catch {
+            options = [];
+          }
+
+          const image = figure.querySelector('img');
+          if (!options.length || !image) {
+            reveal();
+            return;
+          }
+
+          const plate = options[Math.floor(Math.random() * options.length)];
+          if (plate.srcset) image.setAttribute('srcset', plate.srcset);
+          else image.removeAttribute('srcset');
+          image.setAttribute('src', plate.src);
+          image.alt = plate.alt;
+          if (plate.width) image.width = plate.width;
+          if (plate.height) image.height = plate.height;
+
+          const setText = (selector, value) => {
+            const element = figure.querySelector(selector);
+            if (element && value) element.textContent = value;
+          };
+          setText('[data-plate-title]', plate.title);
+          setText('[data-plate-artist]', plate.artist);
+
+          const trigger = figure.querySelector('[data-photo-lightbox-trigger]');
+          if (trigger instanceof HTMLElement) {
+            if (plate.full) trigger.setAttribute('data-photo-lightbox-src', plate.full);
+            if (plate.title) trigger.setAttribute('aria-label', `放大${plate.title}`);
+          }
+
+          if (image.complete && image.naturalWidth > 0) {
+            reveal();
+            return;
+          }
+          let settled = false;
+          const finish = () => {
+            if (settled) return;
+            settled = true;
+            reveal();
+          };
+          image.addEventListener('load', finish, { once: true });
+          image.addEventListener('error', finish, { once: true });
+          setTimeout(finish, 1500);
+        })();
+      </script>
     </section>
   </div>
 
@@ -125,4 +220,5 @@ const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => 
       </div>
     </div>
   </section>
+  <PhotoLightbox title="放大版画" />
 </BaseLayout>

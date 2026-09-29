@@ -1,20 +1,38 @@
 ---
 interface Props {
-  caption?: string;
-  meta?: string;
+  title?: string;
+  artist?: string;
+  full?: string;
   class?: string;
+  [key: string]: unknown;
 }
-const { caption, meta, class: className } = Astro.props;
+const { title, artist, full, class: className, ...rest } = Astro.props;
 ---
 
-<figure class:list={['plate-frame', className]}>
+<figure class:list={['plate-frame', className]} {...rest}>
   <div class="plate-frame__image">
-    <slot />
+    <button
+      class="photo-zoom-trigger plate-zoom-trigger"
+      type="button"
+      data-photo-lightbox-trigger
+      data-photo-lightbox-src={full}
+      aria-label={title ? `放大${title}` : '放大版画'}
+    >
+      <slot />
+    </button>
   </div>
-  {(caption || meta) && (
+  {(title || artist) && (
     <figcaption class="plate-caption">
-      <span>{caption}</span>
-      <span>{meta}</span>
+      {title && (
+        <span class="plate-title" data-plate-title>
+          {title}
+        </span>
+      )}
+      {artist && (
+        <span class="plate-artist" data-plate-artist>
+          {artist}
+        </span>
+      )}
     </figcaption>
   )}
 </figure>

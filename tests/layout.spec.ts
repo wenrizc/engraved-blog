@@ -113,6 +113,46 @@ test('detail pages use consistent titles and section labels', async ({ page }) =
   expect(kinds.every((kind) => kind === '文章' || kind === '摄影')).toBe(true);
 });
 
+test('home plate is chosen from the mirrored print collection', async ({ page }) => {
+  await page.addInitScript(() => {
+    Math.random = () => 0.999999;
+  });
+  await page.goto('/');
+  const figure = page.locator('.hero-plate[data-plates]');
+  const options = (await figure.evaluate((el) =>
+    JSON.parse((el as HTMLElement).dataset.plates || '[]')
+  )) as Array<{ title: string; artist: string; alt: string; full: string; src: string }>;
+  expect(options.length).toBeGreaterThanOrEqual(50);
+  const selected = options.at(-1)!;
+  await expect(figure).not.toHaveAttribute('data-plate-pending');
+  await expect(figure.locator('[data-plate-title]')).toHaveText(selected.title);
+  await expect(figure.locator('[data-plate-artist]')).toHaveText(selected.artist);
+  await expect(figure.locator('img')).toHaveAttribute('alt', selected.alt);
+  await expect(figure.locator('img')).toHaveAttribute('src', selected.src);
+
+  // The plate opens the shared photo lightbox with its own full-size source.
+  const trigger = figure.locator('.plate-zoom-trigger');
+  await expect(trigger).toHaveAttribute('data-photo-lightbox-src', selected.full);
+  await trigger.click();
+  await expect(page.locator('#photo-lightbox')).toBeVisible();
+  await expect(page.locator('.photo-lightbox img')).toHaveAttribute('src', selected.full);
+  await page.locator('.photo-lightbox-close').click();
+  await expect(page.locator('#photo-lightbox')).toBeHidden();
+});
+
+test('plate captions keep the following content in place', async ({ page }) => {
+  await page.goto('/');
+  const selectors = ['.hero-plate', '.home-content'];
+  const original = await rectangles(page, selectors);
+  for (const title of ['Short title', 'Long title '.repeat(100)]) {
+    await page.locator('[data-plate-title]').evaluate((el, value) => {
+      el.textContent = value;
+    }, title);
+    expect(await rectangles(page, selectors)).toEqual(original);
+    await expectNoOverflow(page);
+  }
+});
+
 test('poem changes do not move the title, plate or following content', async ({ page }) => {
   await page.goto('/');
   await page.waitForFunction(() => document.querySelector('.poem-lines')?.textContent?.trim());
