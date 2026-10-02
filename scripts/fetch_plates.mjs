@@ -21,10 +21,11 @@ const DATA_FILE = path.join(ROOT, 'src/data/generated/plates.json');
 const CREDITS_FILE = path.join(PRINTS_DIR, 'CREDITS.md');
 
 const API = 'https://collectionapi.metmuseum.org/public/collection/v1';
+const SEARCH_API = 'https://collectionapi.metmuseum.org/public/collection/v1.1';
 const USER_AGENT = 'engraved-blog/0.1 (plate mirror; contact: local)';
 
-const MIN_PLATES = 50;
-const TARGET_PLATES = 66;
+const MIN_PLATES = 150;
+const TARGET_PLATES = 165;
 const MAX_EDGE = 1800;
 const JPEG_QUALITY = 82;
 const CONCURRENCY = 4;
@@ -36,26 +37,31 @@ const force = process.argv.includes('--force');
 const DEPARTMENT_DRAWINGS_AND_PRINTS = 9;
 const MAX_SCAN_PER_QUERY = 160;
 const QUERIES = [
-  { q: 'Albrecht Dürer', want: 10 },
-  { q: 'Rembrandt', want: 10 },
-  { q: 'Francisco Goya', want: 8 },
-  { q: 'Giovanni Battista Piranesi', want: 8 },
-  { q: 'Jacques Callot', want: 5 },
-  { q: 'William Hogarth', want: 5 },
-  { q: 'Honoré Daumier', want: 5 },
-  { q: 'William Blake', want: 4 },
-  { q: 'Hendrick Goltzius', want: 4 },
-  { q: 'Gustave Doré', want: 4 },
-  { q: 'Andrea Mantegna', want: 3 },
-  { q: 'Lucas van Leyden', want: 3 },
-  { q: 'Martin Schongauer', want: 3 },
-  { q: 'Adriaen van Ostade', want: 3 },
-  { q: 'Giovanni Domenico Tiepolo', want: 3 },
-  { q: 'Canaletto', want: 3 },
-  { q: 'Stefano della Bella', want: 3 },
-  { q: 'Claude Lorrain', want: 3 },
-  { q: 'Albrecht Altdorfer', want: 2 },
-  { q: 'Israhel van Meckenem', want: 2 }
+  { q: 'Albrecht Dürer', want: 14 },
+  { q: 'Rembrandt', want: 14 },
+  { q: 'Francisco Goya', want: 12 },
+  { q: 'Giovanni Battista Piranesi', want: 12 },
+  { q: 'Jacques Callot', want: 8 },
+  { q: 'William Hogarth', want: 8 },
+  { q: 'Honoré Daumier', want: 8 },
+  { q: 'William Blake', want: 8 },
+  { q: 'Hendrick Goltzius', want: 8 },
+  { q: 'Gustave Doré', want: 8 },
+  { q: 'Andrea Mantegna', want: 6 },
+  { q: 'Lucas van Leyden', want: 6 },
+  { q: 'Martin Schongauer', want: 6 },
+  { q: 'Adriaen van Ostade', want: 6 },
+  { q: 'Giovanni Domenico Tiepolo', want: 6 },
+  { q: 'Canaletto', want: 6 },
+  { q: 'Stefano della Bella', want: 6 },
+  { q: 'Claude Lorrain', want: 6 },
+  { q: 'Albrecht Altdorfer', want: 5 },
+  { q: 'Israhel van Meckenem', want: 5 },
+  { q: 'Katsushika Hokusai', want: 8 },
+  { q: 'Utagawa Hiroshige', want: 8 },
+  { q: 'Utagawa Kuniyoshi', want: 6 },
+  { q: 'Kitagawa Utamaro', want: 6 },
+  { q: 'Toshusai Sharaku', want: 4 }
 ];
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -92,13 +98,17 @@ async function exists(file) {
 }
 
 function isMirrorablePrint(obj) {
+  const medium = String(obj?.medium || '').toLowerCase();
   return Boolean(
     obj &&
     obj.isPublicDomain &&
     typeof obj.primaryImage === 'string' &&
     obj.primaryImage &&
     typeof obj.classification === 'string' &&
-    obj.classification.toLowerCase().startsWith('print')
+    obj.classification.toLowerCase().startsWith('print') &&
+    /(etch|engraving|drypoint|aquatint|mezzotint|burin|woodcut|woodblock|wood engraving|intaglio|stipple|roulette|relief print)/.test(
+      medium
+    )
   );
 }
 
@@ -139,7 +149,7 @@ async function collectPrints() {
   for (const { q, want } of QUERIES) {
     if (objects.length >= TARGET_PLATES) break;
     const searchUrl =
-      `${API}/search?hasImages=true&departmentId=${DEPARTMENT_DRAWINGS_AND_PRINTS}` +
+      `${SEARCH_API}/search?hasImages=true&departmentId=${DEPARTMENT_DRAWINGS_AND_PRINTS}&limit=100` +
       `&q=${encodeURIComponent(q)}`;
     const search = await getJson(searchUrl);
     const ids = search?.objectIDs;
