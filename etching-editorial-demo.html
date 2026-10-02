@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>蚀刻式博客视觉演示</title>
+    <style>
+      :root {
+        --paper: #f2eee4;
+        --paper-deep: #e9e3d7;
+        --ink: #20221f;
+        --ink-soft: #5d5c55;
+        --line: rgba(32, 34, 31, 0.32);
+        --hairline: rgba(32, 34, 31, 0.15);
+        --accent: #8f382d;
+        --max: 1180px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Georgia, 'Times New Roman', 'Noto Serif SC', serif;
+        font-synthesis: none;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--paper);
+        line-height: 1.7;
+      }
+
+      .paper-noise {
+        position: fixed;
+        z-index: 20;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0.13;
+        mix-blend-mode: multiply;
+      }
+
+      .demo-note {
+        position: fixed;
+        z-index: 30;
+        right: 16px;
+        bottom: 14px;
+        padding: 5px 9px;
+        color: var(--paper);
+        background: var(--ink);
+        font:
+          10px/1.2 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .page {
+        width: min(var(--max), calc(100% - 42px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 68px;
+        border-bottom: 1px solid var(--line);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+      }
+
+      .topbar a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .topbar .mark {
+        font-size: 13px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .topbar nav {
+        display: flex;
+        gap: 24px;
+        color: var(--ink-soft);
+      }
+
+      .masthead {
+        padding: clamp(44px, 8vw, 98px) 0 28px;
+      }
+
+      .eyebrow {
+        margin: 0 0 18px;
+        color: var(--accent);
+        font:
+          11px/1.4 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 780px;
+        margin-bottom: 21px;
+        font-size: clamp(38px, 6vw, 76px);
+        font-weight: 400;
+        line-height: 0.98;
+        letter-spacing: -0.055em;
+      }
+
+      .dek {
+        max-width: 660px;
+        margin-bottom: 0;
+        color: var(--ink-soft);
+        font-size: clamp(16px, 2vw, 20px);
+        line-height: 1.65;
+      }
+
+      .scene-wrap {
+        position: relative;
+        overflow: hidden;
+        border-top: 1px solid var(--ink);
+        border-bottom: 1px solid var(--ink);
+        background: var(--paper-deep);
+      }
+
+      .scene-wrap::after {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(32, 34, 31, 0.12);
+        content: '';
+        pointer-events: none;
+      }
+
+      .scene {
+        display: block;
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+      }
+
+      .scene-group {
+        transition: opacity 220ms ease;
+      }
+
+      .scene-group[hidden] {
+        display: none;
+      }
+
+      .scene-ui {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 15px 11px;
+        border-top: 1px solid var(--hairline);
+        color: var(--ink-soft);
+        font:
+          10px/1.3 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .scene-ui button {
+        border: 0;
+        padding: 0;
+        color: var(--ink);
+        background: transparent;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        cursor: pointer;
+      }
+
+      .scene-ui button:hover,
+      .scene-ui button:focus-visible {
+        color: var(--accent);
+      }
+
+      .content {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(230px, 0.72fr);
+        gap: clamp(42px, 8vw, 110px);
+        padding: 68px 0 100px;
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+        color: var(--accent);
+        font:
+          11px/1.3 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .section-label::after {
+        width: 58px;
+        height: 1px;
+        background: var(--accent);
+        content: '';
+      }
+
+      .article-title {
+        max-width: 760px;
+        margin-bottom: 17px;
+        font-size: clamp(29px, 4vw, 52px);
+        font-weight: 400;
+        line-height: 1.08;
+        letter-spacing: -0.045em;
+      }
+
+      .article-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 20px;
+        margin-bottom: 38px;
+        color: var(--ink-soft);
+        font-size: 12px;
+      }
+
+      .article-body {
+        max-width: 690px;
+        font-size: 17px;
+      }
+
+      .article-body p {
+        margin-bottom: 24px;
+      }
+
+      .article-body .lead::first-letter {
+        float: left;
+        margin: 8px 8px 0 0;
+        color: var(--accent);
+        font-size: 4.2em;
+        line-height: 0.75;
+      }
+
+      .pullquote {
+        position: relative;
+        margin: 43px 0;
+        padding: 27px 0 25px 29px;
+        border-top: 1px solid var(--ink);
+        border-bottom: 1px solid var(--ink);
+        font-size: clamp(21px, 3vw, 31px);
+        line-height: 1.28;
+      }
+
+      .pullquote::before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 11px;
+        background: repeating-linear-gradient(
+          115deg,
+          transparent 0 3px,
+          rgba(32, 34, 31, 0.7) 3.5px 4px,
+          transparent 4.5px 7px
+        );
+        content: '';
+        opacity: 0.64;
+      }
+
+      .field-note {
+        margin-top: 55px;
+        padding-top: 19px;
+        border-top: 1px solid var(--hairline);
+        color: var(--ink-soft);
+        font-size: 13px;
+      }
+
+      .field-note strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--ink);
+        font:
+          11px/1.3 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .sidebar {
+        align-self: start;
+      }
+
+      .sidebar-block {
+        padding: 19px 0 24px;
+        border-top: 1px solid var(--ink);
+      }
+
+      .sidebar-block:last-child {
+        border-bottom: 1px solid var(--ink);
+      }
+
+      .sidebar h2 {
+        margin-bottom: 16px;
+        font-size: 21px;
+        font-weight: 400;
+        line-height: 1.2;
+      }
+
+      .sidebar p {
+        margin-bottom: 0;
+        color: var(--ink-soft);
+        font-size: 13px;
+      }
+
+      .index-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .index-list li {
+        display: grid;
+        grid-template-columns: 35px 1fr;
+        gap: 10px;
+        padding: 9px 0;
+        border-top: 1px solid var(--hairline);
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .index-list li:first-child {
+        border-top: 0;
+      }
+
+      .index-list .number {
+        color: var(--accent);
+        font:
+          10px/1.8 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+      }
+
+      .tone-study {
+        padding: 30px 0 0;
+      }
+
+      .tone-study h2 {
+        margin-bottom: 8px;
+        font-size: 25px;
+        font-weight: 400;
+      }
+
+      .tone-study > p {
+        max-width: 560px;
+        margin-bottom: 22px;
+        color: var(--ink-soft);
+        font-size: 13px;
+      }
+
+      .tone-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      .tone-card {
+        min-height: 136px;
+        padding: 12px;
+        border: 1px solid var(--hairline);
+        background: rgba(255, 255, 255, 0.13);
+      }
+
+      .tone-card svg {
+        display: block;
+        width: 100%;
+        height: 72px;
+        margin-bottom: 9px;
+      }
+
+      .tone-card span {
+        color: var(--ink-soft);
+        font:
+          10px/1.2 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 18px 0 25px;
+        border-top: 1px solid var(--ink);
+        color: var(--ink-soft);
+        font-size: 12px;
+      }
+
+      .footer p {
+        margin: 0;
+      }
+
+      @media (max-width: 760px) {
+        .demo-note {
+          display: none;
+        }
+
+        .page {
+          width: min(var(--max), calc(100% - 28px));
+        }
+
+        .topbar nav {
+          gap: 11px;
+          font-size: 10px;
+        }
+
+        .content {
+          grid-template-columns: 1fr;
+          gap: 55px;
+          padding-top: 48px;
+        }
+
+        .scene {
+          min-height: 220px;
+        }
+
+        .tone-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .tone-card {
+          display: grid;
+          grid-template-columns: 110px 1fr;
+          align-items: center;
+          gap: 13px;
+          min-height: 0;
+        }
+
+        .tone-card svg {
+          margin: 0;
+        }
+
+        .footer {
+          display: block;
+        }
+
+        .footer p + p {
+          margin-top: 7px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg class="paper-noise" aria-hidden="true" preserveAspectRatio="none">
+      <filter id="paper-grain">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.78"
+          numOctaves="2"
+          stitchTiles="stitch"
+        />
+        <feColorMatrix values="0 0 0 0 0.18 0 0 0 0 0.16 0 0 0 0 0.12 0 0 0 0.38 0" />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#paper-grain)" />
+    </svg>
+
+    <div class="demo-note">temporary visual study</div>
+
+    <div class="page">
+      <header class="topbar">
+        <a class="mark" href="#top">边缘手稿</a>
+        <nav aria-label="演示导航">
+          <a href="#essay">文章</a>
+          <a href="#photography">摄影</a>
+          <a href="#notes">札记</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="masthead" aria-labelledby="page-title">
+          <p class="eyebrow">A study in line, light and silence / 01</p>
+          <h1 id="page-title">让光线沿着纸面<br />慢慢显影</h1>
+          <p class="dek">
+            一个以蚀刻版画的排线、留白和深色阴影组织阅读节奏的页面演示。这里的纹理只在场景和边缘出现，文字仍保持清晰、安静。
+          </p>
+        </section>
+
+        <section class="scene-wrap" aria-label="随机线稿场景演示">
+          <svg
+            class="scene"
+            viewBox="0 0 1200 440"
+            role="img"
+            aria-labelledby="scene-title scene-desc"
+          >
+            <title id="scene-title">由细密排线构成的远山与暮光</title>
+            <desc id="scene-desc">画面使用不同方向、不同间距的细线构成光影，没有大面积色块。</desc>
+            <defs>
+              <pattern
+                id="hatch-a"
+                width="8"
+                height="8"
+                patternUnits="userSpaceOnUse"
+                patternTransform="rotate(17)"
+              >
+                <path d="M0 0V8" stroke="#252722" stroke-width="0.65" opacity="0.66" />
+              </pattern>
+              <pattern
+                id="hatch-b"
+                width="7"
+                height="7"
+                patternUnits="userSpaceOnUse"
+                patternTransform="rotate(-28)"
+              >
+                <path d="M0 0V7" stroke="#252722" stroke-width="0.55" opacity="0.57" />
+              </pattern>
+              <pattern id="cross-hatch" width="9" height="9" patternUnits="userSpaceOnUse">
+                <path
+                  d="M-2 2L2-2M0 9L9 0M7 11L11 7"
+                  stroke="#20221f"
+                  stroke-width="0.55"
+                  opacity="0.62"
+                />
+                <path
+                  d="M7-2L11 2M0 0L9 9M-2 7L2 11"
+                  stroke="#20221f"
+                  stroke-width="0.46"
+                  opacity="0.42"
+                />
+              </pattern>
+              <clipPath id="ridge-clip">
+                <path
+                  d="M0 298C85 269 132 274 208 237C277 204 322 228 381 198C458 159 500 207 560 183C629 155 680 206 743 190C819 171 843 205 921 178C1010 148 1085 192 1200 143V440H0Z"
+                />
+              </clipPath>
+              <clipPath id="lower-ridge-clip">
+                <path
+                  d="M0 365C92 318 171 332 251 304C351 267 408 328 493 292C586 251 634 307 725 274C818 240 877 297 964 259C1064 215 1110 267 1200 230V440H0Z"
+                />
+              </clipPath>
+            </defs>
+
+            <g data-scene="0" class="scene-group">
+              <rect width="1200" height="440" fill="#eee8dc" />
+              <g fill="none" stroke="#292b27" stroke-linecap="round">
+                <path d="M0 302H1200" stroke-width="1" opacity="0.54" />
+                <path d="M0 309H1200" stroke-width="0.45" opacity="0.3" />
+                <circle cx="848" cy="148" r="66" stroke-width="1.1" opacity="0.74" />
+                <circle cx="848" cy="148" r="78" stroke-width="0.55" opacity="0.38" />
+                <path
+                  d="M793 148c25-19 49-29 73-32M798 164c24-19 53-31 85-34M812 181c22-18 46-26 73-30M875 92c-19 13-34 27-45 43M891 99c-18 15-30 31-38 50M907 110c-13 16-21 31-24 46"
+                  stroke-width="0.7"
+                  opacity="0.5"
+                />
+                <path
+                  d="M0 113C88 92 168 97 240 119S391 142 472 110S630 75 704 111"
+                  stroke-width="0.65"
+                  opacity="0.48"
+                />
+                <path
+                  d="M0 126C90 105 163 111 239 131S388 154 475 122S626 90 711 124"
+                  stroke-width="0.4"
+                  opacity="0.28"
+                />
+                <path
+                  d="M85 256c81-22 143-18 203 8M108 268c77-20 139-17 196 7M154 282c62-13 111-11 158 5M366 250c58-24 113-26 165-5M383 262c52-21 104-23 153-5M438 274c36-11 73-11 107-3"
+                  stroke-width="0.65"
+                  opacity="0.54"
+                />
+              </g>
+              <path
+                d="M0 298C85 269 132 274 208 237C277 204 322 228 381 198C458 159 500 207 560 183C629 155 680 206 743 190C819 171 843 205 921 178C1010 148 1085 192 1200 143V440H0Z"
+                fill="url(#hatch-a)"
+                clip-path="url(#ridge-clip)"
+                opacity="0.89"
+              />
+              <path
+                d="M0 298C85 269 132 274 208 237C277 204 322 228 381 198C458 159 500 207 560 183C629 155 680 206 743 190C819 171 843 205 921 178C1010 148 1085 192 1200 143"
+                fill="none"
+                stroke="#242621"
+                stroke-width="1.1"
+              />
+              <path
+                d="M0 365C92 318 171 332 251 304C351 267 408 328 493 292C586 251 634 307 725 274C818 240 877 297 964 259C1064 215 1110 267 1200 230V440H0Z"
+                fill="url(#cross-hatch)"
+                clip-path="url(#lower-ridge-clip)"
+                opacity="0.94"
+              />
+              <path
+                d="M0 365C92 318 171 332 251 304C351 267 408 328 493 292C586 251 634 307 725 274C818 240 877 297 964 259C1064 215 1110 267 1200 230"
+                fill="none"
+                stroke="#20221f"
+                stroke-width="1.25"
+              />
+              <g fill="none" stroke="#20221f" stroke-width="0.55" opacity="0.52">
+                <path
+                  d="M65 345c34-18 71-27 110-27M77 357c31-16 64-23 99-24M149 329c33-19 64-25 94-23M196 352c31-18 63-24 97-23M292 302c38-20 77-26 113-20M325 318c34-18 67-23 100-20M548 285c34-18 68-20 102-11M570 299c34-16 67-18 98-10M801 274c28-14 58-14 89-4M829 289c26-12 51-13 79-5M1045 260c34-15 69-13 101-1M1063 275c32-13 61-12 91-3"
+                />
+              </g>
+            </g>
+
+            <g data-scene="1" class="scene-group" hidden>
+              <rect width="1200" height="440" fill="#e8e4da" />
+              <g fill="none" stroke="#272925" stroke-linecap="round">
+                <path d="M0 333H1200" stroke-width="1" opacity="0.48" />
+                <path d="M0 340H1200" stroke-width="0.45" opacity="0.28" />
+                <path
+                  d="M0 97C144 111 191 65 315 86S525 111 649 81S868 60 1009 93S1125 103 1200 82"
+                  stroke-width="0.75"
+                  opacity="0.4"
+                />
+                <path
+                  d="M0 110C142 125 202 79 315 99S525 124 649 94S867 73 1013 106S1126 116 1200 95"
+                  stroke-width="0.43"
+                  opacity="0.25"
+                />
+                <path
+                  d="M208 130c23-15 48-22 75-22M234 140c24-14 49-21 73-20M806 105c21-13 44-18 68-17M826 116c21-12 43-17 66-16"
+                  stroke-width="0.7"
+                  opacity="0.44"
+                />
+                <path
+                  d="M95 243c38-33 75-43 110-30c24-34 59-38 91-17c24-28 58-27 79 4c40-22 79-11 91 28"
+                  stroke-width="1.15"
+                  opacity="0.62"
+                />
+              </g>
+              <path
+                d="M0 303C112 272 161 249 252 275C346 301 417 212 509 244C584 270 648 195 733 231C800 258 840 210 929 232C1012 252 1106 218 1200 247V440H0Z"
+                fill="url(#hatch-b)"
+                clip-path="url(#ridge-clip)"
+                opacity="0.84"
+              />
+              <path
+                d="M0 303C112 272 161 249 252 275C346 301 417 212 509 244C584 270 648 195 733 231C800 258 840 210 929 232C1012 252 1106 218 1200 247"
+                fill="none"
+                stroke="#242621"
+                stroke-width="1.1"
+              />
+              <path
+                d="M0 381C130 353 183 330 281 355C389 383 425 296 535 324C642 350 677 276 778 306C874 333 950 285 1031 310C1091 330 1151 308 1200 314V440H0Z"
+                fill="url(#cross-hatch)"
+                clip-path="url(#lower-ridge-clip)"
+                opacity="0.94"
+              />
+              <path
+                d="M0 381C130 353 183 330 281 355C389 383 425 296 535 324C642 350 677 276 778 306C874 333 950 285 1031 310C1091 330 1151 308 1200 314"
+                fill="none"
+                stroke="#20221f"
+                stroke-width="1.22"
+              />
+              <g fill="none" stroke="#20221f" stroke-width="0.55" opacity="0.49">
+                <path
+                  d="M126 344c40-15 77-18 109-7M142 357c37-13 71-17 102-8M389 302c42-16 79-17 110-7M417 316c38-13 72-16 103-8M695 300c38-15 75-15 108-4M728 314c36-13 69-14 100-5M967 302c43-14 81-12 116 1M994 316c38-12 72-12 106-2"
+                />
+              </g>
+            </g>
+
+            <g data-scene="2" class="scene-group" hidden>
+              <rect width="1200" height="440" fill="#deddd5" />
+              <g fill="none" stroke="#292b27" stroke-linecap="round">
+                <path d="M0 332H1200" stroke-width="1" opacity="0.54" />
+                <path d="M0 339H1200" stroke-width="0.45" opacity="0.28" />
+                <path
+                  d="M90 299V164h112v135M78 164h137M104 143h84M124 122h44M136 101h21"
+                  stroke-width="1"
+                  opacity="0.72"
+                />
+                <path
+                  d="M103 181h87M103 201h87M103 221h87M103 241h87M103 261h87M128 164v135M157 164v135M184 164v135"
+                  stroke-width="0.52"
+                  opacity="0.52"
+                />
+                <path
+                  d="M0 87C117 66 199 80 278 110S444 142 560 103S759 55 858 94S1051 136 1200 91"
+                  stroke-width="0.7"
+                  opacity="0.38"
+                />
+                <path
+                  d="M0 101C117 80 196 95 276 124S444 156 559 117S759 69 861 108S1052 150 1200 105"
+                  stroke-width="0.42"
+                  opacity="0.25"
+                />
+                <path
+                  d="M315 258c48-33 94-34 135-5c44-51 107-45 139 4c49-31 107-21 129 22"
+                  stroke-width="1.05"
+                  opacity="0.56"
+                />
+              </g>
+              <path
+                d="M0 308C108 268 179 284 265 253C342 225 405 259 477 234C563 204 634 240 706 214C790 185 861 236 932 207C1040 164 1103 203 1200 171V440H0Z"
+                fill="url(#hatch-a)"
+                clip-path="url(#ridge-clip)"
+                opacity="0.8"
+              />
+              <path
+                d="M0 308C108 268 179 284 265 253C342 225 405 259 477 234C563 204 634 240 706 214C790 185 861 236 932 207C1040 164 1103 203 1200 171"
+                fill="none"
+                stroke="#252722"
+                stroke-width="1.12"
+              />
+              <path
+                d="M0 390C97 351 163 367 239 334C332 293 412 350 500 316C597 279 661 333 750 299C838 265 907 330 993 288C1078 247 1137 278 1200 267V440H0Z"
+                fill="url(#cross-hatch)"
+                clip-path="url(#lower-ridge-clip)"
+                opacity="0.95"
+              />
+              <path
+                d="M0 390C97 351 163 367 239 334C332 293 412 350 500 316C597 279 661 333 750 299C838 265 907 330 993 288C1078 247 1137 278 1200 267"
+                fill="none"
+                stroke="#20221f"
+                stroke-width="1.25"
+              />
+              <g fill="none" stroke="#20221f" stroke-width="0.52" opacity="0.5">
+                <path
+                  d="M40 363c39-16 73-18 103-9M54 377c36-14 68-17 97-9M262 322c39-16 77-19 112-9M283 337c37-14 72-17 107-9M555 305c42-17 78-18 111-8M584 320c38-14 71-17 105-8M839 287c37-16 72-15 103-5M866 301c34-13 66-14 95-6M1048 278c40-16 79-13 111 0M1072 291c38-13 72-12 103-2"
+                />
+              </g>
+            </g>
+          </svg>
+          <div class="scene-ui">
+            <span id="scene-count">场景 01 / 03 · 线条密度随阴影变化</span>
+            <button id="scene-next" type="button">换一幕 ↗</button>
+          </div>
+        </section>
+
+        <div class="content">
+          <article id="essay">
+            <div class="section-label">文章 / Essay</div>
+            <h2 class="article-title">在暗处，线条开始拥有方向</h2>
+            <div class="article-meta">
+              <span>林中札记</span>
+              <span>2026.09.30</span>
+              <span>阅读 06 分钟</span>
+            </div>
+            <div class="article-body">
+              <p class="lead">
+                版画里的光并不从纸上照来。它由一组组克制的空隙组成：远处的山脊留下一道亮口，树影在更深处改变方向，密集的排线把空气压低，直到白色重新变得可见。
+              </p>
+              <p>
+                如果把这种方法带入网页，纹理不应该成为一层均匀的滤镜。真正有用的线条需要服从场景：沿着山势转弯，顺着建筑的高度收紧，在阴影最深的地方交叉，在光线经过的地方停下。
+              </p>
+              <blockquote class="pullquote">
+                “阴影不是一块颜色，而是许多条线彼此靠近时产生的重量。”
+              </blockquote>
+              <p>
+                因此页面保留了原有的阅读宽度和文字秩序，只把线条放到边缘、页首和段落之间。它们像印版留下的痕迹，能被察觉，却不会抢走文字的声音。
+              </p>
+              <div class="field-note">
+                <strong>工作注记 / Field note</strong>
+                这组演示只研究全局气质：纸张、方向性排线、明暗层次和文章阅读节奏。作品展示区域保持现有实现，不在此页重做。
+              </div>
+            </div>
+          </article>
+
+          <aside class="sidebar" id="notes">
+            <section class="sidebar-block">
+              <div class="section-label">札记 / Notes</div>
+              <h2>一页的三个深度</h2>
+              <p>
+                背景只提供气息，标题负责进入，正文负责停留。每个层级都用线条密度而不是装饰图案来区分。
+              </p>
+            </section>
+
+            <section class="sidebar-block" id="photography">
+              <div class="section-label">摄影 / Photography</div>
+              <ol class="index-list">
+                <li><span class="number">01</span><span>雾在山谷里改变了边界</span></li>
+                <li><span class="number">02</span><span>一座桥的阴面</span></li>
+                <li><span class="number">03</span><span>下午四点的旧墙</span></li>
+              </ol>
+            </section>
+
+            <section class="sidebar-block">
+              <div class="section-label">诗歌 / Poetry</div>
+              <p>“当最后一条线<br />从暗处退回纸面<br />光才有了形状。”</p>
+            </section>
+          </aside>
+
+          <section class="tone-study" aria-labelledby="tone-title">
+            <h2 id="tone-title">线条如何制造阴影</h2>
+            <p>
+              这里把可复用的视觉原则单独放出来：留白、平行排线、交叉排线。它们只负责建立明暗，不承担图案标志的作用。
+            </p>
+            <div class="tone-grid">
+              <div class="tone-card">
+                <svg viewBox="0 0 180 72" aria-hidden="true">
+                  <rect width="180" height="72" fill="#eee8dc" />
+                  <path
+                    d="M8 52c24-21 48-25 72-10c23 14 43 14 61-3c10-10 20-14 31-13"
+                    fill="none"
+                    stroke="#252722"
+                    stroke-width="1"
+                  />
+                  <path
+                    d="M15 58c25-18 47-21 67-8c20 12 42 13 59-1c12-9 21-13 31-12"
+                    fill="none"
+                    stroke="#252722"
+                    stroke-width="0.55"
+                    opacity="0.6"
+                  />
+                </svg>
+                <span>留白 / light</span>
+              </div>
+              <div class="tone-card">
+                <svg viewBox="0 0 180 72" aria-hidden="true">
+                  <rect width="180" height="72" fill="#eee8dc" />
+                  <g stroke="#252722" stroke-width="0.72" opacity="0.74">
+                    <path
+                      d="M8 12L62 66M20 7L75 62M34 7L89 62M48 7L103 62M62 7L117 62M76 7L131 62M90 7L145 62M104 7L159 62M118 7L173 62"
+                    />
+                  </g>
+                </svg>
+                <span>排线 / half-tone</span>
+              </div>
+              <div class="tone-card">
+                <svg viewBox="0 0 180 72" aria-hidden="true">
+                  <rect width="180" height="72" fill="#eee8dc" />
+                  <g stroke="#252722" stroke-width="0.58" opacity="0.7">
+                    <path
+                      d="M8 11L68 71M20 5L80 65M35 5L95 65M50 5L110 65M65 5L125 65M80 5L140 65M95 5L155 65M110 5L170 65"
+                    />
+                    <path
+                      d="M8 61L68 1M20 67L80 7M35 67L95 7M50 67L110 7M65 67L125 7M80 67L140 7M95 67L155 7M110 67L170 7"
+                    />
+                  </g>
+                </svg>
+                <span>交叉排线 / shadow</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <p>一份临时的蚀刻式视觉研究</p>
+        <p>线条构成光影 · 2026</p>
+      </footer>
+    </div>
+
+    <script>
+      (() => {
+        const scenes = [...document.querySelectorAll('.scene-group')];
+        const counter = document.querySelector('#scene-count');
+        const next = document.querySelector('#scene-next');
+        let current = Math.floor(Math.random() * scenes.length);
+
+        const showScene = (index) => {
+          current = (index + scenes.length) % scenes.length;
+          scenes.forEach((scene, sceneIndex) => {
+            scene.hidden = sceneIndex !== current;
+          });
+          counter.textContent = `场景 ${String(current + 1).padStart(2, '0')} / ${String(scenes.length).padStart(2, '0')} · 线条密度随阴影变化`;
+        };
+
+        next.addEventListener('click', () => showScene(current + 1));
+        showScene(current);
+      })();
+    </script>
+  </body>
+</html>

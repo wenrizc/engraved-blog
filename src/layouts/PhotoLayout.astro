@@ -31,7 +31,7 @@ const hasBody = typeof entry.body === 'string' && entry.body.trim().length > 0;
 
 <BaseLayout title={`${title} | 文日小栈`} description={description || title} type="article">
   <article class="article-shell">
-    <SectionHeader title={title} backHref="/photography/" backLabel="返回摄影" />
+    <SectionHeader title={title} />
     <div class="article-header-meta">
       <span>发布于 {formatDate(date)}</span>
       {tags.length > 0 && (

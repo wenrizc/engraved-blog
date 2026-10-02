@@ -12,7 +12,7 @@ const { title, description, date, tags } = entry.data;
 
 <BaseLayout title={`${title} | 文日小栈`} description={description || title} type="article">
   <article class="article-shell">
-    <SectionHeader title={title} backHref="/article/" backLabel="返回文章" />
+    <SectionHeader title={title} />
     <div class="article-header-meta">
       <span>发布于 {formatDate(date)}</span>
       {tags.length > 0 && (

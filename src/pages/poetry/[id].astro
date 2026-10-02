@@ -20,24 +20,14 @@ interface Poem {
 
 const { poem } = Astro.props as { poem: Poem };
 const sectionMarker = /^[一二三四五六七八九十百〇○零]{1,6}[、.]?$/;
-const stanzas = poem.stanzas.map((stanza, index) => {
-  let marker = '';
-  let inlineMarker = '';
-  const zh = [] as Array<{ text: string; marker: string }>;
-  stanza.zh.forEach((line, lineIndex) => {
+const stanzas = poem.stanzas.map((stanza) => {
+  const zh = stanza.zh.filter((line) => {
     const value = line.trim();
-    if (lineIndex < stanza.zh.length - 1 && sectionMarker.test(value)) {
-      if (lineIndex === 0) marker = value;
-      else inlineMarker = value;
-      return;
-    }
-    zh.push({ text: line, marker: inlineMarker });
-    inlineMarker = '';
+    return !sectionMarker.test(value);
   });
   return {
     ...stanza,
-    zh,
-    marker: index === 0 && poem.title.startsWith(`${marker}、`) ? '' : marker
+    zh
   };
 });
 ---
@@ -48,9 +38,6 @@ const stanzas = poem.stanzas.map((stanza, index) => {
   type="article"
 >
   <article class="poetry-page page-shell">
-    <a class="section-header__back" href="/">
-      ← 返回首页
-    </a>
     <header class="poetry-header">
       <h1>{poem.title}</h1>
       <p class="poetry-title-en">{poem.titleEn}</p>
@@ -64,13 +51,9 @@ const stanzas = poem.stanzas.map((stanza, index) => {
     <div class="poetry-columns">
       {stanzas.map((stanza) => (
         <div class="poetry-stanza-pair">
-          {stanza.marker && <div class="poetry-section-label">{stanza.marker}</div>}
           <section class="poetry-language" aria-label="中文">
             {stanza.zh.map((line) => (
-              <div class="poetry-line">
-                {line.marker && <span class="poetry-inline-marker">{line.marker}</span>}
-                {line.text}
-              </div>
+              <div class="poetry-line">{line}</div>
             ))}
           </section>
           <section class="poetry-language" aria-label="English">

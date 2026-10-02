@@ -264,13 +264,9 @@
 .site-footer:before {
   content: '';
   height: var(--engraved-height);
-  background: linear-gradient(
-    to bottom,
-    transparent 0 6px,
-    var(--engraved-line) 6px 7px,
-    transparent 7px
-  );
+  background: url('/textures/etched-rule.svg') center / 240px 3px repeat-x;
   opacity: 0.8;
+  pointer-events: none;
 }
 
 .engraved-rule {
