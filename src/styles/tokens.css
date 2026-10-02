@@ -14,6 +14,8 @@
   --space-4: 1.5rem;
   --space-5: 2.5rem;
   --space-6: 4rem;
+  --nav-item-width: 80px;
+  --nav-gap: 32px;
   --content: 1180px;
   --page-gutter: 28px;
   --page-top: 65px;
@@ -28,5 +30,19 @@
     --page-gutter: 18px;
     --page-top: 44px;
     --page-bottom: 70px;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --nav-item-width: 64px;
+    --nav-gap: 16px;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --nav-item-width: 36px;
+    --nav-gap: 8px;
   }
 }

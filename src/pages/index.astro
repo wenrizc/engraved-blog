@@ -150,7 +150,7 @@ const heroPlate = plates[0];
 
           const setText = (selector, value) => {
             const element = figure.querySelector(selector);
-            if (element && value) element.textContent = value;
+            if (element) element.textContent = value || '';
           };
           setText('[data-plate-title]', plate.title);
           setText('[data-plate-artist]', plate.artist);

@@ -3,13 +3,6 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 export type ArticleEntry = CollectionEntry<'articles'>;
 export type PhotoEntry = CollectionEntry<'photos'>;
 
-export type ArchiveItem = {
-  kind: 'article' | 'photo';
-  title: string;
-  date: Date;
-  href: string;
-};
-
 export async function getPublishedArticles(): Promise<ArticleEntry[]> {
   const posts = await getCollection('articles', ({ data }) => !data.draft);
   return posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -18,25 +11,6 @@ export async function getPublishedArticles(): Promise<ArticleEntry[]> {
 export async function getPhotos(): Promise<PhotoEntry[]> {
   const photos = await getCollection('photos', ({ data }) => !data.draft);
   return photos.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-}
-
-export async function getArchiveItems(): Promise<ArchiveItem[]> {
-  const articles = await getPublishedArticles();
-  const photos = await getPhotos();
-  return [
-    ...articles.map((entry) => ({
-      kind: 'article' as const,
-      title: entry.data.title,
-      date: entry.data.date,
-      href: articleUrl(entry.slug)
-    })),
-    ...photos.map((entry) => ({
-      kind: 'photo' as const,
-      title: entry.data.title,
-      date: entry.data.date,
-      href: photoUrl(entry.slug)
-    }))
-  ].sort((a, b) => b.date.valueOf() - a.date.valueOf());
 }
 
 export async function getAllTags(): Promise<string[]> {

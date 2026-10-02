@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import InterviewTree from '../../../components/InterviewTree.astro';
+import { getInterviews, interviewTree } from '../../../lib/interviews';
+import { uniqueSorted } from '../../../lib/content';
+export async function getStaticPaths() {
+  const entries = await getInterviews();
+  return uniqueSorted(entries.flatMap((entry) => entry.data.tags)).map((tag) => ({
+    params: { tag },
+    props: { tag, entries: entries.filter((entry) => entry.data.tags.includes(tag)) }
+  }));
+}
+const { tag, entries } = Astro.props;
+---
+
+<BaseLayout title={`${tag} | 面试八股`}>
+  <section class="page-shell">
+    <a href="/interview/topics/">← 返回主题</a>
+    <SectionHeader title={tag} />
+    <InterviewTree directory={interviewTree(entries)} />
+  </section>
+</BaseLayout>

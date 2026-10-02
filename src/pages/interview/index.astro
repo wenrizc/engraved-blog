@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import InterviewTree from '../../components/InterviewTree.astro';
+import { getInterviews, interviewTree } from '../../lib/interviews';
+const entries = await getInterviews();
+---
+
+<BaseLayout title="面试八股 | 文日小栈" description="面试知识与问答整理。">
+  <section class="page-shell">
+    <SectionHeader title="面试八股" />
+    {entries.length > 0 ? (
+      <InterviewTree directory={interviewTree(entries)} />
+    ) : (
+      <EmptyState children="面试知识与问答正在整理中。" />
+    )}
+  </section>
+</BaseLayout>

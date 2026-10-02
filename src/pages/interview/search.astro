@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+---
+
+<BaseLayout title="搜索 | 面试八股" description="搜索面试文章、主题与正文。">
+  <section class="page-shell">
+    <SectionHeader title="搜索" />
+    <form class="interview-search" role="search">
+      <div>
+        <input
+          id="interview-query"
+          aria-label="搜索面试文章"
+          name="q"
+          type="search"
+          placeholder="标题、主题、正文关键词"
+          autocomplete="off"
+        />
+        <button type="submit">搜索</button>
+      </div>
+    </form>
+    <p data-search-status role="status"></p>
+    <div data-search-results class="post-list"></div>
+    <noscript>请启用 JavaScript 使用搜索，或通过文章、主题浏览内容。</noscript>
+  </section>
+</BaseLayout>
+
+<script>
+  interface SearchEntry {
+    title: string;
+    description: string;
+    href: string;
+    text: string;
+  }
+  const form = document.querySelector<HTMLFormElement>('.interview-search')!;
+  const input = document.querySelector<HTMLInputElement>('#interview-query')!;
+  const status = document.querySelector<HTMLElement>('[data-search-status]')!;
+  const results = document.querySelector<HTMLElement>('[data-search-results]')!;
+  let index: Promise<SearchEntry[]> | undefined;
+  let revision = 0;
+  async function search() {
+    const current = ++revision;
+    const query = input.value.trim();
+    results.replaceChildren();
+    const url = new URL(location.href);
+    if (query) url.searchParams.set('q', query);
+    else url.searchParams.delete('q');
+    history.replaceState(null, '', url);
+    if (!query) {
+      status.textContent = '';
+      return;
+    }
+    status.textContent = '正在搜索…';
+    try {
+      index ??= fetch('/interview/search-index.json').then((response) => {
+        if (!response.ok) throw new Error('搜索加载失败');
+        return response.json();
+      });
+      const entries = await index;
+      if (current !== revision) return;
+      const words = query.toLocaleLowerCase().split(/\s+/);
+      const matches = entries.filter((entry) => words.every((word) => entry.text.includes(word)));
+      status.textContent = matches.length
+        ? `找到 ${matches.length} 篇文章`
+        : '没有找到匹配的文章。';
+      for (const entry of matches) {
+        const article = document.createElement('article');
+        article.className = 'post-card';
+        const body = document.createElement('div');
+        body.className = 'post-card-body';
+        const heading = document.createElement('h3');
+        const link = document.createElement('a');
+        link.href = entry.href;
+        link.textContent = entry.title;
+        heading.append(link);
+        body.append(heading);
+        if (entry.description) {
+          const p = document.createElement('p');
+          p.textContent = entry.description;
+          body.append(p);
+        }
+        article.append(body);
+        results.append(article);
+      }
+    } catch {
+      index = undefined;
+      if (current === revision) status.textContent = '搜索加载失败，请重试。';
+    }
+  }
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    void search();
+  });
+  let timer: ReturnType<typeof setTimeout>;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    ++revision;
+    timer = setTimeout(() => void search(), 200);
+  });
+  input.value = new URLSearchParams(location.search).get('q') || '';
+  if (input.value) void search();
+</script>
+<style>
+  [data-search-status]:empty {
+    display: none;
+  }
+  .interview-search {
+    margin-block: 24px;
+  }
+  .interview-search > div {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  input,
+  button {
+    font: inherit;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 10px 14px;
+  }
+  input {
+    flex: 1;
+    min-width: 0;
+  }
+  button {
+    cursor: pointer;
+    color: var(--accent);
+  }
+</style>

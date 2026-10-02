@@ -1,15 +1,20 @@
 ---
 import SiteNav from './SiteNav.astro';
+const interview = Astro.url.pathname.startsWith('/interview/');
 ---
 
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="/" aria-label="文日小栈首页">
+    <a
+      class="brand"
+      href={interview ? '/interview/' : '/'}
+      aria-label={interview ? '面试八股文章' : '文日小栈首页'}
+    >
       <img class="brand-mark" src="/favicon.svg?v=sunrise-1" alt="" width="39" height="39" />
       <span>
         <b>文日小栈</b>
       </span>
     </a>
-    <SiteNav />
+    <SiteNav interview={interview} />
   </div>
 </header>

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import EmptyState from '../../../components/EmptyState.astro';
+import { getInterviews, interviewTopicUrl } from '../../../lib/interviews';
+import { uniqueSorted } from '../../../lib/content';
+const tags = uniqueSorted((await getInterviews()).flatMap((entry) => entry.data.tags));
+---
+
+<BaseLayout title="主题 | 面试八股" description="面试八股主题。">
+  <section class="page-shell">
+    <SectionHeader title="主题" />
+    {tags.length ? (
+      <div class="tag-cloud">
+        {tags.map((tag) => (
+          <a href={interviewTopicUrl(tag)}>{tag}</a>
+        ))}
+      </div>
+    ) : (
+      <EmptyState children="还没有面试主题。" />
+    )}
+  </section>
+</BaseLayout>

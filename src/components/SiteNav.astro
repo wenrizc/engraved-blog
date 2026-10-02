@@ -1,25 +1,46 @@
 ---
-const nav = [
-  { href: '/', label: '首页', en: 'HOME' },
-  { href: '/article/', label: '文章', en: 'ARTICLE' },
-  { href: '/photography/', label: '摄影', en: 'PHOTOGRAPHY' },
-  { href: '/archive/', label: '档案', en: 'ARCHIVE' },
-  { href: '/tags/', label: '主题', en: 'TAGS' },
-  { href: '/about/', label: '关于', en: 'ABOUT' }
-];
+interface Props {
+  interview?: boolean;
+}
+const { interview = false } = Astro.props;
+const nav = interview
+  ? [
+      { href: '/interview/', label: '文章', en: 'ARTICLE' },
+      { href: '/interview/topics/', label: '主题', en: 'TAGS' },
+      { href: '/interview/search/', label: '搜索', en: 'SEARCH' }
+    ]
+  : [
+      { href: '/', label: '首页', en: 'HOME' },
+      { href: '/article/', label: '文章', en: 'ARTICLE' },
+      { href: '/photography/', label: '摄影', en: 'PHOTOGRAPHY' },
+      { href: '/tags/', label: '主题', en: 'TAGS' },
+      { href: '/about/', label: '关于', en: 'ABOUT' }
+    ];
 
-const externalLinks = [
+const links = [
   {
     href: 'https://wenrizc.github.io/technical-article-site/',
-    label: '技术文章收集站'
-  }
+    label: '技术文章收集站',
+    external: true
+  },
+  { href: '/interview/', label: '面试八股', external: false }
 ];
 ---
 
-<nav class="site-nav" aria-label="主导航">
+<nav
+  class:list={['site-nav', { 'interview-nav': interview }]}
+  aria-label={interview ? '面试八股导航' : '主导航'}
+>
   {nav.map((item) => {
     const current =
-      item.href === '/' ? Astro.url.pathname === '/' : Astro.url.pathname.startsWith(item.href);
+      item.href === '/'
+        ? Astro.url.pathname === '/'
+        : item.href === '/interview/'
+          ? Astro.url.pathname.startsWith('/interview/') &&
+            !['topics', 'search'].some((section) =>
+              Astro.url.pathname.startsWith(`/interview/${section}/`)
+            )
+          : Astro.url.pathname.startsWith(item.href);
     return (
       <a
         href={item.href}
@@ -31,33 +52,38 @@ const externalLinks = [
       </a>
     );
   })}
-  <div class="nav-links" data-nav-links>
-    <button
-      type="button"
-      class="nav-links__trigger"
-      aria-haspopup="true"
-      aria-expanded="false"
-      aria-controls="nav-links-menu"
-    >
-      <span>链接</span>
-      <small>LINKS</small>
-    </button>
-    <div class="nav-links__menu" id="nav-links-menu">
-      {externalLinks.map((link) => (
-        <a
-          href={link.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${link.label}（新窗口打开）`}
-        >
-          <span>{link.label}</span>
-          <span class="nav-links__arrow" aria-hidden="true">
-            ↗
-          </span>
-        </a>
-      ))}
+  {!interview && (
+    <div class="nav-links" data-nav-links>
+      <button
+        type="button"
+        class="nav-links__trigger"
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-controls="nav-links-menu"
+      >
+        <span>链接</span>
+        <small>LINKS</small>
+      </button>
+      <div class="nav-links__menu" id="nav-links-menu">
+        {links.map((link) => (
+          <a
+            href={link.href}
+            target={link.external ? '_blank' : undefined}
+            rel={link.external ? 'noopener noreferrer' : undefined}
+            aria-label={link.external ? `${link.label}（新窗口打开）` : undefined}
+            aria-current={
+              !link.external && Astro.url.pathname.startsWith(link.href) ? 'page' : undefined
+            }
+          >
+            <span>{link.label}</span>
+            <span class="nav-links__arrow" aria-hidden="true">
+              ↗
+            </span>
+          </a>
+        ))}
+      </div>
     </div>
-  </div>
+  )}
 </nav>
 
 <script>

@@ -9,9 +9,9 @@ const beachPoem = poetryData.poems.find(
 const hawkPoem = poetryData.poems.find((poem: { title: string }) => poem.title === '受伤的鹰');
 const beautyPoem = poetryData.poems.find((poem: { title: string }) => poem.title === '赞智力美');
 
-const tabs = ['/article/', '/photography/', '/archive/', '/tags/', '/about/'];
-const tabTitles = ['文章', '摄影', '档案', '主题', '关于'];
-const navEnglish = ['HOME', 'ARTICLE', 'PHOTOGRAPHY', 'ARCHIVE', 'TAGS', 'ABOUT', 'LINKS'];
+const tabs = ['/article/', '/photography/', '/tags/', '/about/'];
+const tabTitles = ['文章', '摄影', '主题', '关于'];
+const navEnglish = ['HOME', 'ARTICLE', 'PHOTOGRAPHY', 'TAGS', 'ABOUT', 'LINKS'];
 const details = [
   '/article/design-notes/',
   '/photography/2026-07-11-stone-garden/',
@@ -67,14 +67,14 @@ test('tabs share header, navigation, page title and content boundaries', async (
     await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(1);
     const nav = await rectangles(page, [
       'nav',
-      ...Array.from({ length: 6 }, (_, i) => `nav a:nth-child(${i + 1}) span`)
+      ...Array.from({ length: 5 }, (_, i) => `nav a:nth-child(${i + 1}) span`)
     ]);
     expect(new Set(nav.slice(1).map((r) => r.y)).size).toBe(1);
     expect(nav.slice(1).every((r) => r.height < 24)).toBe(true);
   }
 });
 
-test('nav links dropdown reveals an external link without navigating', async ({ page }) => {
+test('nav links dropdown opens external and internal destinations', async ({ page }) => {
   await page.goto('/');
   const trigger = page.locator('.nav-links__trigger');
   const menu = page.locator('.nav-links__menu');
@@ -86,15 +86,27 @@ test('nav links dropdown reveals an external link without navigating', async ({ 
   expect(page.url()).toBe(before);
   await expect(trigger).toHaveAttribute('aria-expanded', 'true');
   await expect(menu).toBeVisible();
-  await expect(menu.locator('a')).toHaveAttribute(
+  const externalLink = menu.getByRole('link', { name: '技术文章收集站（新窗口打开）' });
+  await expect(externalLink).toHaveAttribute(
     'href',
     'https://wenrizc.github.io/technical-article-site/'
   );
+  await expect(externalLink).toHaveAttribute('target', '_blank');
+  const interviewLink = menu.getByRole('link', { name: '面试八股' });
+  await expect(interviewLink).toHaveAttribute('href', '/interview/');
+  await expect(interviewLink).not.toHaveAttribute('target');
 
   await page.keyboard.press('Escape');
   await page.mouse.move(0, 0);
   await expect(menu).toBeHidden();
   await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+  await trigger.click();
+  await interviewLink.click();
+  await expect(page).toHaveURL(/\/interview\/$/);
+  await expect(page.locator('.section-header h1')).toHaveText('面试八股');
+  await expect(page.locator('.site-nav small')).toHaveText(['ARTICLE', 'TAGS', 'SEARCH']);
+  await expectNoOverflow(page);
 });
 
 test('detail pages use consistent titles and section labels', async ({ page }) => {
@@ -108,9 +120,6 @@ test('detail pages use consistent titles and section labels', async ({ page }) =
     await expect(page).toHaveTitle('文日小栈');
     await expect(page.locator('.article-header-meta')).toContainText('发布于');
   }
-  await page.goto('/archive/');
-  const kinds = await page.locator('.archive-list li > span').allTextContents();
-  expect(kinds.every((kind) => kind === '文章' || kind === '摄影')).toBe(true);
 });
 
 test('home plate is chosen from the mirrored print collection', async ({ page }) => {
@@ -306,9 +315,31 @@ test('responsive breakpoints do not overflow', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'Sweep viewport boundaries once.');
   for (const width of [390, 480, 640, 641, 760, 761, 1024, 1920]) {
     await page.setViewportSize({ width, height: 900 });
-    for (const route of ['/', '/photography/', '/archive/']) {
+    for (const route of ['/', '/photography/', '/tags/']) {
       await page.goto(route);
       await expectNoOverflow(page);
     }
   }
+});
+
+test('main and interview navigation share fixed spacing and right alignment', async ({ page }) => {
+  const readNav = () =>
+    page.locator('nav').evaluate((nav) => ({
+      right: nav.getBoundingClientRect().right,
+      gap: getComputedStyle(nav).columnGap,
+      items: Array.from(nav.children).map((item) => {
+        const box = item.getBoundingClientRect();
+        return { center: box.x + box.width / 2, width: box.width };
+      })
+    }));
+  await page.goto('/');
+  await expect(page.locator('.brand b')).toHaveText('文日小栈');
+  const main = await readNav();
+  await page.goto('/interview/');
+  await expect(page.locator('.brand b')).toHaveText('文日小栈');
+  const interview = await readNav();
+  expect(interview.right).toBeCloseTo(main.right, 1);
+  expect(interview.gap).toBe(main.gap);
+  expect(interview.items).toEqual(main.items.slice(-3));
+  await expectNoOverflow(page);
 });

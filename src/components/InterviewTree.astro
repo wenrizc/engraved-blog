@@ -1,0 +1,47 @@
+---
+import { interviewUrl, type InterviewDirectory } from '../lib/interviews';
+interface Props {
+  directory: InterviewDirectory;
+}
+const { directory } = Astro.props;
+---
+
+<div class="interview-tree">
+  {directory.directories.map((child) => (
+    <details open>
+      <summary>{child.name}</summary>
+      <Astro.self directory={child} />
+    </details>
+  ))}
+  {directory.entries.map((entry) => (
+    <article class="post-card">
+      <div class="post-card-body">
+        <h3>
+          <a href={interviewUrl(entry.slug)}>{entry.data.title}</a>
+        </h3>
+        {entry.data.description && <p>{entry.data.description}</p>}
+      </div>
+      <a class="card-arrow" href={interviewUrl(entry.slug)} aria-label={`阅读 ${entry.data.title}`}>
+        ↗
+      </a>
+    </article>
+  ))}
+</div>
+
+<style>
+  .interview-tree {
+    min-width: 0;
+  }
+  details {
+    margin-block: 18px;
+  }
+  summary {
+    cursor: pointer;
+    color: var(--accent);
+    overflow-wrap: anywhere;
+  }
+  details > .interview-tree {
+    padding-left: clamp(12px, 3vw, 24px);
+    border-left: 1px solid var(--rule);
+  }
+</style>

@@ -12,7 +12,6 @@ const routes = [
   '/article/design-notes/',
   '/photography/',
   '/photography/2026-07-11-stone-garden/',
-  '/archive/',
   '/tags/',
   '/tags/cat/',
   '/about/',

@@ -1,4 +1,5 @@
 import http from 'node:http';
+import { parse as parseYaml } from 'yaml';
 import { randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, readdir, writeFile, rename } from 'node:fs/promises';
@@ -9,6 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const adminDir = __dirname;
 const articlesDir = path.join(root, 'src', 'content', 'articles');
+const interviewsDir = path.join(root, 'src', 'content', 'interviews');
 const photosDir = path.join(root, 'src', 'content', 'photos');
 const assetPhotosDir = path.join(root, 'src', 'assets', 'photos');
 const trashDir = path.join(root, '.local-admin-trash');
@@ -47,43 +49,45 @@ function slugify(input) {
 
 function safeJoin(base, target) {
   const resolved = path.resolve(base, target);
-  if (!resolved.startsWith(path.resolve(base))) {
+  if (resolved !== path.resolve(base) && !resolved.startsWith(path.resolve(base) + path.sep)) {
     throw new Error('Path escapes content directory.');
   }
   return resolved;
 }
 
-function parseValue(value) {
-  const trimmed = value.trim();
-  if (trimmed === 'true') return true;
-  if (trimmed === 'false') return false;
-  if (trimmed === 'null') return null;
-  if (
-    (trimmed.startsWith('[') && trimmed.endsWith(']')) ||
-    (trimmed.startsWith('{') && trimmed.endsWith('}'))
-  ) {
-    try {
-      return JSON.parse(trimmed.replace(/'/g, '"'));
-    } catch {
-      return trimmed;
-    }
-  }
-  return trimmed.replace(/^["']|["']$/g, '');
+function parseFrontmatter(markdown) {
+  const normalized = markdown.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n');
+  const match = normalized.match(/^---\n([\s\S]*?)\n---(?:\n|$)/);
+  if (!match) return { data: {}, body: normalized.trim() };
+  const data = parseYaml(match[1]) || {};
+  if (typeof data !== 'object' || Array.isArray(data))
+    throw new Error('Markdown 元数据必须是对象。');
+  return { data, body: normalized.slice(match[0].length).trim() };
 }
 
-function parseFrontmatter(markdown) {
-  if (!markdown.startsWith('---')) return { data: {}, body: markdown.trim() };
-  const end = markdown.indexOf('\n---', 3);
-  if (end === -1) return { data: {}, body: markdown.trim() };
-  const raw = markdown.slice(3, end).trim();
-  const body = markdown.slice(end + 4).replace(/^\s+/, '');
-  const data = {};
-  for (const line of raw.split(/\r?\n/)) {
-    const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
-    if (!match) continue;
-    data[match[1]] = parseValue(match[2]);
+function collectionDir(type) {
+  return { article: articlesDir, photography: photosDir, interview: interviewsDir }[type];
+}
+
+function entrySlug(type, input) {
+  if (type !== 'interview') return slugify(input);
+  const parts = String(input).replace(/\\/g, '/').split('/');
+  if (parts.some((part) => !part.trim() || part === '.' || part === '..')) {
+    throw new Error('目录路径无效。');
   }
-  return { data, body };
+  return parts.map(slugify).join('/');
+}
+
+async function markdownFiles(dir, prefix = '') {
+  if (!existsSync(dir)) return [];
+  const files = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const relative = prefix + entry.name;
+    if (entry.isDirectory())
+      files.push(...(await markdownFiles(path.join(dir, entry.name), relative + '/')));
+    else if (entry.isFile() && entry.name.endsWith('.md')) files.push(relative);
+  }
+  return files;
 }
 
 function quoteString(value) {
@@ -107,8 +111,8 @@ function toMarkdown(data, body = '') {
 }
 
 async function readCollection(type) {
-  const dir = type === 'article' ? articlesDir : photosDir;
-  const files = (await readdir(dir)).filter((file) => file.endsWith('.md'));
+  const dir = collectionDir(type);
+  const files = await markdownFiles(dir);
   const entries = [];
   for (const file of files) {
     const fullPath = path.join(dir, file);
@@ -131,16 +135,17 @@ async function readRequest(req) {
 }
 
 async function saveEntry(type, payload) {
-  const dir = type === 'article' ? articlesDir : photosDir;
+  const dir = collectionDir(type);
   await mkdir(dir, { recursive: true });
-  const slug = slugify(payload.slug || payload.data?.title || 'entry');
-  const originalSlug = payload.originalSlug ? slugify(payload.originalSlug) : '';
+  const slug = entrySlug(type, payload.slug || payload.data?.title || 'entry');
+  const originalSlug = payload.originalSlug ? entrySlug(type, payload.originalSlug) : '';
   const target = safeJoin(dir, `${slug}.md`);
   if (existsSync(target) && originalSlug !== slug) {
     const error = new Error(`页面路径已存在：${slug}。请调整标题或日期。`);
     error.statusCode = 409;
     throw error;
   }
+  await mkdir(path.dirname(target), { recursive: true });
   if (originalSlug && originalSlug !== slug) {
     const originalTarget = safeJoin(dir, `${originalSlug}.md`);
     if (existsSync(originalTarget)) await rename(originalTarget, target);
@@ -152,14 +157,56 @@ async function saveEntry(type, payload) {
 }
 
 async function deleteEntry(type, slug) {
-  const dir = type === 'article' ? articlesDir : photosDir;
-  const target = safeJoin(dir, `${slugify(slug)}.md`);
+  const dir = collectionDir(type);
+  const target = safeJoin(dir, `${entrySlug(type, slug)}.md`);
   if (!existsSync(target)) return false;
   await mkdir(trashDir, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
   const archived = path.join(trashDir, `${type}-${slugify(slug)}-${stamp}.md`);
   await rename(target, archived);
   return true;
+}
+
+async function importInterviews(payload) {
+  const files = Array.isArray(payload.files) ? payload.files : [];
+  const results = [];
+  for (const file of files) {
+    try {
+      if (!/\.md$/i.test(file.path || '')) throw new Error('请选择 .md 文件。');
+      const slug = entrySlug('interview', file.path.replace(/\.md$/i, ''));
+      const { data, body } = parseFrontmatter(String(file.markdown || ''));
+      const title = data.title || body.match(/^#\s+(.+)$/m)?.[1] || path.basename(slug);
+      const date = data.date || new Date().toISOString().slice(0, 10);
+      if (!Number.isFinite(new Date(date).valueOf())) throw new Error('日期无效。');
+      if (
+        data.tags !== undefined &&
+        (!Array.isArray(data.tags) || data.tags.some((tag) => typeof tag !== 'string'))
+      )
+        throw new Error('标签应为字符串数组。');
+      if (data.draft !== undefined && typeof data.draft !== 'boolean')
+        throw new Error('draft 应为 true 或 false。');
+      if (
+        typeof title !== 'string' ||
+        (data.description !== undefined && typeof data.description !== 'string')
+      )
+        throw new Error('标题和摘要应为文字。');
+      const saved = await saveEntry('interview', {
+        slug,
+        data: {
+          title,
+          description: data.description || '',
+          date,
+          tags: data.tags || [],
+          draft: data.draft || false
+        },
+        body
+      });
+      results.push({ path: file.path, ...saved, saved: true });
+    } catch (error) {
+      results.push({ path: file.path, saved: false, error: error.message });
+    }
+  }
+  return results;
 }
 
 async function saveUploadedPhotos(payload) {
@@ -202,21 +249,25 @@ async function route(req, res) {
     }
     if (req.method === 'GET' && url.pathname === '/api/entries') {
       const type = url.searchParams.get('type');
-      if (!['article', 'photography'].includes(type))
+      if (!['article', 'photography', 'interview'].includes(type))
         return json(res, 400, { error: 'Invalid type.' });
       return json(res, 200, await readCollection(type));
     }
     if (req.method === 'POST' && url.pathname === '/api/entry') {
       const payload = JSON.parse((await readRequest(req)).toString('utf8'));
-      if (!['article', 'photography'].includes(payload.type))
+      if (!['article', 'photography', 'interview'].includes(payload.type))
         return json(res, 400, { error: 'Invalid type.' });
       return json(res, 200, await saveEntry(payload.type, payload));
     }
     if (req.method === 'POST' && url.pathname === '/api/delete') {
       const payload = JSON.parse((await readRequest(req)).toString('utf8'));
-      if (!['article', 'photography'].includes(payload.type))
+      if (!['article', 'photography', 'interview'].includes(payload.type))
         return json(res, 400, { error: 'Invalid type.' });
       return json(res, 200, { deleted: await deleteEntry(payload.type, payload.slug) });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/interviews/import') {
+      const payload = JSON.parse((await readRequest(req)).toString('utf8'));
+      return json(res, 200, { results: await importInterviews(payload) });
     }
     if (req.method === 'POST' && url.pathname === '/api/photos') {
       const payload = JSON.parse((await readRequest(req)).toString('utf8'));

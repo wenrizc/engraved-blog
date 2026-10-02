@@ -17,6 +17,7 @@ http://127.0.0.1:9797/
 ## What It Edits
 
 - Article Markdown: `src/content/articles/*.md`
+- Interview Markdown (separate library, nested folders supported): `src/content/interviews/**/*.md`
 - Photography Markdown: `src/content/photos/*.md`
 - Photo assets copied into: `src/assets/photos/*`
 
@@ -35,3 +36,34 @@ http://127.0.0.1:9797/
 - The HTML page alone cannot write files in a normal browser; the small Node server provides that filesystem access.
 - Default URL is usually `http://127.0.0.1:9797/`. If that port is occupied, the server automatically tries the next available port and prints the final URL.
 - Delete is intentionally conservative: it moves Markdown files into `.local-admin-trash` instead of deleting photo assets.
+
+## 面试八股管理
+
+后台的“面试八股”tab 使用独立内容库 `src/content/interviews/`，不会进入主站文章或主题。
+
+- 新建和编辑文章时，可填写目录，例如 `Java/并发`；文件会保存到对应子目录。
+- 可批量选择 `.md` 文件，或选择文件夹导入。文件夹导入保留所选根文件夹及内部层级，仅导入 Markdown。
+- 同名路径不会覆盖已有文章，导入结果逐篇显示；已有文章请在内容列表中编辑。
+- Markdown 支持 YAML 元数据（包括多行标签）。缺少标题时使用一级标题或文件名，缺少日期时使用导入当天日期。
+- `draft: true` 的文章仅在后台可见，不进入文章列表、主题或搜索。
+- `src/content/interviews/template.md` 是草稿模板，可在后台参考其格式。
+- 面试区入口是主站“链接 → 面试八股”，导航为文章、主题、搜索。搜索覆盖标题、目录、标签、摘要和正文。
+- 导入只复制 Markdown；文中的本地图片需要另行放入网站公开资源目录并使用有效 URL。
+
+示例：`src/content/interviews/Java/并发/线程池.md`
+
+```markdown
+---
+title: 线程池的工作原理
+description: 核心线程、任务队列与拒绝策略
+date: 2026-10-02
+tags:
+  - Java
+  - 并发
+draft: false
+---
+
+## 线程池如何处理任务？
+
+在这里填写回答。
+```

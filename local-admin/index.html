@@ -194,7 +194,7 @@
 
       .tabs {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
         width: 100%;
       }
@@ -408,6 +408,13 @@
       .command-line {
         margin: 4px 0 0;
         color: var(--muted);
+      }
+
+      .interview-only {
+        display: none;
+      }
+      body[data-type='interview'] .interview-only {
+        display: grid;
       }
 
       .photo-only {
@@ -725,6 +732,7 @@
       @media (max-width: 900px) {
         main {
           width: min(100% - (var(--page-gutter) * 2), 680px);
+          grid-template-columns: minmax(0, 1fr);
           padding-top: 40px;
           gap: 44px;
         }
@@ -776,6 +784,7 @@
         <div class="tabs">
           <button type="button" data-tab="article" aria-pressed="true">文章</button>
           <button type="button" data-tab="photography" aria-pressed="false">照片</button>
+          <button type="button" data-tab="interview" aria-pressed="false">面试八股</button>
         </div>
         <label class="search-box">
           筛选
@@ -791,7 +800,32 @@
             <h2 class="section-title">编辑内容</h2>
             <p class="section-note">保存后会直接写入本地 Markdown 文件</p>
           </div>
+          <div class="interview-only">
+            <p class="hint">
+              独立八股库，支持批量导入 Markdown 或选择文件夹保留目录层级。同名路径不会覆盖。
+            </p>
+            <label
+              >选择 Markdown 文件<input id="interview-files" type="file" accept=".md" multiple
+            /></label>
+            <label
+              >选择 Markdown 文件夹<input
+                id="interview-folder"
+                type="file"
+                webkitdirectory
+                multiple
+            /></label>
+            <button id="import-interviews" type="button">导入面试文章</button>
+            <pre
+              id="import-results"
+              class="hint"
+              style="white-space: pre-wrap; overflow-wrap: anywhere"
+              role="status"
+            ></pre>
+          </div>
           <div class="grid">
+            <label class="interview-only"
+              >目录（可选，使用 / 分层）<input id="directory" placeholder="Java/并发"
+            /></label>
             <label>
               标题
               <input id="title" name="title" required />
@@ -861,10 +895,20 @@
       };
       const typeLabels = {
         article: '文章',
-        photography: '照片'
+        photography: '照片',
+        interview: '面试八股'
       };
 
-      const fields = ['title', 'description', 'date', 'tags', 'draft', 'cover', 'body'];
+      const fields = [
+        'title',
+        'description',
+        'date',
+        'tags',
+        'draft',
+        'cover',
+        'body',
+        'directory'
+      ];
 
       const $ = (id) => document.getElementById(id);
 
@@ -900,6 +944,11 @@
       function generatedSlug() {
         const date = toDateInput($('date').value) || today();
         const title = slugifyClient($('title').value) || 'untitled';
+        if (state.type === 'interview') {
+          const directory = $('directory').value.trim();
+          const filename = state.current?.slug?.split('/').pop() || `${date}-${title}`;
+          return directory ? `${directory}/${filename}` : filename;
+        }
         return `${date}-${title}`;
       }
 
@@ -918,6 +967,8 @@
         $('draft').value = String(Boolean(entry?.data?.draft));
         $('cover').value = entry?.data?.cover || '';
         $('body').value = entry?.body || '';
+        $('directory').value =
+          state.type === 'interview' ? (entry?.slug || '').split('/').slice(0, -1).join('/') : '';
         renderGallery(
           Array.isArray(entry?.data?.gallery)
             ? entry.data.gallery
@@ -1023,7 +1074,7 @@
         for (const entry of filtered) {
           const button = document.createElement('div');
           button.className = `entry ${state.current?.slug === entry.slug ? 'active' : ''}`;
-          button.innerHTML = `<strong>${entry.data.title || entry.slug}</strong><span>${entry.data.date || ''} / ${entry.slug}</span>`;
+          button.innerHTML = `<strong>${escapeHtml(entry.data.title || entry.slug)}</strong><span>${escapeHtml(entry.data.date || '')} / ${escapeHtml(entry.slug)}</span>`;
           button.addEventListener('click', () => fill(entry));
           list.appendChild(button);
         }
@@ -1043,14 +1094,16 @@
           tab.setAttribute('aria-pressed', String(tab.dataset.tab === state.type));
         });
         const res = await fetch(`/api/entries?type=${state.type}`);
-        state.entries = await res.json();
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '加载失败');
+        state.entries = data;
         fill(state.entries[0] || null);
       }
 
       function collectPayload() {
         const originalSlug = state.current?.slug || '';
         const slug = generatedSlug();
-        if (state.type === 'article') {
+        if (state.type !== 'photography') {
           return {
             type: state.type,
             slug,
@@ -1085,7 +1138,10 @@
       document.querySelectorAll('[data-tab]').forEach((tab) => {
         tab.addEventListener('click', () => {
           state.type = tab.dataset.tab;
-          loadEntries();
+          state.filter = '';
+          $('filter').value = '';
+          $('import-results').textContent = '';
+          loadEntries().catch((error) => setStatus(error.message));
         });
       });
 
@@ -1115,6 +1171,46 @@
           await loadEntries();
         } catch (error) {
           setStatus(error.message || '保存失败');
+        }
+      });
+
+      $('import-interviews').addEventListener('click', async () => {
+        const button = $('import-interviews');
+        const files = [...$('interview-files').files, ...$('interview-folder').files].filter(
+          (file) => /\.md$/i.test(file.name)
+        );
+        if (!files.length) return setStatus('请选择 Markdown 文件或文件夹。');
+        button.disabled = true;
+        try {
+          const encoded = await Promise.all(
+            files.map(async (file) => ({
+              path: file.webkitRelativePath || file.name,
+              markdown: await file.text()
+            }))
+          );
+          const res = await fetch('/api/interviews/import', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ files: encoded })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || '导入失败');
+          $('import-results').textContent = data.results
+            .map(
+              (item) =>
+                `${item.saved ? '已导入' : '失败'} ${item.path}${item.error ? '：' + item.error : ''}`
+            )
+            .join('\n');
+          setStatus(
+            `已导入 ${data.results.filter((item) => item.saved).length}/${files.length} 篇面试文章`
+          );
+          $('interview-files').value = '';
+          $('interview-folder').value = '';
+          await loadEntries();
+        } catch (error) {
+          setStatus(error.message || '导入失败');
+        } finally {
+          button.disabled = false;
         }
       });
 

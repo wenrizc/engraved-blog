@@ -36,4 +36,15 @@ const photos = defineCollection({
       })
 });
 
-export const collections = { articles, photos };
+const interviews = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string().default(''),
+    date: z.coerce.date(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false)
+  })
+});
+
+export const collections = { articles, photos, interviews };
