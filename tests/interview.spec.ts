@@ -11,7 +11,11 @@ let folder: string;
 test.beforeAll(async ({}, testInfo) => {
   folder = `test-interview-${testInfo.project.name}-${process.pid}`;
   admin = spawn(process.execPath, ['local-admin/server.mjs'], {
-    env: { ...process.env, ADMIN_PORT: String(19000 + (process.pid % 10000)) }
+    env: {
+      ...process.env,
+      ADMIN_HOST: '127.0.0.1',
+      ADMIN_PORT: String(19000 + (process.pid % 10000))
+    }
   });
   adminUrl = await new Promise<string>((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error('Admin did not start')), 10000);
@@ -24,6 +28,13 @@ test.beforeAll(async ({}, testInfo) => {
     });
     admin.on('error', reject);
   });
+});
+
+test.beforeEach(async ({ page }) => {
+  await page.route('https://fonts.googleapis.com/**', (route) => route.abort());
+  // Importing content triggers Vite reloads that can interrupt link clicks.
+  // Each navigation still requests the current content from the dev server.
+  await page.routeWebSocket('**', (socket) => socket.close());
 });
 
 test.afterAll(async () => {
@@ -85,8 +96,16 @@ test('admin imports nested Markdown into an isolated interview library', async (
   await page.getByRole('button', { name: '保存 Markdown', exact: true }).click();
   await expect(page.locator('#status')).toContainText('已保存');
 
+  // Wait for Astro's content watcher to pick up the imported files.
+  await expect
+    .poll(async () => {
+      const response = await request.get('/interview/');
+      return (await response.text()).includes(`/interview/article/${folder}/`);
+    })
+    .toBe(true);
   await page.goto('/interview/');
-  await expect(page.locator('.site-nav small')).toHaveText(['ARTICLE', 'TAGS', 'SEARCH']);
+  await expect(page.locator('.site-nav small')).toHaveCount(0);
+  await expect(page.locator('.site-nav > a')).toHaveText(['文章', '主题', '搜索']);
   await expect(
     page
       .locator('details')

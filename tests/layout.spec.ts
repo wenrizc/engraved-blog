@@ -11,7 +11,6 @@ const beautyPoem = poetryData.poems.find((poem: { title: string }) => poem.title
 
 const tabs = ['/article/', '/photography/', '/tags/', '/about/'];
 const tabTitles = ['文章', '摄影', '主题', '关于'];
-const navEnglish = ['HOME', 'ARTICLE', 'PHOTOGRAPHY', 'TAGS', 'ABOUT', 'LINKS'];
 const details = [
   '/article/design-notes/',
   '/photography/2026-07-11-stone-garden/',
@@ -51,7 +50,15 @@ test('tabs share header, navigation, page title and content boundaries', async (
     await expect(page.locator('.section-header h1')).toHaveText(tabTitles[index]);
     await expect(page.locator('.section-header__title span')).toHaveCount(0);
     await expect(page).toHaveTitle('文日小栈');
-    await expect(page.locator('.site-nav small')).toHaveText(navEnglish);
+    await expect(page.locator('.site-nav small')).toHaveCount(0);
+    await expect(page.locator('.site-nav > a')).toHaveText([
+      '首页',
+      '文章',
+      '摄影',
+      '主题',
+      '关于'
+    ]);
+    await expect(page.locator('.nav-links__trigger')).toHaveText('链接');
     const boxes = await rectangles(page, [
       '.site-header',
       '.header-inner',
@@ -105,18 +112,36 @@ test('nav links dropdown opens external and internal destinations', async ({ pag
   await interviewLink.click();
   await expect(page).toHaveURL(/\/interview\/$/);
   await expect(page.locator('.section-header h1')).toHaveText('面试八股');
-  await expect(page.locator('.site-nav small')).toHaveText(['ARTICLE', 'TAGS', 'SEARCH']);
+  await expect(page.locator('.site-nav small')).toHaveCount(0);
+  await expect(page.locator('.site-nav > a')).toHaveText(['文章', '主题', '搜索']);
   await expectNoOverflow(page);
 });
 
-test('detail pages use consistent titles and section labels', async ({ page }) => {
-  for (const [route, backLabel] of [
-    ['/article/design-notes/', '返回文章'],
-    ['/photography/2026-07-11-stone-garden/', '返回摄影']
-  ]) {
+test('nav dropdown clears the header rule and stays open across the gap', async ({ page }) => {
+  await page.goto('/about/');
+  const trigger = page.locator('.nav-links__trigger');
+  const menu = page.locator('.nav-links__menu');
+  await trigger.hover();
+  await expect(menu).toBeVisible();
+  // Wait for the opening transition before measuring the visible panel.
+  await expect(menu).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  const headerBox = (await page.locator('.site-header').boundingBox())!;
+  const triggerBox = (await trigger.boundingBox())!;
+  const menuBox = (await menu.boundingBox())!;
+  expect(menuBox.y).toBeGreaterThan(headerBox.y + headerBox.height + 4);
+  const pointerX = triggerBox.x + triggerBox.width / 2;
+  await page.mouse.move(pointerX, (triggerBox.y + triggerBox.height + menuBox.y) / 2);
+  await expect(menu).toBeVisible();
+  await menu.getByRole('link', { name: '面试八股' }).hover();
+  await expect(menu).toBeVisible();
+  await expectNoOverflow(page);
+});
+
+test('detail pages show titles and publication metadata', async ({ page }) => {
+  for (const route of ['/article/design-notes/', '/photography/2026-07-11-stone-garden/']) {
     await page.goto(route);
     await expect(page.locator('.section-header__title span')).toHaveCount(0);
-    await expect(page.locator('.section-header__back')).toContainText(backLabel);
+    await expect(page.locator('.section-header h1')).toBeVisible();
     await expect(page).toHaveTitle('文日小栈');
     await expect(page.locator('.article-header-meta')).toContainText('发布于');
   }
@@ -134,8 +159,7 @@ test('home plate is chosen from the mirrored print collection', async ({ page })
   expect(options.length).toBeGreaterThanOrEqual(50);
   const selected = options.at(-1)!;
   await expect(figure).not.toHaveAttribute('data-plate-pending');
-  await expect(figure.locator('[data-plate-title]')).toHaveText(selected.title);
-  await expect(figure.locator('[data-plate-artist]')).toHaveText(selected.artist);
+  await expect(figure.locator('figcaption')).toHaveCount(0);
   await expect(figure.locator('img')).toHaveAttribute('alt', selected.alt);
   await expect(figure.locator('img')).toHaveAttribute('src', selected.src);
 
@@ -149,18 +173,63 @@ test('home plate is chosen from the mirrored print collection', async ({ page })
   await expect(page.locator('#photo-lightbox')).toBeHidden();
 });
 
-test('plate captions keep the following content in place', async ({ page }) => {
-  await page.goto('/');
-  const selectors = ['.hero-plate', '.home-content'];
-  const original = await rectangles(page, selectors);
-  for (const title of ['Short title', 'Long title '.repeat(100)]) {
-    await page.locator('[data-plate-title]').evaluate((el, value) => {
-      el.textContent = value;
-    }, title);
-    expect(await rectangles(page, selectors)).toEqual(original);
+const printCollection = JSON.parse(
+  readFileSync(new URL('../src/data/generated/plates.json', import.meta.url), 'utf8')
+).plates as Array<{ width: number; height: number }>;
+const printRatios = printCollection.map((plate) => plate.width / plate.height);
+for (const [name, index] of [
+  ['wide landscape', printRatios.indexOf(Math.max(...printRatios))],
+  ['narrow portrait', printRatios.indexOf(Math.min(...printRatios))],
+  ['landscape', 0]
+] as const) {
+  test(`home print frame fits ${name} without cropping or moving content`, async ({ page }) => {
+    await page.addInitScript(
+      (random) => {
+        Math.random = () => random;
+      },
+      (index + 0.5) / printCollection.length
+    );
+    await page.goto('/');
+    const figure = page.locator('.hero-plate');
+    await expect(figure).not.toHaveAttribute('data-plate-pending');
+    const geometry = await figure.evaluate((el) => {
+      const image = el.querySelector('img')!;
+      const frame = el.querySelector('.plate-zoom-trigger')!;
+      const bounds = (element: Element) => {
+        const r = element.getBoundingClientRect();
+        return {
+          x: r.x,
+          y: r.y,
+          right: r.right,
+          bottom: r.bottom,
+          width: r.width,
+          height: r.height
+        };
+      };
+      return {
+        stage: bounds(el),
+        frame: bounds(frame),
+        image: bounds(image),
+        ratio: Number(image.getAttribute('width')) / Number(image.getAttribute('height')),
+        fit: getComputedStyle(image).objectFit
+      };
+    });
+    expect(geometry.ratio).toBeCloseTo(printRatios[index], 2);
+    expect(geometry.image.width / geometry.image.height).toBeCloseTo(printRatios[index], 2);
+    expect(geometry.fit).toBe('contain');
+    expect(geometry.frame.x).toBeGreaterThanOrEqual(geometry.stage.x - 1);
+    expect(geometry.frame.y).toBeGreaterThanOrEqual(geometry.stage.y - 1);
+    expect(geometry.frame.right).toBeLessThanOrEqual(geometry.stage.right + 1);
+    expect(geometry.frame.bottom).toBeLessThanOrEqual(geometry.stage.bottom + 1);
+    // Changing proportions must not move the following articles or the reserved area.
+    const before = await rectangles(page, ['.hero-plate', '.home-content']);
+    await figure.evaluate((el) => {
+      (el as HTMLElement).style.setProperty('--plate-ratio', '1');
+    });
+    expect(await rectangles(page, ['.hero-plate', '.home-content'])).toEqual(before);
     await expectNoOverflow(page);
-  }
-});
+  });
+}
 
 test('poem changes do not move the title, plate or following content', async ({ page }) => {
   await page.goto('/');
@@ -247,7 +316,7 @@ test('bilingual poem stanzas and source lines stay aligned', async ({ page }) =>
   }
   await page.goto(`/poetry/${hawkPoem.id}/`);
   const first = page.locator('.poetry-stanza-pair').first();
-  await expect(first.locator('.poetry-section-label')).toHaveText('一');
+  await expect(first.locator('.poetry-section-label')).toHaveCount(0);
   await expect(
     first.locator('.poetry-language').first().locator('.poetry-line').first()
   ).toHaveText('翅膀骨头从凝着血块的肩上撕开了，');
@@ -255,8 +324,12 @@ test('bilingual poem stanzas and source lines stay aligned', async ({ page }) =>
     'The broken pillar of the wing jags from the clotted shoulder,'
   );
   await page.goto(`/poetry/${beautyPoem.id}/`);
-  await expect(page.locator('.poetry-inline-marker')).toHaveCount(6);
-  await expect(page.locator('.poetry-language').first().locator('.poetry-line')).toHaveCount(84);
+  await expect(page.locator('.poetry-inline-marker')).toHaveCount(0);
+  await expect(page.locator('.poetry-language').first().locator('.poetry-line')).toHaveCount(
+    beautyPoem.stanzas[0].zh.filter(
+      (line: string) => !/^[一二三四五六七八九十百〇○零]{1,6}[、.]?$/.test(line.trim())
+    ).length
+  );
 });
 
 test('detail pages and long content stay inside the viewport', async ({ page }) => {

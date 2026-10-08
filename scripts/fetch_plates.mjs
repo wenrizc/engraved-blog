@@ -10,7 +10,8 @@
  * License: CC0. Attribution is not required, but the source is recorded for
  * every plate so the credits stay traceable.
  */
-import { mkdir, access, writeFile } from 'node:fs/promises';
+import { mkdir, access, writeFile, readFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
 import { constants } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -205,6 +206,49 @@ async function mirrorImage(obj) {
 async function main() {
   await mkdir(PRINTS_DIR, { recursive: true });
   await mkdir(path.dirname(DATA_FILE), { recursive: true });
+
+  // Once reviewed, mirror only approved works. Broad catalogue searches would
+  // otherwise reintroduce rejected portraits and replace the Doré collection.
+  const curatedFile = path.join(ROOT, 'src/data/plate-curation.json');
+  if (await exists(curatedFile)) {
+    const manifest = JSON.parse(await readFile(curatedFile, 'utf8'));
+    for (const entry of manifest.entries.filter((entry) => entry.decision === 'keep')) {
+      const dest = path.join(PRINTS_DIR, entry.record.file);
+      if (!force && (await exists(dest))) continue;
+      let url = entry.imageUrl;
+      if (!url) {
+        const obj = await getJson(`${API}/objects/${entry.record.id}`);
+        if (!isMirrorablePrint(obj))
+          throw new Error(`Approved plate ${entry.record.id} unavailable`);
+        url = obj.primaryImage;
+      }
+      const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
+      if (!res.ok) throw new Error(`Approved plate ${entry.record.id}: HTTP ${res.status}`);
+      let image = sharp(Buffer.from(await res.arrayBuffer()))
+        .rotate()
+        .resize({
+          width: MAX_EDGE,
+          height: MAX_EDGE,
+          fit: 'inside',
+          withoutEnlargement: true
+        });
+      if (entry.crop) {
+        image = sharp(await image.toBuffer()).extract(entry.crop);
+      }
+      await image.jpeg({ quality: JPEG_QUALITY, mozjpeg: true }).toFile(dest);
+      console.log(`Mirrored approved plate ${entry.record.id}`);
+    }
+    const result = spawnSync(
+      process.execPath,
+      [path.join(ROOT, 'scripts/sync_curated_plates.mjs')],
+      {
+        stdio: 'inherit'
+      }
+    );
+    if (result.error) throw result.error;
+    if (result.status !== 0) throw new Error('Curated collection sync failed');
+    return;
+  }
 
   console.log('Collecting prints from The Met (CC0)…');
   const objects = await collectPrints();

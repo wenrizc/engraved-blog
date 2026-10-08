@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>首页版画 · 展示方案对比</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      color: #292a27;
+      background: #f1ede5;
+      font-family: Georgia, 'Noto Serif SC', serif;
+    }
+    main {
+      max-width: 1180px;
+      margin: auto;
+      padding: 36px 24px;
+    }
+    h1 {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 500;
+      margin: 0 0 12px;
+    }
+    p {
+      line-height: 1.8;
+      color: #777169;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 24px 0;
+      align-items: center;
+    }
+    select,
+    button {
+      font: inherit;
+      color: inherit;
+    }
+    select {
+      background: transparent;
+      border: 1px solid #aaa297;
+      padding: 9px;
+      max-width: 100%;
+    }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: 500;
+      border-top: 1px solid #aaa297;
+      padding-top: 18px;
+    }
+    .stage {
+      height: clamp(340px, 42vw, 560px);
+      display: grid;
+      place-items: center;
+    }
+    .old {
+      width: min(100%, 420px);
+      padding: 18px;
+      border: 1px solid #aaa297;
+      outline: 1px solid #c9c2b8;
+      outline-offset: -6px;
+      box-shadow: 0 3px #50463a14;
+    }
+    .old img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: contain;
+    }
+    .new {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: zoom-in;
+      line-height: 0;
+      max-width: min(100%, 420px);
+    }
+    .new img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 480px;
+      padding: 12px;
+      border: 1px solid #292a272e;
+      background: #f1ede5;
+      box-shadow: 0 2px 5px #50463a12;
+    }
+    .bare .new img {
+      padding: 0;
+      border: 0;
+      box-shadow: none;
+    }
+    button:focus-visible,
+    select:focus-visible {
+      outline: 2px solid #96392c;
+      outline-offset: 4px;
+    }
+    .note {
+      min-height: 58px;
+      font-size: 14px;
+    }
+    footer {
+      border-top: 1px solid #aaa297;
+      margin-top: 28px;
+      padding-top: 10px;
+      font-size: 14px;
+    }
+    a {
+      color: #96392c;
+    }
+    dialog {
+      border: 0;
+      padding: 44px 16px 16px;
+      background: #f1ede5;
+      max-width: 96vw;
+      max-height: 96dvh;
+    }
+    dialog::backdrop {
+      background: #292a27cc;
+    }
+    dialog img {
+      display: block;
+      max-width: 88vw;
+      max-height: 80dvh;
+      object-fit: contain;
+    }
+    dialog button {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+    }
+    @media (max-width: 760px) {
+      main {
+        padding: 24px 18px;
+      }
+      .comparison {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .stage {
+        height: 420px;
+      }
+      .old {
+        max-width: 290px;
+      }
+      .new img {
+        max-height: 390px;
+        padding: 9px;
+      }
+    }
+  </style>
+  <main>
+    <h1>首页版画 · 展示方案对比</h1>
+    <p>
+      用图库中的实际作品比较：左侧固定竖框，右侧固定展示区域、画框随原图比例变化。可切换作品，也可关闭右侧边框查看无框方案。
+    </p>
+    <div class="controls">
+      <label
+        >作品比例
+        <select id="artwork">
+          <option value="0">横版 · 约翰·马丁</option>
+          <option value="1">竖版 · 多雷</option>
+          <option value="2">横版 · 皮拉内西</option>
+          <option value="3">窄长竖版 · 喜多川歌麿</option>
+          <option value="4">超宽横版 · 葛饰北斋</option>
+        </select></label
+      >
+      <label><input id="bare" type="checkbox" /> 对比无框方案</label>
+    </div>
+    <div class="comparison">
+      <section>
+        <h2>目前：统一 4:5 竖框</h2>
+        <div class="stage">
+          <div class="old"><img id="before" alt="" /></div>
+        </div>
+        <p class="note">构图完整，但横图的空白被包进画框，容易显得画面偏小。</p>
+      </section>
+      <section id="proposed">
+        <h2>建议：按原图比例装裱</h2>
+        <div class="stage">
+          <button class="new" id="zoom" aria-label="放大版画"><img id="after" alt="" /></button>
+        </div>
+        <p class="note">横图利用宽度，竖图限制高度；四周保持薄纸边。点击图片放大，Esc 关闭。</p>
+      </section>
+    </div>
+    <footer>
+      <p>
+        这是一份设计预览。首页落地建议：桌面展示区高约 480–520px；手机高约
+        340–400px，图片居中并使用完整内容宽度。具体尺寸随实际布局微调。保持随机展示，画面下方不显示标题和作者。
+      </p>
+      <p>
+        参考：<a href="https://www.rijksmuseum.nl/en/collection/SK-C-5"
+          >Rijksmuseum 作品查看与缩放交互</a
+        >
+        ·
+        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit"
+          >MDN：完整适配与裁切的区别</a
+        >
+      </p>
+    </footer>
+  </main>
+  <dialog id="lightbox">
+    <button id="close" aria-label="关闭放大图">关闭 ×</button><img id="full" alt="" />
+  </dialog>
+  <script>
+    const artworks = [
+      ['met-373640-john-martin.jpg', '约翰·马丁，伯沙撒的宴会'],
+      ['dore-8789-01-002.jpg', '多雷，神曲插图'],
+      ['met-362674-piranesi.jpg', '皮拉内西版画'],
+      ['met-36622-kitagawa-utamaro-plate.jpg', '喜多川歌麿浮世绘'],
+      ['met-36483-katsushika-hokusai-plate.jpg', '葛饰北斋浮世绘']
+    ];
+    const selector = document.querySelector('#artwork');
+    const dialog = document.querySelector('#lightbox');
+    function update() {
+      const [file, alt] = artworks[Number(selector.value)];
+      for (const id of ['before', 'after', 'full']) {
+        const img = document.getElementById(id);
+        img.src = '../src/assets/prints/' + file;
+        img.alt = alt;
+      }
+    }
+    selector.addEventListener('change', update);
+    document.querySelector('#bare').addEventListener('change', (event) => {
+      document.querySelector('#proposed').classList.toggle('bare', event.target.checked);
+    });
+    document.querySelector('#zoom').addEventListener('click', () => dialog.showModal());
+    document.querySelector('#close').addEventListener('click', () => dialog.close());
+    update();
+  </script>
+</html>

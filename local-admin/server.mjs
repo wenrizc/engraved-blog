@@ -3,6 +3,7 @@ import { parse as parseYaml } from 'yaml';
 import { randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, readdir, writeFile, rename } from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -15,6 +16,7 @@ const photosDir = path.join(root, 'src', 'content', 'photos');
 const assetPhotosDir = path.join(root, 'src', 'assets', 'photos');
 const trashDir = path.join(root, '.local-admin-trash');
 const preferredPort = Number(process.env.ADMIN_PORT || 9797);
+const preferredHost = process.env.ADMIN_HOST || '127.0.0.1';
 
 function send(res, status, body, type = 'application/json; charset=utf-8') {
   res.writeHead(status, { 'content-type': type });
@@ -288,8 +290,21 @@ function listen(port, remainingAttempts = 20) {
     }
     throw error;
   });
-  server.listen(port, '127.0.0.1', () => {
-    console.log(`Local admin running at http://127.0.0.1:${port}/`);
+  server.listen(port, preferredHost, () => {
+    const urlHost = preferredHost.includes(':') ? `[${preferredHost}]` : preferredHost;
+    const urls = new Set([`http://${urlHost}:${port}/`]);
+    if (preferredHost === '0.0.0.0' || preferredHost === '::') {
+      urls.clear();
+      urls.add(`http://127.0.0.1:${port}/`);
+      for (const addresses of Object.values(os.networkInterfaces())) {
+        for (const address of addresses || []) {
+          if ((address.family === 'IPv4' || address.family === 4) && !address.internal) {
+            urls.add(`http://${address.address}:${port}/`);
+          }
+        }
+      }
+    }
+    console.log(`Local admin running at ${[...urls].join(' or ')}`);
   });
 }
 

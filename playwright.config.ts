@@ -8,7 +8,8 @@ const executablePath =
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
-  workers: 2,
+  // Admin tests edit content watched by the shared dev server.
+  workers: 1,
   use: {
     baseURL: 'http://127.0.0.1:4330',
     launchOptions: { executablePath },

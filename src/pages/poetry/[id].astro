@@ -39,12 +39,19 @@ const stanzas = poem.stanzas.map((stanza) => {
 >
   <article class="poetry-page page-shell">
     <header class="poetry-header">
-      <h1>{poem.title}</h1>
-      <p class="poetry-title-en">{poem.titleEn}</p>
-      <div class="poetry-meta">
-        <span>{poem.author}</span>
-        <span>{poem.authorEn}</span>
-        {poem.dates && <span>{poem.dates}</span>}
+      <div class="poetry-heading" lang="zh-CN">
+        <h1 class="poetry-title">{poem.title}</h1>
+        <div class="poetry-meta">
+          <span>{poem.author}</span>
+          {poem.dates && <span>{poem.dates}</span>}
+        </div>
+      </div>
+      <div class="poetry-heading" lang="en">
+        <h2 class="poetry-title">{poem.titleEn}</h2>
+        <div class="poetry-meta">
+          <span>{poem.authorEn}</span>
+          {poem.dates && <span>{poem.dates}</span>}
+        </div>
       </div>
     </header>
 

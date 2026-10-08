@@ -1,12 +1,11 @@
 ---
 interface Props {
   title?: string;
-  artist?: string;
   full?: string;
   class?: string;
   [key: string]: unknown;
 }
-const { title, artist, full, class: className, ...rest } = Astro.props;
+const { title, full, class: className, ...rest } = Astro.props;
 ---
 
 <figure class:list={['plate-frame', className]} {...rest}>
@@ -21,18 +20,4 @@ const { title, artist, full, class: className, ...rest } = Astro.props;
       <slot />
     </button>
   </div>
-  {(title || artist) && (
-    <figcaption class="plate-caption">
-      {title && (
-        <span class="plate-title" data-plate-title>
-          {title}
-        </span>
-      )}
-      {artist && (
-        <span class="plate-artist" data-plate-artist>
-          {artist}
-        </span>
-      )}
-    </figcaption>
-  )}
 </figure>

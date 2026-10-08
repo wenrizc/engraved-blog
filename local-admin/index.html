@@ -82,27 +82,11 @@
         letter-spacing: -0.03em;
       }
 
-      .eyebrow {
-        margin: 0 0 7px;
-        color: var(--yellow);
-        font:
-          700 11px/1.2 'Courier New',
-          monospace;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-      }
       .section-title {
         margin: 0;
         color: var(--green-strong);
         font-size: 16px;
         letter-spacing: 0.02em;
-      }
-      .section-note {
-        margin: 4px 0 0;
-        color: var(--muted);
-        font:
-          12px/1.5 'Courier New',
-          monospace;
       }
 
       button,
@@ -405,11 +389,6 @@
         font-size: 12px;
       }
 
-      .command-line {
-        margin: 4px 0 0;
-        color: var(--muted);
-      }
-
       .interview-only {
         display: none;
       }
@@ -516,13 +495,6 @@
       header > div:first-child {
         min-width: 0;
       }
-      .eyebrow {
-        margin: 0 0 2px;
-        color: var(--muted);
-        font: 9px/1.5 var(--mono);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-      }
       h1 {
         color: var(--ink);
         font: 600 clamp(22px, 3vw, 30px)/1.15 var(--serif);
@@ -532,12 +504,6 @@
       h1 span {
         color: var(--accent) !important;
       }
-      .command-line {
-        margin: 3px 0 0;
-        color: var(--muted);
-        font: 10px/1.5 var(--mono);
-      }
-
       main {
         width: min(1180px, calc(100% - (var(--page-gutter) * 2)));
         margin: 0 auto;
@@ -766,9 +732,7 @@
   <body data-type="article">
     <header>
       <div>
-        <p class="eyebrow">Local content studio</p>
-        <h1>文日小栈 Admin<span style="color: var(--green)">█</span></h1>
-        <p class="command-line">$ edit ./content --local</p>
+        <h1>文日小栈 Admin</h1>
       </div>
       <div class="actions">
         <button type="button" id="new-entry">新建</button>
@@ -779,7 +743,6 @@
       <aside class="panel sidebar-panel">
         <div class="panel-intro">
           <h2 class="section-title">内容库</h2>
-          <p class="section-note">选择条目开始编辑</p>
         </div>
         <div class="tabs">
           <button type="button" data-tab="article" aria-pressed="true">文章</button>
@@ -798,12 +761,9 @@
         <form id="editor">
           <div class="panel-intro">
             <h2 class="section-title">编辑内容</h2>
-            <p class="section-note">保存后会直接写入本地 Markdown 文件</p>
           </div>
           <div class="interview-only">
-            <p class="hint">
-              独立八股库，支持批量导入 Markdown 或选择文件夹保留目录层级。同名路径不会覆盖。
-            </p>
+            <p class="hint">批量导入 Markdown；文件夹保留目录层级，同名路径跳过。</p>
             <label
               >选择 Markdown 文件<input id="interview-files" type="file" accept=".md" multiple
             /></label>
@@ -879,9 +839,6 @@
             <button type="button" class="danger" id="delete-entry">删除内容</button>
             <span class="status" id="status"></span>
           </div>
-          <p class="hint">
-            回收站：<code>.local-admin-trash</code> / 校验：<code>npm run build</code>
-          </p>
         </form>
       </section>
     </main>

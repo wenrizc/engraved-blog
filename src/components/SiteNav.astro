@@ -5,16 +5,16 @@ interface Props {
 const { interview = false } = Astro.props;
 const nav = interview
   ? [
-      { href: '/interview/', label: '文章', en: 'ARTICLE' },
-      { href: '/interview/topics/', label: '主题', en: 'TAGS' },
-      { href: '/interview/search/', label: '搜索', en: 'SEARCH' }
+      { href: '/interview/', label: '文章' },
+      { href: '/interview/topics/', label: '主题' },
+      { href: '/interview/search/', label: '搜索' }
     ]
   : [
-      { href: '/', label: '首页', en: 'HOME' },
-      { href: '/article/', label: '文章', en: 'ARTICLE' },
-      { href: '/photography/', label: '摄影', en: 'PHOTOGRAPHY' },
-      { href: '/tags/', label: '主题', en: 'TAGS' },
-      { href: '/about/', label: '关于', en: 'ABOUT' }
+      { href: '/', label: '首页' },
+      { href: '/article/', label: '文章' },
+      { href: '/photography/', label: '摄影' },
+      { href: '/tags/', label: '主题' },
+      { href: '/about/', label: '关于' }
     ];
 
 const links = [
@@ -48,7 +48,6 @@ const links = [
         class:list={{ active: current }}
       >
         <span>{item.label}</span>
-        <small>{item.en}</small>
       </a>
     );
   })}
@@ -62,7 +61,6 @@ const links = [
         aria-controls="nav-links-menu"
       >
         <span>链接</span>
-        <small>LINKS</small>
       </button>
       <div class="nav-links__menu" id="nav-links-menu">
         {links.map((link) => (

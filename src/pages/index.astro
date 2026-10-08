@@ -105,9 +105,9 @@ const heroPlate = plates[0];
         </script>
       </div>
       <PlateFrame
-        class="hero-plate paper-grain"
+        class="hero-plate"
+        style={`--plate-ratio: ${heroPlate.image.width / heroPlate.image.height}`}
         title={heroPlate.title}
-        artist={heroPlate.artist}
         full={plateOptions[0].full}
         data-plates={JSON.stringify(plateOptions)}
         data-plate-pending="true"
@@ -141,19 +141,15 @@ const heroPlate = plates[0];
           }
 
           const plate = options[Math.floor(Math.random() * options.length)];
+          if (plate.width > 0 && plate.height > 0) {
+            figure.style.setProperty('--plate-ratio', String(plate.width / plate.height));
+          }
           if (plate.srcset) image.setAttribute('srcset', plate.srcset);
           else image.removeAttribute('srcset');
           image.setAttribute('src', plate.src);
           image.alt = plate.alt;
           if (plate.width) image.width = plate.width;
           if (plate.height) image.height = plate.height;
-
-          const setText = (selector, value) => {
-            const element = figure.querySelector(selector);
-            if (element) element.textContent = value || '';
-          };
-          setText('[data-plate-title]', plate.title);
-          setText('[data-plate-artist]', plate.artist);
 
           const trigger = figure.querySelector('[data-photo-lightbox-trigger]');
           if (trigger instanceof HTMLElement) {

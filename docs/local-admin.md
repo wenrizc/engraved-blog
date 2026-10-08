@@ -14,6 +14,31 @@ Then open the URL printed in the terminal, usually:
 http://127.0.0.1:9797/
 ```
 
+## Open from the local subnet
+
+The default server only listens on this computer. To open the admin from another device on the same trusted Wi-Fi or wired network, start it with:
+
+```bash
+ADMIN_HOST=0.0.0.0 npm run admin
+```
+
+The terminal will print the available LAN URL, for example:
+
+```text
+http://192.168.1.23:9797/
+```
+
+Open that URL on the other device. Both devices must be on the same subnet. If the port is occupied, use the port shown in the terminal; the server automatically tries the next port. A host firewall may also need to allow that TCP port.
+
+On Windows PowerShell, use:
+
+```powershell
+$env:ADMIN_HOST = "0.0.0.0"
+npm run admin
+```
+
+The admin can write this project’s content files and has no login protection, so only expose it on a network you trust. Stop it with `Ctrl+C` when finished.
+
 ## What It Edits
 
 - Article Markdown: `src/content/articles/*.md`
@@ -34,7 +59,7 @@ http://127.0.0.1:9797/
 
 - This is local-only and writes files through `local-admin/server.mjs`.
 - The HTML page alone cannot write files in a normal browser; the small Node server provides that filesystem access.
-- Default URL is usually `http://127.0.0.1:9797/`. If that port is occupied, the server automatically tries the next available port and prints the final URL.
+- Default URL is usually `http://127.0.0.1:9797/`; set `ADMIN_HOST=0.0.0.0` to listen on the local subnet. If the port is occupied, the server automatically tries the next available port and prints the final URL.
 - Delete is intentionally conservative: it moves Markdown files into `.local-admin-trash` instead of deleting photo assets.
 
 ## 面试八股管理
