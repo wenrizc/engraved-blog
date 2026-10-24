@@ -1,14 +1,19 @@
-import { existsSync } from 'node:fs';
+import { existsSync, mkdtempSync } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { defineConfig } from '@playwright/test';
 
 const executablePath =
   process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ??
   (existsSync('/usr/bin/google-chrome') ? '/usr/bin/google-chrome' : undefined);
 
+process.env.TEST_SITE_ROOT ??= mkdtempSync(path.join(os.tmpdir(), 'wenri-site-test-'));
+
 export default defineConfig({
   testDir: './tests',
+  testIgnore: 'admin.spec.ts',
   fullyParallel: true,
-  // Admin tests edit content watched by the shared dev server.
+  // Integration tests share one disposable copy of the site's content.
   workers: 1,
   use: {
     baseURL: 'http://127.0.0.1:4330',
@@ -22,8 +27,8 @@ export default defineConfig({
     { name: 'desktop', use: { viewport: { width: 1440, height: 900 } } }
   ],
   webServer: {
-    command: 'npm run dev -- --host 127.0.0.1 --port 4330',
+    command: 'node tests/site-server.mjs',
     url: 'http://127.0.0.1:4330',
-    reuseExistingServer: !process.env.CI
+    reuseExistingServer: false
   }
 });

@@ -5,7 +5,7 @@ import { getPublishedArticles } from '../../lib/content';
 
 export async function getStaticPaths() {
   const posts = await getPublishedArticles();
-  return posts.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
 const { entry } = Astro.props;

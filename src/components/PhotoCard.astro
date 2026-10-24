@@ -12,7 +12,7 @@ const thumbnail = photo.data.cover ?? photo.data.gallery[0]?.src;
 const thumbnailAspect = thumbnail
   ? Math.min(2.2, Math.max(1, thumbnail.width / thumbnail.height))
   : 1.5;
-const href = photoUrl(photo.slug);
+const href = photoUrl(photo.id);
 ---
 
 <article class:list={['photo-card', priority && 'is-priority']}>

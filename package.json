@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.23.4"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build",
@@ -15,13 +18,20 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "smoke": "node scripts/smoke.mjs",
-    "test:layout": "playwright test"
+    "test:layout": "playwright test",
+    "test:admin": "playwright test --config playwright.admin.config.ts"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/sitemap": "^3.5.0",
-    "astro": "^5.12.3",
+    "@astrojs/check": "^0.9.12",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.2",
+    "rehype-sanitize": "^6.0.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
     "typescript": "^5.8.3",
+    "unified": "^11.0.5",
     "yaml": "^2.9.1"
   },
   "devDependencies": {
@@ -33,6 +43,6 @@
     "eslint-plugin-astro": "^1.7.0",
     "prettier": "^3.9.9",
     "prettier-plugin-astro": "^1.1.0",
-    "sharp": "^0.34.5"
+    "sharp": "^0.35.5"
   }
 }

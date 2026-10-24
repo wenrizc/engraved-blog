@@ -1,9 +1,12 @@
 ---
-title: '复古终端风格的可读性边界'
-description: '记录这个博客主题的设计原则：哪里可以复古，哪里必须现代。'
+title: 复古终端风格的可读性边界
+description: 记录这个博客主题的设计原则：哪里可以复古，哪里必须现代。
 date: 2026-07-10
-tags: ['readability', 'ui', 'retro']
-draft: false
+tags:
+  - readability
+  - ui
+  - retro
+draft: true
 ---
 
 复古终端风格最容易犯的错误，是把所有文字都变成低分辨率像素字体，再配上刺眼的荧光色。这样的页面第一眼有记忆点，但不适合阅读。

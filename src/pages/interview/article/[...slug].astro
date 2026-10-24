@@ -7,7 +7,7 @@ import { formatDate } from '../../../lib/content';
 
 export async function getStaticPaths() {
   return (await getInterviews()).map((entry) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry }
   }));
 }

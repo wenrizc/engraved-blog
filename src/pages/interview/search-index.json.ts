@@ -7,7 +7,7 @@ export async function GET() {
       entries.map((entry) => ({
         title: entry.data.title,
         description: entry.data.description,
-        href: interviewUrl(entry.slug),
+        href: interviewUrl(entry.id),
         text: [entry.data.title, entry.data.description, entry.id, ...entry.data.tags, entry.body]
           .join(' ')
           .toLocaleLowerCase()

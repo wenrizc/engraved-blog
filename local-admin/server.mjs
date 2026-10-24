@@ -1,14 +1,23 @@
 import http from 'node:http';
-import { parse as parseYaml } from 'yaml';
-import { randomUUID } from 'node:crypto';
+import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
+import { createHash, randomUUID } from 'node:crypto';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
+import remarkRehype from 'remark-rehype';
+import rehypeSanitize from 'rehype-sanitize';
+import rehypeStringify from 'rehype-stringify';
+import sharp from 'sharp';
 import { existsSync } from 'node:fs';
-import { mkdir, readFile, readdir, writeFile, rename } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile, rename, unlink, stat } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(__dirname, '..');
+const root = process.env.ADMIN_PROJECT_ROOT
+  ? path.resolve(process.env.ADMIN_PROJECT_ROOT)
+  : path.resolve(__dirname, '..');
 const adminDir = __dirname;
 const articlesDir = path.join(root, 'src', 'content', 'articles');
 const interviewsDir = path.join(root, 'src', 'content', 'interviews');
@@ -17,9 +26,31 @@ const assetPhotosDir = path.join(root, 'src', 'assets', 'photos');
 const trashDir = path.join(root, '.local-admin-trash');
 const preferredPort = Number(process.env.ADMIN_PORT || 9797);
 const preferredHost = process.env.ADMIN_HOST || '127.0.0.1';
+const markdownRenderer = unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkRehype)
+  .use(rehypeSanitize)
+  .use(rehypeStringify);
+const revisionOf = (markdown) => createHash('sha256').update(markdown).digest('hex');
+const thumbnails = new Map();
+let mutations = Promise.resolve();
+function mutate(action) {
+  const result = mutations.then(action);
+  mutations = result.catch(() => {});
+  return result;
+}
 
 function send(res, status, body, type = 'application/json; charset=utf-8') {
-  res.writeHead(status, { 'content-type': type });
+  res.writeHead(status, {
+    'content-type': type,
+    'x-content-type-options': 'nosniff',
+    'referrer-policy': 'no-referrer',
+    'cache-control': 'no-store',
+    'content-security-policy': type.startsWith('image/svg+xml')
+      ? "default-src 'none'; sandbox"
+      : "frame-ancestors 'none'"
+  });
   res.end(body);
 }
 
@@ -52,7 +83,9 @@ function slugify(input) {
 function safeJoin(base, target) {
   const resolved = path.resolve(base, target);
   if (resolved !== path.resolve(base) && !resolved.startsWith(path.resolve(base) + path.sep)) {
-    throw new Error('Path escapes content directory.');
+    const error = new Error('Path escapes content directory.');
+    error.statusCode = 400;
+    throw error;
   }
   return resolved;
 }
@@ -80,6 +113,19 @@ function entrySlug(type, input) {
   return parts.map(slugify).join('/');
 }
 
+function storedSlug(type, input) {
+  const slug = String(input);
+  const parts = slug.split('/');
+  if (
+    (type !== 'interview' && parts.length !== 1) ||
+    parts.some((part) => !part || part === '.' || part === '..') ||
+    slug.includes('\\')
+  )
+    throw new Error('目录路径无效。');
+  safeJoin(collectionDir(type), `${slug}.md`);
+  return slug;
+}
+
 async function markdownFiles(dir, prefix = '') {
   if (!existsSync(dir)) return [];
   const files = [];
@@ -92,24 +138,13 @@ async function markdownFiles(dir, prefix = '') {
   return files;
 }
 
-function quoteString(value) {
-  return JSON.stringify(value ?? '');
-}
-
-function yamlValue(value) {
-  if (Array.isArray(value)) return `[${value.map(quoteString).join(', ')}]`;
-  if (typeof value === 'boolean') return value ? 'true' : 'false';
-  if (value === undefined || value === null || value === '') return '""';
-  return quoteString(value);
-}
-
 function toMarkdown(data, body = '') {
-  const lines = Object.entries(data)
-    .filter(([, value]) => value !== undefined)
-    .map(([key, value]) => `${key}: ${yamlValue(value)}`);
+  const metadata = Object.fromEntries(
+    Object.entries(data).filter(([, value]) => value !== undefined)
+  );
   const normalizedBody = typeof body === 'string' ? body.trim() : '';
   const bodyBlock = normalizedBody ? `\n\n${normalizedBody}\n` : '\n';
-  return `---\n${lines.join('\n')}\n---${bodyBlock}`;
+  return `---\n${stringifyYaml(metadata, { lineWidth: 0 })}---${bodyBlock}`;
 }
 
 async function readCollection(type) {
@@ -124,6 +159,7 @@ async function readCollection(type) {
       type,
       slug: file.replace(/\.md$/, ''),
       file,
+      revision: revisionOf(markdown),
       ...parsed
     });
   }
@@ -132,35 +168,101 @@ async function readCollection(type) {
 
 async function readRequest(req) {
   const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > 45 * 1024 * 1024) {
+      const error = new Error('文件过大，请每次上传小于 30 MB 的图片。');
+      error.statusCode = 413;
+      throw error;
+    }
+    chunks.push(chunk);
+  }
   return Buffer.concat(chunks);
 }
 
 async function saveEntry(type, payload) {
   const dir = collectionDir(type);
+  const data = payload.data || {};
+  if (typeof data.title !== 'string' || !data.title.trim()) throw new Error('请填写标题。');
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(data.date) ||
+    !Number.isFinite(Date.parse(data.date)) ||
+    new Date(data.date).toISOString().slice(0, 10) !== data.date
+  )
+    throw new Error('请填写有效日期。');
+  if (!Array.isArray(data.tags) || data.tags.some((tag) => typeof tag !== 'string'))
+    throw new Error('标签应为字符串数组。');
+  if (typeof data.draft !== 'boolean') throw new Error('草稿状态无效。');
+  if (type === 'photography') {
+    const gallery = data.gallery || [];
+    if (!Array.isArray(gallery) || (!data.cover && !gallery.length))
+      throw new Error('摄影作品至少需要一张图片。');
+    if (
+      gallery.some(
+        (item) =>
+          !item ||
+          typeof item.src !== 'string' ||
+          !item.src ||
+          (item.caption !== undefined && typeof item.caption !== 'string')
+      )
+    )
+      throw new Error('图片或说明格式无效。');
+    for (const src of [data.cover, ...gallery.map((item) => item?.src)].filter(Boolean)) {
+      if (
+        typeof src !== 'string' ||
+        !src.startsWith('../../assets/photos/') ||
+        !existsSync(safeJoin(assetPhotosDir, src.slice('../../assets/photos/'.length)))
+      )
+        throw new Error('图片不存在，请重新添加图片。');
+    }
+  }
   await mkdir(dir, { recursive: true });
-  const slug = entrySlug(type, payload.slug || payload.data?.title || 'entry');
-  const originalSlug = payload.originalSlug ? entrySlug(type, payload.originalSlug) : '';
+  const originalSlug = payload.originalSlug ? storedSlug(type, payload.originalSlug) : '';
+  let slug =
+    originalSlug && payload.slug === originalSlug
+      ? originalSlug
+      : entrySlug(type, payload.slug || data.title);
+  if (originalSlug && type === 'interview' && payload.slug !== originalSlug) {
+    const directory = String(payload.slug).replace(/\\/g, '/').split('/').slice(0, -1).join('/');
+    slug = [directory ? entrySlug(type, directory) : '', originalSlug.split('/').pop()]
+      .filter(Boolean)
+      .join('/');
+  }
   const target = safeJoin(dir, `${slug}.md`);
+  if (originalSlug && payload.revision) {
+    const originalTarget = safeJoin(dir, `${originalSlug}.md`);
+    if (
+      !existsSync(originalTarget) ||
+      revisionOf(await readFile(originalTarget, 'utf8')) !== payload.revision
+    ) {
+      const error = new Error('文件已被其他窗口或编辑器修改。请保留本机草稿，重新加载后再保存。');
+      error.statusCode = 409;
+      throw error;
+    }
+  }
   if (existsSync(target) && originalSlug !== slug) {
     const error = new Error(`页面路径已存在：${slug}。请调整标题或日期。`);
     error.statusCode = 409;
     throw error;
   }
   await mkdir(path.dirname(target), { recursive: true });
-  if (originalSlug && originalSlug !== slug) {
-    const originalTarget = safeJoin(dir, `${originalSlug}.md`);
-    if (existsSync(originalTarget)) await rename(originalTarget, target);
-  }
-  const data = payload.data || {};
   const body = typeof payload.body === 'string' ? payload.body : '';
-  await writeFile(target, toMarkdown(data, body), 'utf8');
-  return { slug, file: `${slug}.md` };
+  const markdown = toMarkdown(data, body);
+  const temporary = `${target}.${randomUUID()}.tmp`;
+  try {
+    await writeFile(temporary, markdown, 'utf8');
+    await rename(temporary, target);
+    if (originalSlug && originalSlug !== slug) await unlink(safeJoin(dir, `${originalSlug}.md`));
+  } finally {
+    await unlink(temporary).catch(() => {});
+  }
+  return { slug, file: `${slug}.md`, revision: revisionOf(markdown) };
 }
 
 async function deleteEntry(type, slug) {
   const dir = collectionDir(type);
-  const target = safeJoin(dir, `${entrySlug(type, slug)}.md`);
+  const target = safeJoin(dir, `${storedSlug(type, slug)}.md`);
   if (!existsSync(target)) return false;
   await mkdir(trashDir, { recursive: true });
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -197,7 +299,7 @@ async function importInterviews(payload) {
         data: {
           title,
           description: data.description || '',
-          date,
+          date: new Date(date).toISOString().slice(0, 10),
           tags: data.tags || [],
           draft: data.draft || false
         },
@@ -215,15 +317,40 @@ async function saveUploadedPhotos(payload) {
   await mkdir(assetPhotosDir, { recursive: true });
   const files = Array.isArray(payload.files) ? payload.files : [];
   const saved = [];
+  const sanitized = [];
+  if (files.length > 100) throw new Error('单次最多添加 100 张图片。');
+  // Validate the whole batch before writing any assets.
   for (const file of files) {
+    const buffer = Buffer.from(file.data || '', 'base64');
+    if (!buffer.length || buffer.length > 30 * 1024 * 1024)
+      throw new Error('图片大小应在 0 到 30 MB 之间。');
+    if (
+      !['.jpg', '.jpeg', '.png', '.webp', '.avif', '.svg'].includes(
+        path.extname(file.name || '').toLowerCase()
+      )
+    )
+      throw new Error(`不支持的图片格式：${file.name}`);
+    try {
+      const image = sharp(buffer).rotate();
+      const metadata = await image.metadata();
+      // Rasterize SVG so uploaded XML/scripts can never run on the admin origin.
+      // Sharp also removes EXIF/XMP metadata, including location and device details.
+      const output = await (metadata.format === 'svg' ? image.png() : image).toBuffer({
+        resolveWithObject: true
+      });
+      const extension = { jpeg: '.jpg', png: '.png', webp: '.webp', heif: '.avif' }[
+        output.info.format
+      ];
+      if (!extension) throw new Error('Unsupported image format.');
+      sanitized.push({ file, buffer: output.data, extension });
+    } catch {
+      throw new Error(`无法读取图片：${file.name || '未命名图片'}`);
+    }
+  }
+  for (const { file, buffer, extension } of sanitized) {
     const original = file.name || `photo-${randomUUID()}`;
     const parsed = path.parse(original);
-    const ext = parsed.ext.toLowerCase();
-    if (!['.jpg', '.jpeg', '.png', '.webp', '.avif', '.svg'].includes(ext)) {
-      throw new Error(`Unsupported image extension: ${original}`);
-    }
-    const buffer = Buffer.from(file.data || '', 'base64');
-    const name = `${slugify(file.slug || parsed.name)}-${randomUUID().slice(0, 6)}${ext}`;
+    const name = `${slugify(file.slug || parsed.name)}-${randomUUID().slice(0, 6)}${extension}`;
     const target = safeJoin(assetPhotosDir, name);
     await writeFile(target, buffer);
     saved.push({
@@ -235,19 +362,73 @@ async function saveUploadedPhotos(payload) {
 }
 
 async function route(req, res) {
-  const url = new URL(req.url || '/', 'http://127.0.0.1');
   try {
+    const origin = `http://${req.headers.host}`;
+    const url = new URL(req.url || '/', origin);
+    const localAddresses = Object.values(os.networkInterfaces())
+      .flat()
+      .filter(Boolean)
+      .map(({ address }) => (address.includes(':') ? `[${address}]` : address));
+    const hosts = new Set(['localhost', '127.0.0.1', '[::1]', ...localAddresses]);
+    if (!['0.0.0.0', '::'].includes(preferredHost)) {
+      hosts.add(preferredHost.includes(':') ? `[${preferredHost}]` : preferredHost);
+    }
+    // Host validation prevents DNS rebinding; Origin and JSON checks prevent CSRF.
+    if (
+      !hosts.has(url.hostname) ||
+      url.origin !== origin ||
+      Number(url.port || 80) !== req.socket.localPort ||
+      (req.headers.origin && req.headers.origin !== url.origin) ||
+      (url.pathname.startsWith('/api/') && req.headers['sec-fetch-site'] === 'cross-site')
+    ) {
+      return json(res, 403, { error: '仅允许从管理页同一地址访问。' });
+    }
+    if (
+      req.method === 'POST' &&
+      req.headers['content-type']?.split(';')[0].trim().toLowerCase() !== 'application/json'
+    ) {
+      return json(res, 415, { error: '请求必须使用 application/json。' });
+    }
     if (req.method === 'GET' && url.pathname === '/') {
       const html = await readFile(path.join(adminDir, 'index.html'), 'utf8');
       return send(res, 200, html, 'text/html; charset=utf-8');
+    }
+    if (req.method === 'GET' && ['/admin.css', '/admin.js'].includes(url.pathname)) {
+      const file = path.join(adminDir, url.pathname.slice(1));
+      return send(
+        res,
+        200,
+        await readFile(file, 'utf8'),
+        url.pathname.endsWith('.css') ? 'text/css; charset=utf-8' : 'text/javascript; charset=utf-8'
+      );
+    }
+    if (req.method === 'POST' && url.pathname === '/api/preview') {
+      const payload = JSON.parse((await readRequest(req)).toString('utf8'));
+      const rendered = await markdownRenderer.process(String(payload.body || ''));
+      return json(res, 200, { html: String(rendered) });
     }
     if (req.method === 'GET' && url.pathname.startsWith('/src/assets/photos/')) {
       const file = safeJoin(
         assetPhotosDir,
         decodeURIComponent(url.pathname.replace('/src/assets/photos/', ''))
       );
-      const data = await readFile(file);
-      return send(res, 200, data, contentType(file));
+      const width = Number(url.searchParams.get('width'));
+      if ([96, 480, 1440].includes(width)) {
+        const info = await stat(file);
+        const key = `${file}:${info.mtimeMs}:${info.size}:${width}`;
+        let thumbnail = thumbnails.get(key);
+        if (!thumbnail) {
+          thumbnail = await sharp(file)
+            .rotate()
+            .resize({ width, height: width, fit: 'inside', withoutEnlargement: true })
+            .webp({ quality: 82 })
+            .toBuffer();
+          if (thumbnails.size >= 80) thumbnails.delete(thumbnails.keys().next().value);
+          thumbnails.set(key, thumbnail);
+        }
+        return send(res, 200, thumbnail, 'image/webp');
+      }
+      return send(res, 200, await readFile(file), contentType(file));
     }
     if (req.method === 'GET' && url.pathname === '/api/entries') {
       const type = url.searchParams.get('type');
@@ -259,25 +440,34 @@ async function route(req, res) {
       const payload = JSON.parse((await readRequest(req)).toString('utf8'));
       if (!['article', 'photography', 'interview'].includes(payload.type))
         return json(res, 400, { error: 'Invalid type.' });
-      return json(res, 200, await saveEntry(payload.type, payload));
+      return json(res, 200, await mutate(() => saveEntry(payload.type, payload)));
     }
     if (req.method === 'POST' && url.pathname === '/api/delete') {
       const payload = JSON.parse((await readRequest(req)).toString('utf8'));
       if (!['article', 'photography', 'interview'].includes(payload.type))
         return json(res, 400, { error: 'Invalid type.' });
-      return json(res, 200, { deleted: await deleteEntry(payload.type, payload.slug) });
+      return json(res, 200, {
+        deleted: await mutate(() => deleteEntry(payload.type, payload.slug))
+      });
     }
     if (req.method === 'POST' && url.pathname === '/api/interviews/import') {
       const payload = JSON.parse((await readRequest(req)).toString('utf8'));
-      return json(res, 200, { results: await importInterviews(payload) });
+      return json(res, 200, { results: await mutate(() => importInterviews(payload)) });
     }
     if (req.method === 'POST' && url.pathname === '/api/photos') {
       const payload = JSON.parse((await readRequest(req)).toString('utf8'));
       return json(res, 200, { gallery: await saveUploadedPhotos(payload) });
     }
+    if (req.method === 'GET' && /\.(png|jpe?g|webp|avif|svg)$/i.test(url.pathname)) {
+      const file = safeJoin(path.join(root, 'public'), decodeURIComponent(url.pathname.slice(1)));
+      if (existsSync(file)) return send(res, 200, await readFile(file), contentType(file));
+    }
     return json(res, 404, { error: 'Not found.' });
   } catch (error) {
-    return json(res, error.statusCode || 500, { error: error.message });
+    const status = error.statusCode || (error instanceof SyntaxError ? 400 : 500);
+    return json(res, status, {
+      error: error.code === 'ENOENT' ? '文件不存在。' : error.message.replaceAll(root, '[project]')
+    });
   }
 }
 

@@ -17,11 +17,11 @@ const { directory } = Astro.props;
     <article class="post-card">
       <div class="post-card-body">
         <h3>
-          <a href={interviewUrl(entry.slug)}>{entry.data.title}</a>
+          <a href={interviewUrl(entry.id)}>{entry.data.title}</a>
         </h3>
         {entry.data.description && <p>{entry.data.description}</p>}
       </div>
-      <a class="card-arrow" href={interviewUrl(entry.slug)} aria-label={`阅读 ${entry.data.title}`}>
+      <a class="card-arrow" href={interviewUrl(entry.id)} aria-label={`阅读 ${entry.data.title}`}>
         ↗
       </a>
     </article>

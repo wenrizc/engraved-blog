@@ -13,6 +13,7 @@ test.beforeAll(async ({}, testInfo) => {
   admin = spawn(process.execPath, ['local-admin/server.mjs'], {
     env: {
       ...process.env,
+      ADMIN_PROJECT_ROOT: process.env.TEST_SITE_ROOT,
       ADMIN_HOST: '127.0.0.1',
       ADMIN_PORT: String(19000 + (process.pid % 10000))
     }
@@ -40,10 +41,12 @@ test.beforeEach(async ({ page }) => {
 test.afterAll(async () => {
   admin?.kill();
   if (folder) {
-    await rm(`src/content/interviews/${folder}`, { recursive: true, force: true });
-    await rm(`src/content/interviews/${folder}-upload.md`, { force: true });
-    for (const file of await readdir('.local-admin-trash').catch(() => [])) {
-      if (file.startsWith(`interview-${folder}-`)) await rm(`.local-admin-trash/${file}`);
+    const root = process.env.TEST_SITE_ROOT;
+    if (!root) throw new Error('TEST_SITE_ROOT is required.');
+    await rm(`${root}/src/content/interviews/${folder}`, { recursive: true, force: true });
+    await rm(`${root}/src/content/interviews/${folder}-upload.md`, { force: true });
+    for (const file of await readdir(`${root}/.local-admin-trash`).catch(() => [])) {
+      if (file.startsWith(`interview-${folder}-`)) await rm(`${root}/.local-admin-trash/${file}`);
     }
   }
 });
@@ -54,6 +57,7 @@ test('admin imports nested Markdown into an isolated interview library', async (
 }) => {
   await page.goto(adminUrl);
   await page.getByRole('button', { name: '面试八股', exact: true }).click();
+  await page.locator('#open-import').click();
   await expect(page.locator('#import-interviews')).toBeVisible();
   const markdown = `---\ntitle: 面试目录验证\ndate: 2026-10-02\ntags:\n  - ${folder}\ndraft: false\n---\n\n## 问答\n\ninterview-search-${folder}\n`;
   await page.locator('#interview-files').setInputFiles({
@@ -65,6 +69,7 @@ test('admin imports nested Markdown into an isolated interview library', async (
   });
   await page.getByRole('button', { name: '导入面试文章', exact: true }).click();
   await expect(page.locator('#import-results')).toContainText('已导入');
+  await page.getByRole('button', { name: '关闭导入', exact: true }).click();
   // The API retains folder paths from directory selections.
   const payload = {
     files: [
@@ -93,7 +98,7 @@ test('admin imports nested Markdown into an isolated interview library', async (
   await page.locator('#entries .entry').filter({ hasText: '/并发/thread' }).click();
   await expect(page.locator('#directory')).toHaveValue(`${folder}/java/并发`);
   await page.locator('#description').fill('后台编辑验证');
-  await page.getByRole('button', { name: '保存 Markdown', exact: true }).click();
+  await page.getByRole('button', { name: /保存 Markdown/ }).click();
   await expect(page.locator('#status')).toContainText('已保存');
 
   // Wait for Astro's content watcher to pick up the imported files.

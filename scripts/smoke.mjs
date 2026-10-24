@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 
 const poetryData = JSON.parse(readFileSync('src/data/generated/poetry-poems.json', 'utf8'));
 const samplePoem = poetryData.poems[0];
@@ -9,19 +9,24 @@ const port = 4327;
 const routes = [
   '/',
   '/article/',
-  '/article/design-notes/',
   '/photography/',
-  '/photography/2026-07-11-stone-garden/',
   '/tags/',
-  '/tags/cat/',
+  '/interview/',
+  '/interview/search/',
   '/about/',
   '/404',
   samplePoetryRoute
 ];
+for (const section of ['article', 'photography', 'tags']) {
+  const entry = readdirSync(`dist/${section}`, { withFileTypes: true }).find((entry) =>
+    entry.isDirectory()
+  );
+  if (entry) routes.push(`/${section}/${entry.name}/`);
+}
 
 const server = spawn(
   'node_modules/.bin/astro',
-  ['preview', '--host', '127.0.0.1', '--port', String(port)],
+  ['preview', '--ignore-lock', '--host', '127.0.0.1', '--port', String(port)],
   {
     stdio: ['ignore', 'pipe', 'pipe']
   }
@@ -52,7 +57,7 @@ try {
   if (!ready) throw new Error(`preview server did not start\n${output}`);
 
   for (const route of routes) {
-    const response = await fetch(`http://127.0.0.1:${port}${route}`);
+    const response = await fetch(`http://127.0.0.1:${port}${encodeURI(route)}`);
     const html = await response.text();
     if (response.status !== 200) throw new Error(`${route}: expected 200, got ${response.status}`);
     for (const marker of ['<main', '<nav', '<title>']) {

@@ -3,1223 +3,317 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>文日小栈 Admin</title>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Noto+Serif+SC:wght@400;500;600;700&display=optional');
-
-      :root {
-        --bg: #080b09;
-        --bg-deep: #0d110f;
-        --panel: #101713;
-        --panel-2: #151e18;
-        --text: #e6f2e7;
-        --muted: #8c9b90;
-        --line: #2d3b31;
-        --line-strong: #a8c9ae;
-        --green: #b8e8bf;
-        --green-strong: #d8f7dd;
-        --yellow: #e7bd72;
-        --danger: #ed8b8e;
-        --content-max: 1400px;
-        --page-gutter: 48px;
-        --content: min(var(--content-max), calc(100% - var(--page-gutter)));
-        --sidebar-width: 330px;
-        --layout-gap: 24px;
-        --panel-padding: 24px;
-        --control-height: 42px;
-        color-scheme: dark;
-        font-family:
-          Inter,
-          ui-sans-serif,
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          'Microsoft YaHei',
-          sans-serif;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        overflow-y: scroll;
-        scrollbar-gutter: stable;
-      }
-
-      body {
-        margin: 0;
-        background: radial-gradient(circle at 50% -10%, #1b2b20 0, transparent 48%), var(--bg);
-        color: var(--text);
-        min-height: 100vh;
-      }
-
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 22px max(calc(var(--page-gutter) / 2), calc((100% - var(--content-max)) / 2));
-        background: rgba(8, 11, 9, 0.84);
-        border-bottom: 1px solid var(--line);
-        box-shadow: 0 12px 38px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(16px);
-      }
-
-      h1,
-      h2,
-      h3,
-      p {
-        margin-top: 0;
-      }
-
-      h1 {
-        margin-bottom: 0;
-        color: var(--green-strong);
-        font-family: Georgia, 'Songti SC', serif;
-        font-size: clamp(25px, 4vw, 38px);
-        line-height: 1.2;
-        letter-spacing: -0.03em;
-      }
-
-      .section-title {
-        margin: 0;
-        color: var(--green-strong);
-        font-size: 16px;
-        letter-spacing: 0.02em;
-      }
-
-      button,
-      input,
-      textarea,
-      select {
-        font: inherit;
-      }
-
-      button {
-        min-height: 38px;
-        padding: 7px 14px;
-        border: 1px solid var(--line-strong);
-        border-radius: 8px;
-        background: transparent;
-        color: var(--green-strong);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
-        font-weight: 700;
-        cursor: pointer;
-        transition:
-          background 0.18s,
-          color 0.18s,
-          border-color 0.18s,
-          transform 0.18s;
-      }
-
-      button:hover,
-      button:focus-visible {
-        background: var(--green-strong);
-        border-color: var(--green-strong);
-        color: #101812;
-        transform: translateY(-1px);
-      }
-
-      button.secondary {
-        color: var(--yellow);
-        border-color: var(--yellow);
-      }
-
-      button.danger {
-        background: rgba(237, 139, 142, 0.12);
-        color: var(--danger);
-        border-color: var(--danger);
-      }
-
-      main {
-        width: var(--content);
-        margin: 34px auto 80px;
-        display: grid;
-        grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-        gap: var(--layout-gap);
-        align-items: stretch;
-      }
-
-      .panel {
-        width: 100%;
-        min-width: 0;
-        padding: var(--panel-padding);
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        background: linear-gradient(145deg, rgba(24, 35, 27, 0.94), rgba(12, 17, 14, 0.97));
-        box-shadow:
-          0 18px 48px rgba(0, 0, 0, 0.22),
-          inset 0 1px 0 rgba(255, 255, 255, 0.025);
-      }
-
-      .editor-panel {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        align-content: start;
-      }
-
-      .sidebar-panel {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        align-content: start;
-        gap: 16px;
-      }
-
-      .panel-intro {
-        padding-bottom: 4px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .sidebar-panel > * {
-        width: 100%;
-        min-width: 0;
-      }
-
-      .tabs {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-        width: 100%;
-      }
-
-      .tabs button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        min-width: 0;
-        text-align: center;
-      }
-
-      .tabs button[aria-pressed='true'] {
-        background: var(--green);
-        color: #112016;
-        border-color: var(--green);
-      }
-
-      .search-box {
-        margin: 0;
-      }
-
-      .entry-list {
-        display: grid;
-        gap: 8px;
-        align-content: start;
-      }
-
-      .entry {
-        padding: 14px 14px 14px 16px;
-        border: 1px solid var(--line);
-        border-left: 3px solid transparent;
-        border-radius: 9px;
-        background: rgba(21, 30, 24, 0.78);
-        cursor: pointer;
-        transition:
-          border-color 0.18s,
-          background 0.18s,
-          transform 0.18s;
-      }
-
-      .entry:hover {
-        border-color: #5a7460;
-        transform: translateX(2px);
-      }
-
-      .entry.active {
-        border-color: var(--yellow);
-        border-left-color: var(--yellow);
-        background: rgba(65, 55, 32, 0.22);
-      }
-
-      .entry strong,
-      .entry span {
-        display: block;
-      }
-
-      .entry span {
-        color: var(--muted);
-        margin-top: 6px;
-        font:
-          12px/1.4 'Courier New',
-          monospace;
-      }
-
-      .empty-state,
-      .summary {
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.6;
-      }
-
-      .summary {
-        margin-top: 2px;
-        padding-top: 14px;
-        border-top: 1px dashed var(--line);
-      }
-
-      form {
-        display: grid;
-        width: 100%;
-        min-width: 0;
-        gap: 18px;
-      }
-
-      .grid {
-        display: grid;
-        width: 100%;
-        min-width: 0;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 18px;
-      }
-
-      label {
-        display: grid;
-        gap: 8px;
-        color: var(--muted);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        min-width: 0;
-      }
-
-      input,
-      textarea,
-      select {
-        display: block;
-        width: 100%;
-        min-width: 0;
-        padding: 10px 12px;
-        border: 1px solid #35483a;
-        border-radius: 7px;
-        background: rgba(6, 10, 8, 0.74);
-        color: var(--text);
-      }
-
-      input,
-      select {
-        height: var(--control-height);
-        line-height: 1.35;
-      }
-
-      input[type='file'] {
-        height: var(--control-height);
-        padding: 6px 10px;
-        line-height: 1.35;
-      }
-
-      input:focus,
-      textarea:focus,
-      select:focus {
-        outline: 2px solid rgba(184, 232, 191, 0.45);
-        outline-offset: 2px;
-        border-color: var(--green);
-        box-shadow: 0 0 0 3px rgba(184, 232, 191, 0.08);
-      }
-
-      textarea {
-        min-height: 320px;
-        resize: vertical;
-        line-height: 1.7;
-      }
-
-      .body-field {
-        grid-column: 1 / -1;
-      }
-
-      .gallery-editor {
-        display: grid;
-        gap: 12px;
-      }
-
-      .gallery-item {
-        display: grid;
-        grid-template-columns: 140px minmax(0, 1fr);
-        gap: 12px;
-        padding: 12px;
-        border-radius: 9px;
-        border: 1px solid var(--line);
-        background: rgba(21, 30, 24, 0.78);
-      }
-
-      .gallery-item img {
-        width: 100%;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
-        background: var(--bg-deep);
-        border: 1px solid var(--line);
-      }
-
-      .gallery-fields {
-        display: grid;
-        gap: 8px;
-      }
-
-      .gallery-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-      }
-
-      .cover-badge {
-        color: var(--green);
-        font-weight: 700;
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-      }
-
-      .status {
-        color: var(--green);
-        font:
-          12px/1.4 'Courier New',
-          monospace;
-        min-height: 1.6em;
-      }
-
-      .hint {
-        color: var(--muted);
-        line-height: 1.65;
-        font-size: 12px;
-      }
-
-      .interview-only {
-        display: none;
-      }
-      body[data-type='interview'] .interview-only {
-        display: grid;
-      }
-
-      .photo-only {
-        display: none;
-      }
-
-      body[data-type='photography'] .photo-only {
-        display: grid;
-      }
-
-      body[data-type='photography'] .article-only {
-        display: none;
-      }
-
-      @media (max-width: 900px) {
-        :root {
-          --page-gutter: 24px;
-        }
-        main {
-          grid-template-columns: 1fr;
-        }
-
-        .sidebar-panel {
-          order: 2;
-        }
-        .editor-panel {
-          order: 1;
-        }
-
-        .grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 560px) {
-        header {
-          align-items: flex-start;
-          padding-top: 18px;
-          padding-bottom: 18px;
-        }
-        header .actions {
-          padding-top: 3px;
-        }
-        main {
-          margin-top: 20px;
-        }
-        .panel {
-          padding: 18px;
-          border-radius: 11px;
-        }
-        .gallery-item {
-          grid-template-columns: 1fr;
-        }
-        .gallery-item img {
-          max-height: 210px;
-        }
-        .actions {
-          align-items: stretch;
-        }
-        .actions button {
-          flex: 1;
-        }
-      }
-
-      /* Keep the admin inside the same quiet paper-and-ink system as the main site. */
-      :root {
-        --paper: #f1ede5;
-        --paper-deep: #e6dfd3;
-        --ink: #292a27;
-        --muted: #777169;
-        --rule: #aaa297;
-        --accent: #96392c;
-        --copper: #78817b;
-        --serif: 'Newsreader', 'Noto Serif SC', serif;
-        --mono: 'DM Mono', monospace;
-        --page-gutter: 28px;
-      }
-
-      body {
-        color: var(--ink);
-        background: linear-gradient(rgba(41, 42, 39, 0.018) 1px, transparent 1px), var(--paper);
-        background-size: 100% 5px;
-        font-family: var(--serif);
-        font-size: 16px;
-        line-height: 1.7;
-      }
-
-      header {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        padding: 10px max(var(--page-gutter), calc((100% - 1180px) / 2));
-        background: rgba(241, 237, 229, 0.94);
-        border-bottom: 1px solid rgba(41, 42, 39, 0.32);
-        box-shadow: none;
-        backdrop-filter: blur(8px);
-      }
-
-      header > div:first-child {
-        min-width: 0;
-      }
-      h1 {
-        color: var(--ink);
-        font: 600 clamp(22px, 3vw, 30px)/1.15 var(--serif);
-        letter-spacing: -0.03em;
-        text-shadow: none;
-      }
-      h1 span {
-        color: var(--accent) !important;
-      }
-      main {
-        width: min(1180px, calc(100% - (var(--page-gutter) * 2)));
-        margin: 0 auto;
-        padding: 58px 0 90px;
-        grid-template-columns: 280px minmax(0, 1fr);
-        gap: 76px;
-      }
-
-      .panel {
-        padding: 0;
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        box-shadow: none;
-      }
-      .sidebar-panel {
-        align-content: start;
-        gap: 20px;
-      }
-      .editor-panel {
-        align-content: start;
-      }
-      .panel-intro {
-        padding: 0 0 14px;
-        border-bottom: 2px solid var(--ink);
-      }
-      .section-title {
-        color: var(--ink);
-        font: 500 30px/1.1 var(--serif);
-        letter-spacing: -0.03em;
-      }
-      .section-note {
-        margin-top: 7px;
-        color: var(--muted);
-        font: 10px/1.5 var(--mono);
-      }
-
-      button {
-        min-height: 0;
-        padding: 8px 13px;
-        border: 1px solid var(--rule);
-        border-radius: 0;
-        background: var(--paper);
-        color: var(--ink);
-        box-shadow: 0 2px 0 rgba(80, 70, 58, 0.08);
-        font: inherit;
-        font-size: 14px;
-        font-weight: 500;
-        transition:
-          color 0.16s,
-          background 0.16s,
-          border-color 0.16s;
-      }
-      button:hover,
-      button:focus-visible {
-        background: var(--paper-deep);
-        color: var(--accent);
-        border-color: var(--accent);
-        transform: none;
-      }
-      button.secondary {
-        color: var(--accent);
-        border-color: var(--rule);
-        background: var(--paper);
-      }
-      button.danger {
-        color: var(--accent);
-        border-color: var(--accent);
-        background: transparent;
-      }
-
-      .tabs {
-        gap: 18px;
-        border-bottom: 1px solid var(--rule);
-        padding-bottom: 12px;
-      }
-      .tabs button {
-        border: 0;
-        border-bottom: 1px solid transparent;
-        padding: 4px 0;
-        background: transparent;
-        box-shadow: none;
-      }
-      .tabs button[aria-pressed='true'] {
-        background: transparent;
-        color: var(--accent);
-        border-bottom-color: var(--accent);
-      }
-      .tabs button:hover,
-      .tabs button:focus-visible {
-        background: transparent;
-      }
-
-      label {
-        gap: 6px;
-        color: var(--muted);
-        font: 10px/1.5 var(--mono);
-        letter-spacing: 0.1em;
-      }
-      input,
-      textarea,
-      select {
-        padding: 9px 10px;
-        border: 1px solid var(--rule);
-        border-radius: 0;
-        background: rgba(230, 223, 211, 0.35);
-        color: var(--ink);
-        font: 16px/1.45 var(--serif);
-      }
-      input,
-      select {
-        height: 42px;
-      }
-      input:focus,
-      textarea:focus,
-      select:focus {
-        outline: 2px solid rgba(150, 57, 44, 0.3);
-        outline-offset: 2px;
-        border-color: var(--accent);
-        box-shadow: none;
-      }
-      textarea {
-        min-height: 320px;
-        line-height: 1.7;
-      }
-      .entry-list {
-        gap: 0;
-      }
-      .entry {
-        padding: 16px 0;
-        border: 0;
-        border-bottom: 1px solid var(--rule);
-        border-radius: 0;
-        border-left: 0;
-        background: transparent;
-        box-shadow: none;
-      }
-      .entry:hover {
-        border-color: var(--rule);
-        transform: none;
-        color: var(--accent);
-      }
-      .entry.active {
-        border-color: var(--rule);
-        border-left: 0;
-        background: transparent;
-        color: var(--accent);
-      }
-      .entry strong {
-        font-size: 18px;
-        font-weight: 500;
-        line-height: 1.3;
-      }
-      .entry span {
-        margin-top: 6px;
-        color: var(--muted);
-        font: 10px/1.5 var(--mono);
-      }
-      .summary,
-      .hint,
-      .empty-state {
-        color: var(--muted);
-        font: 10px/1.6 var(--mono);
-      }
-      .summary {
-        margin-top: 0;
-        padding-top: 13px;
-        border-top: 0;
-      }
-      .actions {
-        gap: 10px;
-      }
-      .status {
-        color: var(--accent);
-        font: 10px/1.6 var(--mono);
-      }
-      .gallery-item {
-        padding: 12px;
-        border: 1px solid var(--rule);
-        border-radius: 0;
-        background: var(--paper-deep);
-      }
-      .gallery-item img {
-        border: 1px solid var(--rule);
-        background: var(--paper);
-      }
-      .cover-badge {
-        color: var(--accent);
-        font: 10px var(--mono);
-      }
-
-      @media (max-width: 900px) {
-        main {
-          width: min(100% - (var(--page-gutter) * 2), 680px);
-          grid-template-columns: minmax(0, 1fr);
-          padding-top: 40px;
-          gap: 44px;
-        }
-        .sidebar-panel {
-          order: 2;
-        }
-        .editor-panel {
-          order: 1;
-        }
-      }
-      @media (max-width: 560px) {
-        :root {
-          --page-gutter: 18px;
-        }
-        header {
-          padding: 10px var(--page-gutter);
-        }
-        main {
-          width: calc(100% - (var(--page-gutter) * 2));
-          padding-top: 32px;
-        }
-        .panel {
-          padding: 0;
-        }
-        .section-title {
-          font-size: 27px;
-        }
-      }
-    </style>
+    <title>内容工作台 · 文日小栈</title>
+    <link rel="stylesheet" href="/admin.css" />
+    <script src="/admin.js" type="module"></script>
   </head>
-  <body data-type="article">
-    <header>
-      <div>
-        <h1>文日小栈 Admin</h1>
-      </div>
-      <div class="actions">
-        <button type="button" id="new-entry">新建</button>
+  <body data-type="article" data-mode="edit">
+    <header class="app-header">
+      <a class="brand" href="/" aria-label="文日小栈管理首页"
+        ><span class="brand-mark">文</span><span>文日小栈<small>内容工作台</small></span></a
+      >
+      <div class="header-actions">
+        <span id="save-state" class="save-state" role="status">正在加载…</span>
+        <button type="button" id="toggle-preview">预览</button>
+        <button type="submit" form="editor" id="save-entry" class="primary">
+          保存 Markdown <kbd>⌘ / Ctrl S</kbd>
+        </button>
       </div>
     </header>
-
-    <main>
-      <aside class="panel sidebar-panel">
-        <div class="panel-intro">
-          <h2 class="section-title">内容库</h2>
+    <main class="app-shell">
+      <aside class="library" aria-label="内容库">
+        <div class="section-heading">
+          <h2>内容库</h2>
+          <span id="library-count" class="count">0</span>
         </div>
-        <div class="tabs">
+        <nav class="collection-tabs" aria-label="内容类型">
           <button type="button" data-tab="article" aria-pressed="true">文章</button>
           <button type="button" data-tab="photography" aria-pressed="false">照片</button>
           <button type="button" data-tab="interview" aria-pressed="false">面试八股</button>
+        </nav>
+        <div class="library-actions">
+          <button type="button" id="new-entry" class="primary">＋ 新建文章</button
+          ><button type="button" id="open-import" class="interview-only">导入</button>
         </div>
-        <label class="search-box">
-          筛选
-          <input id="filter" name="filter" placeholder="标题、标签" autocomplete="off" />
-        </label>
-        <div id="entries" class="entry-list"></div>
-        <div id="summary" class="summary"></div>
+        <label class="search-label"
+          ><span class="sr-only">筛选内容</span
+          ><input id="filter" type="search" placeholder="搜索标题、标签、目录…" autocomplete="off"
+        /></label>
+        <div class="list-controls">
+          <label
+            ><span class="sr-only">筛选状态</span
+            ><select id="status-filter">
+              <option value="all">全部状态</option>
+              <option value="published">公开内容</option>
+              <option value="draft">草稿</option>
+            </select></label
+          ><label
+            ><span class="sr-only">排序方式</span
+            ><select id="list-sort">
+              <option value="newest">日期 ↓</option>
+              <option value="oldest">日期 ↑</option>
+              <option value="title">标题 A–Z</option>
+            </select></label
+          >
+        </div>
+        <div id="entries" class="entry-list" aria-label="内容列表"></div>
+        <p id="summary" class="summary"></p>
+        <p class="library-note">
+          内容保存在项目 Markdown 文件中。<br />保存后重新构建网站即可发布。
+        </p>
       </aside>
-
-      <section class="panel editor-panel">
+      <section class="workspace" id="workspace" aria-label="编辑工作区">
+        <div class="workspace-heading">
+          <div>
+            <p class="eyebrow" id="editor-context">文章 / 编辑</p>
+            <h1 id="editor-heading">编写文章</h1>
+          </div>
+          <span class="badge" id="entry-state">公开</span>
+        </div>
+        <div id="recovery-banner" class="notice" hidden>
+          <p id="recovery-message"></p>
+          <div>
+            <button type="button" id="restore-draft">恢复暂存</button
+            ><button type="button" id="discard-draft">丢弃暂存</button>
+          </div>
+        </div>
+        <div
+          id="status"
+          class="notice status-message"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
         <form id="editor">
-          <div class="panel-intro">
-            <h2 class="section-title">编辑内容</h2>
+          <div class="document-title">
+            <label for="title" class="sr-only">标题</label
+            ><input
+              id="title"
+              name="title"
+              placeholder="为这篇内容起一个标题…"
+              required
+              maxlength="200"
+            /><label for="description" class="sr-only">摘要（可选）</label
+            ><textarea
+              id="description"
+              name="description"
+              rows="2"
+              placeholder="添加摘要，让读者知道这篇内容讲什么（可选）"
+            ></textarea>
           </div>
-          <div class="interview-only">
-            <p class="hint">批量导入 Markdown；文件夹保留目录层级，同名路径跳过。</p>
-            <label
-              >选择 Markdown 文件<input id="interview-files" type="file" accept=".md" multiple
-            /></label>
-            <label
-              >选择 Markdown 文件夹<input
-                id="interview-folder"
-                type="file"
-                webkitdirectory
-                multiple
-            /></label>
-            <button id="import-interviews" type="button">导入面试文章</button>
-            <pre
-              id="import-results"
-              class="hint"
-              style="white-space: pre-wrap; overflow-wrap: anywhere"
-              role="status"
-            ></pre>
+          <div class="view-bar">
+            <div class="view-tabs" aria-label="编辑视图">
+              <button type="button" data-mode="edit" aria-pressed="true">编写</button
+              ><button type="button" data-mode="split" aria-pressed="false">分屏预览</button
+              ><button type="button" data-mode="preview" aria-pressed="false">预览</button>
+            </div>
+            <span id="word-count" class="subtle">0 字</span>
           </div>
-          <div class="grid">
-            <label class="interview-only"
-              >目录（可选，使用 / 分层）<input id="directory" placeholder="Java/并发"
-            /></label>
-            <label>
-              标题
-              <input id="title" name="title" required />
-            </label>
-            <label>
-              摘要（可选）
-              <input id="description" name="description" />
-            </label>
-            <label>
-              日期
-              <input id="date" name="date" type="date" required />
-            </label>
-            <label>
-              标签
-              <input id="tags" name="tags" placeholder="street, night, city" />
-            </label>
-            <label>
-              草稿
-              <select id="draft" name="draft">
-                <option value="false">否</option>
-                <option value="true">是</option>
-              </select>
-            </label>
-            <label class="photo-only">
-              封面路径
-              <input
-                id="cover"
-                name="cover"
-                placeholder="../../assets/photos/example.jpg"
-                readonly
-              />
-            </label>
-            <label class="photo-only">
-              选择照片
-              <input id="photo-files" name="photo-files" type="file" accept="image/*" multiple />
-            </label>
-            <label class="body-field photo-only">
-              图库
-              <div id="gallery-editor" class="gallery-editor"></div>
-            </label>
-            <label class="body-field">
-              正文
-              <textarea id="body" name="body"></textarea>
-            </label>
-          </div>
-          <div class="actions">
-            <button type="submit">保存 Markdown</button>
-            <button type="button" class="secondary photo-only" id="upload-photos">
-              上传所选照片
-            </button>
-            <button type="button" class="danger" id="delete-entry">删除内容</button>
-            <span class="status" id="status"></span>
+          <div class="composition">
+            <div class="writing-pane">
+              <section class="gallery-section photo-only" aria-labelledby="gallery-heading">
+                <div class="section-heading">
+                  <h2 id="gallery-heading">照片 <span id="photo-count" class="count">0</span></h2>
+                  <div class="compact-actions">
+                    <button type="button" id="undo-gallery" disabled>撤销</button
+                    ><button type="button" id="choose-photos">＋ 添加照片</button>
+                  </div>
+                </div>
+                <p class="hint">
+                  拖动手柄、使用箭头或修改序号调整顺序。封面单独选择，图集按这里的顺序展示。
+                </p>
+                <div
+                  id="photo-dropzone"
+                  class="dropzone"
+                  tabindex="0"
+                  role="button"
+                  aria-label="选择或拖入照片"
+                >
+                  <span class="drop-icon" aria-hidden="true">＋</span
+                  ><strong>把照片拖到这里，或点击添加</strong
+                  ><span>可多选 · JPG、PNG、WebP、AVIF、SVG · 每张最多 30 MB</span>
+                </div>
+                <input
+                  id="photo-files"
+                  class="sr-only"
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.webp,.avif,.svg"
+                  multiple
+                  tabindex="-1"
+                />
+                <input
+                  id="replace-photo-file"
+                  class="sr-only"
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.webp,.avif,.svg"
+                  tabindex="-1"
+                />
+                <div id="gallery-editor" class="gallery-editor"></div>
+              </section>
+              <section class="body-section" aria-labelledby="body-heading">
+                <div class="section-heading">
+                  <h2 id="body-heading">正文</h2>
+                  <span class="subtle">Markdown</span>
+                </div>
+                <div class="markdown-toolbar" aria-label="正文格式工具">
+                  <button type="button" data-format="heading" title="二级标题">H2</button
+                  ><button type="button" data-format="bold" title="粗体"><b>B</b></button
+                  ><button type="button" data-format="italic" title="斜体"><i>I</i></button
+                  ><span class="toolbar-separator"></span
+                  ><button type="button" data-format="quote">引用</button
+                  ><button type="button" data-format="list">列表</button
+                  ><button type="button" data-format="link">链接</button
+                  ><button type="button" data-format="code">代码</button>
+                  <details class="syntax-help">
+                    <summary>语法提示</summary>
+                    <div>
+                      <p><code>## 标题</code> 二级标题</p>
+                      <p><code>**文字**</code> 粗体</p>
+                      <p><code>- 项目</code> 列表</p>
+                      <p><code>[文字](网址)</code> 链接</p>
+                      <p><code>```语言</code> 代码块</p>
+                    </div>
+                  </details>
+                </div>
+                <label for="body" class="sr-only">正文</label
+                ><textarea
+                  id="body"
+                  name="body"
+                  spellcheck="false"
+                  placeholder="从这里开始写作…&#10;&#10;支持 Markdown，点击「分屏预览」边写边看。"
+                ></textarea>
+                <div class="editor-footnote">
+                  <span>修改自动暂存到此浏览器</span><span>保存快捷键 ⌘ / Ctrl + S</span>
+                </div>
+              </section>
+            </div>
+            <section id="preview-pane" class="preview-pane" aria-label="内容预览" hidden>
+              <div class="preview-controls">
+                <span>阅读预览</span>
+                <div class="compact-actions">
+                  <button type="button" data-preview-size="desktop" aria-pressed="true">桌面</button
+                  ><button type="button" data-preview-size="phone" aria-pressed="false">
+                    手机
+                  </button>
+                </div>
+              </div>
+              <p class="hint preview-note">预览包含未保存修改；正文排版与线上内容可能略有差异。</p>
+              <article id="preview-document" class="preview-document">
+                <header>
+                  <p id="preview-meta" class="preview-meta"></p>
+                  <h2 id="preview-title"></h2>
+                  <div id="preview-tags" class="preview-tags"></div>
+                  <p id="preview-description"></p>
+                </header>
+                <div id="preview-gallery"></div>
+                <div id="preview-body" class="prose"></div>
+              </article>
+            </section>
+            <aside class="settings-pane" aria-label="内容设置">
+              <h2>内容设置</h2>
+              <label
+                >状态<select id="draft" name="draft">
+                  <option value="true">草稿 · 仅后台可见</option>
+                  <option value="false">公开 · 构建后展示</option>
+                </select></label
+              >
+              <label>日期<input id="date" name="date" type="date" required /></label>
+              <label
+                >标签<input id="tags" name="tags" placeholder="例如：设计，阅读" /><span
+                  class="hint"
+                  >用逗号分隔，支持中文逗号</span
+                ></label
+              >
+              <label class="interview-only"
+                >目录<input id="directory" placeholder="Java/并发" /><span class="hint"
+                  >使用 / 划分层级</span
+                ></label
+              >
+              <div class="photo-only cover-setting">
+                <span class="field-label">封面</span
+                ><img id="cover-preview" alt="当前封面" hidden />
+                <p id="cover-hint" class="hint">添加照片后选择封面</p>
+              </div>
+              <details class="advanced-settings">
+                <summary>文件信息</summary>
+                <p class="hint">修改标题或日期会保留已有文件名；面试文章可通过目录移动。</p>
+                <p id="entry-path" class="file-path"></p>
+              </details>
+              <div class="danger-zone">
+                <button type="button" id="delete-entry" class="text-danger" disabled>
+                  删除内容
+                </button>
+                <p class="hint">Markdown 移到本地回收站，图片保留。</p>
+              </div>
+            </aside>
           </div>
         </form>
       </section>
     </main>
-
-    <script>
-      const state = {
-        type: 'article',
-        entries: [],
-        current: null,
-        filter: ''
-      };
-      const typeLabels = {
-        article: '文章',
-        photography: '照片',
-        interview: '面试八股'
-      };
-
-      const fields = [
-        'title',
-        'description',
-        'date',
-        'tags',
-        'draft',
-        'cover',
-        'body',
-        'directory'
-      ];
-
-      const $ = (id) => document.getElementById(id);
-
-      function today() {
-        return new Date().toISOString().slice(0, 10);
-      }
-
-      function setStatus(message) {
-        $('status').textContent = message;
-        window.clearTimeout(setStatus.timer);
-        setStatus.timer = window.setTimeout(() => {
-          $('status').textContent = '';
-        }, 4000);
-      }
-
-      function parseTags(value) {
-        return value
-          .split(',')
-          .map((tag) => tag.trim())
-          .filter(Boolean);
-      }
-
-      function slugifyClient(input) {
-        return String(input || '')
-          .trim()
-          .toLowerCase()
-          .normalize('NFKD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-')
-          .replace(/^-+|-+$/g, '');
-      }
-
-      function generatedSlug() {
-        const date = toDateInput($('date').value) || today();
-        const title = slugifyClient($('title').value) || 'untitled';
-        if (state.type === 'interview') {
-          const directory = $('directory').value.trim();
-          const filename = state.current?.slug?.split('/').pop() || `${date}-${title}`;
-          return directory ? `${directory}/${filename}` : filename;
-        }
-        return `${date}-${title}`;
-      }
-
-      function toDateInput(value) {
-        if (!value) return '';
-        return String(value).slice(0, 10);
-      }
-
-      function fill(entry) {
-        state.current = entry;
-        for (const id of fields) $(id).value = '';
-        $('title').value = entry?.data?.title || '';
-        $('description').value = entry?.data?.description || '';
-        $('date').value = toDateInput(entry?.data?.date) || today();
-        $('tags').value = Array.isArray(entry?.data?.tags) ? entry.data.tags.join(', ') : '';
-        $('draft').value = String(Boolean(entry?.data?.draft));
-        $('cover').value = entry?.data?.cover || '';
-        $('body').value = entry?.body || '';
-        $('directory').value =
-          state.type === 'interview' ? (entry?.slug || '').split('/').slice(0, -1).join('/') : '';
-        renderGallery(
-          Array.isArray(entry?.data?.gallery)
-            ? entry.data.gallery
-            : entry?.data?.cover
-              ? [{ src: entry.data.cover, caption: '' }]
-              : []
-        );
-        renderEntries();
-      }
-
-      function previewPath(src) {
-        return src.replace('../../assets/photos/', '/src/assets/photos/');
-      }
-
-      function escapeHtml(value) {
-        return String(value || '').replace(
-          /[&<>"']/g,
-          (char) =>
-            ({
-              '&': '&amp;',
-              '<': '&lt;',
-              '>': '&gt;',
-              '"': '&quot;',
-              "'": '&#039;'
-            })[char]
-        );
-      }
-
-      function renderGallery(items) {
-        const editor = $('gallery-editor');
-        editor.innerHTML = '';
-        const selectedCover = $('cover').value;
-        for (const [index, item] of items.entries()) {
-          const isCover = item.src && item.src === selectedCover;
-          const row = document.createElement('div');
-          row.className = 'gallery-item';
-          row.dataset.index = String(index);
-          row.innerHTML = `
-            <img src="${escapeHtml(previewPath(item.src || ''))}" alt="">
-            <div class="gallery-fields">
-              <label>图片路径<input data-gallery-field="src" value="${escapeHtml(item.src || '')}" readonly></label>
-              <label>说明<input data-gallery-field="caption" value="${escapeHtml(item.caption || '')}"></label>
-              <div class="gallery-actions">
-                <button type="button" class="secondary" data-cover-gallery="${index}">设为封面</button>
-                <button type="button" class="danger" data-remove-gallery="${index}">移除图片</button>
-                <span class="cover-badge">${isCover ? '当前封面' : ''}</span>
-              </div>
-            </div>
-          `;
-          editor.appendChild(row);
-        }
-        editor.querySelectorAll('[data-cover-gallery]').forEach((button) => {
-          button.addEventListener('click', () => {
-            const index = Number(button.dataset.coverGallery);
-            const next = collectGallery();
-            $('cover').value = next[index]?.src || next[0]?.src || '';
-            renderGallery(next);
-          });
-        });
-        editor.querySelectorAll('[data-remove-gallery]').forEach((button) => {
-          button.addEventListener('click', () => {
-            const index = Number(button.dataset.removeGallery);
-            const currentCover = $('cover').value;
-            const removed = collectGallery()[index]?.src;
-            const next = collectGallery().filter((_, itemIndex) => itemIndex !== index);
-            $('cover').value = removed === currentCover ? next[0]?.src || '' : currentCover;
-            renderGallery(next);
-          });
-        });
-      }
-
-      function collectGallery() {
-        return Array.from(document.querySelectorAll('.gallery-item'))
-          .map((row) => {
-            const find = (name) =>
-              row.querySelector(`[data-gallery-field="${name}"]`)?.value.trim() || '';
-            return {
-              src: find('src'),
-              caption: find('caption') || undefined
-            };
-          })
-          .filter((item) => item.src);
-      }
-
-      function renderEntries() {
-        const list = $('entries');
-        list.innerHTML = '';
-        const query = state.filter.trim().toLowerCase();
-        const filtered = state.entries.filter((entry) => {
-          if (!query) return true;
-          const haystack = [
-            entry.slug,
-            entry.data.title,
-            entry.data.description,
-            entry.data.date,
-            ...(Array.isArray(entry.data.tags) ? entry.data.tags : [])
-          ]
-            .filter(Boolean)
-            .join(' ')
-            .toLowerCase();
-          return haystack.includes(query);
-        });
-        for (const entry of filtered) {
-          const button = document.createElement('div');
-          button.className = `entry ${state.current?.slug === entry.slug ? 'active' : ''}`;
-          button.innerHTML = `<strong>${escapeHtml(entry.data.title || entry.slug)}</strong><span>${escapeHtml(entry.data.date || '')} / ${escapeHtml(entry.slug)}</span>`;
-          button.addEventListener('click', () => fill(entry));
-          list.appendChild(button);
-        }
-        if (filtered.length === 0) {
-          const empty = document.createElement('div');
-          empty.className = 'empty-state';
-          empty.textContent = query ? '没有匹配内容。' : '还没有内容。';
-          list.appendChild(empty);
-        }
-        $('summary').textContent =
-          `${filtered.length}/${state.entries.length} 条${typeLabels[state.type]}内容`;
-      }
-
-      async function loadEntries() {
-        document.body.dataset.type = state.type;
-        document.querySelectorAll('[data-tab]').forEach((tab) => {
-          tab.setAttribute('aria-pressed', String(tab.dataset.tab === state.type));
-        });
-        const res = await fetch(`/api/entries?type=${state.type}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || '加载失败');
-        state.entries = data;
-        fill(state.entries[0] || null);
-      }
-
-      function collectPayload() {
-        const originalSlug = state.current?.slug || '';
-        const slug = generatedSlug();
-        if (state.type !== 'photography') {
-          return {
-            type: state.type,
-            slug,
-            originalSlug,
-            data: {
-              title: $('title').value,
-              description: $('description').value || undefined,
-              date: $('date').value,
-              tags: parseTags($('tags').value),
-              draft: $('draft').value === 'true'
-            },
-            body: $('body').value
-          };
-        }
-        return {
-          type: state.type,
-          slug,
-          originalSlug,
-          data: {
-            title: $('title').value,
-            description: $('description').value || undefined,
-            date: $('date').value,
-            tags: parseTags($('tags').value),
-            draft: $('draft').value === 'true',
-            cover: $('cover').value || collectGallery()[0]?.src,
-            gallery: collectGallery()
-          },
-          body: $('body').value
-        };
-      }
-
-      document.querySelectorAll('[data-tab]').forEach((tab) => {
-        tab.addEventListener('click', () => {
-          state.type = tab.dataset.tab;
-          state.filter = '';
-          $('filter').value = '';
-          $('import-results').textContent = '';
-          loadEntries().catch((error) => setStatus(error.message));
-        });
-      });
-
-      $('filter').addEventListener('input', (event) => {
-        state.filter = event.target.value;
-        renderEntries();
-      });
-      $('new-entry').addEventListener('click', () =>
-        fill({
-          slug: '',
-          data: { date: today(), tags: [], draft: false },
-          body: ''
-        })
-      );
-
-      $('editor').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        try {
-          const res = await fetch('/api/entry', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(collectPayload())
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || '保存失败');
-          setStatus(`已保存 ${data.file}`);
-          await loadEntries();
-        } catch (error) {
-          setStatus(error.message || '保存失败');
-        }
-      });
-
-      $('import-interviews').addEventListener('click', async () => {
-        const button = $('import-interviews');
-        const files = [...$('interview-files').files, ...$('interview-folder').files].filter(
-          (file) => /\.md$/i.test(file.name)
-        );
-        if (!files.length) return setStatus('请选择 Markdown 文件或文件夹。');
-        button.disabled = true;
-        try {
-          const encoded = await Promise.all(
-            files.map(async (file) => ({
-              path: file.webkitRelativePath || file.name,
-              markdown: await file.text()
-            }))
-          );
-          const res = await fetch('/api/interviews/import', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ files: encoded })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || '导入失败');
-          $('import-results').textContent = data.results
-            .map(
-              (item) =>
-                `${item.saved ? '已导入' : '失败'} ${item.path}${item.error ? '：' + item.error : ''}`
-            )
-            .join('\n');
-          setStatus(
-            `已导入 ${data.results.filter((item) => item.saved).length}/${files.length} 篇面试文章`
-          );
-          $('interview-files').value = '';
-          $('interview-folder').value = '';
-          await loadEntries();
-        } catch (error) {
-          setStatus(error.message || '导入失败');
-        } finally {
-          button.disabled = false;
-        }
-      });
-
-      $('upload-photos').addEventListener('click', async () => {
-        const input = $('photo-files');
-        const files = Array.from(input.files || []);
-        if (files.length === 0) return setStatus('请先选择一张或多张照片。');
-        const encoded = await Promise.all(
-          files.map(async (file) => {
-            const buffer = await file.arrayBuffer();
-            const bytes = new Uint8Array(buffer);
-            let binary = '';
-            for (let index = 0; index < bytes.length; index += 1)
-              binary += String.fromCharCode(bytes[index]);
-            return {
-              name: file.name,
-              slug: generatedSlug() || file.name,
-              data: btoa(binary)
-            };
-          })
-        );
-        const res = await fetch('/api/photos', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ files: encoded })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || '上传失败');
-        const next = [...collectGallery(), ...data.gallery];
-        if (!$('cover').value) $('cover').value = next[0]?.src || '';
-        renderGallery(next);
-        input.value = '';
-        setStatus(`已上传 ${data.gallery.length} 张照片`);
-      });
-
-      $('delete-entry').addEventListener('click', async () => {
-        const slug = state.current?.slug || '';
-        if (!slug || !confirm(`将${typeLabels[state.type]} ${slug}.md 移到 .local-admin-trash？`))
-          return;
-        const res = await fetch('/api/delete', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ type: state.type, slug })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || '删除失败');
-        setStatus(data.deleted ? `已归档 ${slug}.md` : '未找到文件。');
-        await loadEntries();
-      });
-
-      window.addEventListener('error', (event) => setStatus(event.message));
-      loadEntries();
-    </script>
+    <dialog id="navigation-dialog" class="small-dialog">
+      <h2>还有未保存的修改</h2>
+      <p>保存到项目后继续，或将修改暂存到本机。下次打开这篇内容时可以恢复。</p>
+      <div class="dialog-actions">
+        <button type="button" data-navigation="cancel">继续编辑</button
+        ><button type="button" data-navigation="stash">暂存并继续</button
+        ><button type="button" data-navigation="save" class="primary">保存并继续</button>
+      </div>
+    </dialog>
+    <dialog id="delete-dialog" class="small-dialog">
+      <h2>删除这篇内容？</h2>
+      <p id="delete-message"></p>
+      <div class="dialog-actions">
+        <button type="button" id="cancel-delete">取消</button
+        ><button type="button" id="confirm-delete" class="danger">移到回收站</button>
+      </div>
+    </dialog>
+    <dialog id="import-dialog">
+      <div class="section-heading">
+        <h2>导入面试文章</h2>
+        <button type="button" data-close-dialog="import-dialog" aria-label="关闭导入">关闭</button>
+      </div>
+      <p class="hint">只导入 Markdown，文件夹保留目录层级，同名路径跳过。</p>
+      <label
+        >选择 Markdown 文件<input id="interview-files" type="file" accept=".md" multiple /></label
+      ><label
+        >选择 Markdown 文件夹<input
+          id="interview-folder"
+          type="file"
+          webkitdirectory
+          multiple /></label
+      ><button id="import-interviews" type="button" class="primary">导入面试文章</button>
+      <pre id="import-results" class="import-results" role="status"></pre>
+    </dialog>
+    <dialog id="image-dialog" class="image-dialog">
+      <div class="section-heading">
+        <h2 id="image-dialog-title">编辑照片</h2>
+        <button type="button" data-close-dialog="image-dialog">关闭</button>
+      </div>
+      <div class="image-canvas-wrap"><canvas id="image-canvas"></canvas></div>
+      <div class="image-tools">
+        <button type="button" id="rotate-left">↶ 左转 90°</button
+        ><button type="button" id="rotate-right">↷ 右转 90°</button
+        ><label
+          >裁剪比例<select id="crop-ratio">
+            <option value="original">原图</option>
+            <option value="1">1:1 方形</option>
+            <option value="1.3333333333">4:3</option>
+            <option value="1.5">3:2</option>
+            <option value="0.6666666667">2:3 竖图</option>
+            <option value="1.7777777778">16:9</option>
+          </select></label
+        ><button type="button" id="reset-image">重置</button>
+      </div>
+      <div id="crop-position" class="crop-position" hidden>
+        <label>水平位置<input id="crop-x" type="range" min="0" max="100" value="50" /></label
+        ><label>垂直位置<input id="crop-y" type="range" min="0" max="100" value="50" /></label>
+      </div>
+      <p class="hint">裁剪后可调整取景位置。应用会生成新图片，原始文件保留。</p>
+      <div class="dialog-actions">
+        <button type="button" data-close-dialog="image-dialog">取消</button
+        ><button type="button" id="apply-image" class="primary">应用修改</button>
+      </div>
+      <p id="image-error" class="error-text" role="status"></p>
+    </dialog>
   </body>
 </html>
