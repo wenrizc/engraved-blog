@@ -8,17 +8,19 @@ import PostCard from '../components/PostCard.astro';
 import { plates } from '../data/plates';
 import { poetryQuotes } from '../data/poetryQuotes';
 import { getPhotos, getPublishedArticles } from '../lib/content';
+import { prepareQuote, type PreparedQuote } from '../lib/poetry';
 
 const posts = await getPublishedArticles();
 const photos = await getPhotos();
 const featured = posts[0];
-const poemOptions = poetryQuotes.map(({ poemId, text, lines, author, work }) => ({
-  poemId,
-  text,
-  lines,
-  author,
-  work
-}));
+const poemOptions = poetryQuotes
+  .map(prepareQuote)
+  .filter((quote): quote is PreparedQuote => quote !== null);
+if (poemOptions.length === 0) {
+  throw new Error(
+    'No poetry excerpts survived normalisation. Check src/data/generated/poetry-quotes.json and src/lib/poetry.ts.'
+  );
+}
 
 // Hero plate follows the poem pattern: the first plate is rendered on the
 // server, then a random one is swapped in on the client. srcset is precomputed

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import poetryData from '../../data/generated/poetry-poems.json';
+import { filterPoemLines, normalizeAuthor, normalizeTitle } from '../../lib/poetry';
 
 export function getStaticPaths() {
   return poetryData.poems.map((poem) => ({
@@ -10,6 +11,7 @@ export function getStaticPaths() {
 }
 
 interface Poem {
+  id: string;
   title: string;
   titleEn: string;
   author: string;
@@ -19,30 +21,27 @@ interface Poem {
 }
 
 const { poem } = Astro.props as { poem: Poem };
-const sectionMarker = /^[一二三四五六七八九十百〇○零]{1,6}[、.]?$/;
-const stanzas = poem.stanzas.map((stanza) => {
-  const zh = stanza.zh.filter((line) => {
-    const value = line.trim();
-    return !sectionMarker.test(value);
-  });
-  return {
+const title = normalizeTitle(poem.title, poem.author);
+const author = normalizeAuthor(poem.author);
+const stanzas = poem.stanzas
+  .map((stanza) => ({
     ...stanza,
-    zh
-  };
-});
+    zh: filterPoemLines(stanza.zh, { poemId: poem.id })
+  }))
+  .filter((stanza) => stanza.zh.length > 0);
 ---
 
 <BaseLayout
-  title={`${poem.title} — ${poem.author} | 文日小栈`}
-  description={`${poem.title}：${poem.author} 的中英对照诗歌。`}
+  title={`${title} — ${author} | 文日小栈`}
+  description={`${title}：${author} 的中英对照诗歌。`}
   type="article"
 >
   <article class="poetry-page page-shell">
     <header class="poetry-header">
       <div class="poetry-heading" lang="zh-CN">
-        <h1 class="poetry-title">{poem.title}</h1>
+        <h1 class="poetry-title">{title}</h1>
         <div class="poetry-meta">
-          <span>{poem.author}</span>
+          <span>{author}</span>
           {poem.dates && <span>{poem.dates}</span>}
         </div>
       </div>

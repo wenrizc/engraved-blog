@@ -19,7 +19,10 @@
     "format:check": "prettier --check .",
     "smoke": "node scripts/smoke.mjs",
     "test:layout": "playwright test",
-    "test:admin": "playwright test --config playwright.admin.config.ts"
+    "test:admin": "playwright test --config playwright.admin.config.ts",
+    "fix:poetry": "python3 scripts/apply_poetry_fixes.py",
+    "check:poetry": "python3 scripts/apply_poetry_fixes.py --check",
+    "test:poetry": "playwright test tests/poetry.spec.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",
