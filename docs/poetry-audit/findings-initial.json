@@ -1,0 +1,1717 @@
+{
+  "generatedAt": "2026-10-25",
+  "quotesReviewed": 1386,
+  "initialFindings": 190,
+  "findings": [
+    {
+      "id": "cea77ab7dbbada",
+      "severity": "high",
+      "category": "非诗歌内容",
+      "fragment": "剪影",
+      "problem": "摘录第一行“剪影”是《印象》组诗第一首的小标题，不是诗行。英文该节 en_stanza 从 “The sea is flecked with bars of grey,” 开始，只有四行，没有与“剪影”对应的英文；源诗另有“月之逃逸”小标题。首页会把“剪影”单独显示成诗的第一行，读者会以为正文第一行是一个单词。",
+      "suggestion": "抽取摘录时过滤“剪影”“月之逃逸”这类分节小标题；若仍以《印象》为作品名，小标题只作分节标题，或把该条作品名改为《剪影》。",
+      "batch": 1
+    },
+    {
+      "id": "2f32e97cff9d4e",
+      "severity": "high",
+      "category": "非诗歌内容",
+      "fragment": "一",
+      "problem": "以下 10 条把章节序号单独作为摘录第一行显示：155（一，2f32e97cff9d4e）、159（五，e8d47e7719e661）、163（九，0b7acef6c766a4）、166（十二，858ec42e472738）、167（十三，49597007612c5c）、168（十四，a3390e346250b8）、169（十五，b1344780254845）、171（十七，4240028adf18dd）、172（十八，2bf8461b8f02e5）、173（十九，9bbd3fd45616d9）。英文对应诗节没有这一行（如 #155 en_stanza 首行直接是 “Thou hast made me, And shall thy worke decay?”），中文行数比英文多 1，说明序号是混入的非诗歌内容；其中 #155、#167、#172 的摘录除序号外只剩与作品名几乎相同的首行。",
+      "suggestion": "抽取时过滤纯序号行（一、二、……十九），从“您造就了我……”等正文行开始；同时避免让摘录只剩与作品名重复的首行。",
+      "batch": 1
+    },
+    {
+      "id": "204393209c97cd",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "享受黄金城里极乐的一切。”—",
+      "problem": "摘录从一句引语中间开始，行内只剩一个收引号（”），没有对应的开引号；英文 en_before 为 “‘Curse God and die: what better hope than this?”，可见引语在摘录之前已经开始。首页读者会看到一个孤立的收引号。",
+      "suggestion": "把摘录起点前移到引语开头（“骂一声上帝，死去……”），或删去这个多余的收引号。",
+      "batch": 1
+    },
+    {
+      "id": "379d84fb9d2323",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "“ 我的玫瑰 ”四个字惹你红了脸，",
+      "problem": "引号内首尾各有一个半角空格（“ 我的玫瑰 ”），是英文 “‘ My Rose,’” 的排式带进中文的；首页会明显看到引号与文字之间的空隙。",
+      "suggestion": "删去引号内空格，改为“我的玫瑰”四个字惹你红了脸，（保留句末逗号）。",
+      "batch": 1
+    },
+    {
+      "id": "9d7739da1c0b0e",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "小小的花呀 要是 我能够弄懂",
+      "problem": "行内用两个半角空格代替了标点。英文原句是 “Little flower — but if I could understand”，这里本该是破折号，中文却成了“花呀 要是 我能够弄懂”，读起来像排版时丢了标点。",
+      "suggestion": "恢复为“小小的花呀——要是我能够弄懂”或“小小的花呀，要是我能够弄懂”，并去掉多余空格。",
+      "batch": 1
+    },
+    {
+      "id": "d68e84f7255e75",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "爱情最不堪忍受的， 别离，为食。",
+      "problem": "英文 “That which love worst endures, discretion.” 里的 discretion 是“谨慎、审慎”，译文却作“别离”，把意思改成了“爱情最不能忍受的是别离”，与原文相反；逗号后还多一个半角空格。",
+      "suggestion": "按原文改为“让它以爱情最难忍受的谨慎为食”一类译法，并删去逗号后的空格。",
+      "batch": 1
+    },
+    {
+      "id": "4240028adf18dd",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "偿还给造化；对她也对我有好处，死了；",
+      "problem": "英文 “To Nature, and to her's, and my good is dead,” 的意思是“她的好处和我的幸福都已死去”；中文把 my good is dead 拆成“对她也对我有好处”+“死了”，句子读不通，读者会卡在“对她也对我有好处，死了”。",
+      "suggestion": "依英文改为“偿还给造化；她的好处和我的幸福都已死去”一类表达，让“死了”有明确主语。",
+      "batch": 1
+    },
+    {
+      "id": "6a5b2cbe00bd76",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "你为何自以为？",
+      "problem": "英文 “Why shouldst thou thinke?” 意为“你凭什么这样想？”；中文“自以为”后缺宾语，是残句，单独一行读不通。",
+      "suggestion": "改为“你凭什么这样想？”或“你为何如此自负？”。",
+      "batch": 1
+    },
+    {
+      "id": "d243301552fbaa",
+      "severity": "medium",
+      "category": "归属",
+      "fragment": "《《石榴之家》题辞》",
+      "problem": "作品名外层书名号里又套了完整书名号，形成“《《……》……》”的双层书名号；中文书名号嵌套应改用单书名号〈〉。",
+      "suggestion": "改为《〈石榴之家〉题辞》。",
+      "batch": 1
+    },
+    {
+      "id": "20505b885c6556",
+      "severity": "medium",
+      "category": "归属",
+      "fragment": "《对《天方夜谭》的思忆》",
+      "problem": "同上，内层《天方夜谭》未改用单书名号，首页“— 作者，《作品》”会显示成两层书名号，层级不清。",
+      "suggestion": "改为《对〈天方夜谭〉的思忆》。",
+      "batch": 1
+    },
+    {
+      "id": "8f04bb4f749005",
+      "severity": "low",
+      "category": "归属",
+      "fragment": "《二、正如与许多名号相称》",
+      "problem": "第 155–173 条（共 19 条）的作品名都带“N、”序号，对应 id 为：155（2f32e97cff9d4e）、156（8f04bb4f749005）、157（547e79572324d1）、158（a753205b81c104）、159（e8d47e7719e661）、160（f8f7ebae4f38e4）、161（d3bb3a716ac815）、162（ebc7360e7265cd）、163（0b7acef6c766a4）、164（c684e0a0e41728）、165（a2db8d04e1ae0d）、166（858ec42e472738）、167（49597007612c5c）、168（a3390e346250b8）、169（b1344780254845）、170（28adc5a6e0dc4d）、171（4240028adf18dd）、172（2bf8461b8f02e5）、173（9bbd3fd45616d9）。首页会显示成“《一、您造就了我》”这类像章节标题的书名，与同批其他作品名格式不一致；英文 titleEn 也带 “I.”，说明是源书编号，但展示层不宜保留。",
+      "suggestion": "删去作品名开头的“一、二、……十九、”，或把编号移到不影响阅读的字段/副标题。",
+      "batch": 1
+    },
+    {
+      "id": "e6226591d63ee1",
+      "severity": "low",
+      "category": "空格",
+      "fragment": "《幻 景》",
+      "problem": "8 条作品名在两个字之间夹半角空格：10《幻 景》（e6226591d63ee1）、16《新 生》（459201514fa144）、41《卡 玛》（78ec6b3ad6a6a0）、44《印 象》（cea77ab7dbbada）、45《印 象》（751f377979135b）、48《妓 院》（e6a33da98ee273）、53《短 歌》（99c0da122b2f27）、56《林 中》（8557f5f08c3f95）。这像是源书的二字标题排版，但在网页“— 作者，《作品》”里会被看成空格拆词，且与其余作品名不一致。",
+      "suggestion": "统一去掉标题内空格（《幻景》《新生》……），或在样式层用字间距实现，不要写进书名。",
+      "batch": 1
+    },
+    {
+      "id": "0cdf13b7d5ecab",
+      "severity": "low",
+      "category": "标点",
+      "fragment": "哦，我们英语国家里的诗人-画家！",
+      "problem": "中文行里用了半角连字符“-”（诗人-画家）；中文连接或破折应使用“—”，或改写成“诗人兼画家”。",
+      "suggestion": "改为“诗人—画家”或“诗人兼画家”。",
+      "batch": 1
+    },
+    {
+      "id": "751f377979135b",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "Le Réveillon",
+      "problem": "该条 alignment=stanza_mismatch，en_stanza 只有一行 “Le Réveillon”，这是另一首同名《印 象》（Impression）的法文小标题，不是诗行；中文四行“天空交织着飘忽的红……”对应的是标题后的英文第 2–5 行。英文侧把标题当成诗节，双语页会多出一行未翻译的法文标题，且无法与中文对齐。",
+      "suggestion": "英诗行同样过滤小标题“Le Réveillon”，用 “The sky is laced with fitful red,” 起的四行与中文对齐。",
+      "batch": 1
+    },
+    {
+      "id": "3d605c5336d8e2",
+      "severity": "low",
+      "category": "边界",
+      "fragment": "当克伦威尔说出“民主”一词，/ 这片土地曾是三岛联盟的帝国！",
+      "problem": "en_before 是 “Who love her not: Dear God! is this the land”，英文摘录第一行 “Which bare a triple empire in her hand” 是关系从句，主句 “is this the land” 留在上一行；中文把从句提前并收成感叹句，等于从一个疑问句中间截出两行包装成完整陈述。",
+      "suggestion": "把起点前移到“他们并不爱她：亲爱的上帝！”，或保留疑问语气，避免以“当……”开头、以“！”收尾的独立句。",
+      "batch": 1
+    },
+    {
+      "id": "00c79054734f6c",
+      "severity": "low",
+      "category": "标点",
+      "fragment": "这样的材料可加工琢磨，）",
+      "problem": "右括号前多一个逗号（“，）”），中文括号内不该以逗号收尾；英文原文括号内 “there is,)” 也有逗号，但中文照搬后标点位置不合中文习惯。",
+      "suggestion": "删去括号内末尾逗号，改为“……可加工琢磨）”；如需保留停顿，把逗号移到括号外。",
+      "batch": 1
+    },
+    {
+      "id": "f025ed3ec7acdb",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "这时它咆哮着升到水面死亡：/ 就这么一次被人和天使看到。",
+      "problem": "英文顺序是 “Then once by man and angels to be seen, / In roaring he shall rise and on the surface die.”；中文把两行倒置，结果“死亡：”后冒号引出的却是“被人和天使看到”，逻辑接不上，冒号也失去作用。",
+      "suggestion": "按英文顺序调整为“这时它将被人和天使看到一次：/ 咆哮着升上水面死去。”",
+      "batch": 1
+    },
+    {
+      "id": "1d6ba68c0b61dd",
+      "severity": "high",
+      "category": "空格",
+      "fragment": "“ 记忆 呀，我的 青春 在哪里？",
+      "problem": "引号后及“记忆”“青春”前后有多余空格，把中文词拆开；英文原文为“O Memory, where is now my Youth”，可见空格来自原文强调标记残留。",
+      "suggestion": "改为“记忆呀，我的青春在哪里？”，并去掉引号后的空格。",
+      "batch": 2
+    },
+    {
+      "id": "8466b05818c5dc",
+      "severity": "high",
+      "category": "非诗歌内容",
+      "fragment": "七",
+      "problem": "摘录首行是孤立的章节序号“七”，与英文该节四行诗（Flickering of incessant rain…）无法对应，中文比英文多出一行，读者会以为排版错误。",
+      "suggestion": "删除“七”，或把节号移到诗页标题/导航处，不放进摘录。",
+      "batch": 2
+    },
+    {
+      "id": "1f9e921065911d",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "“布谷鸟不是一只？”",
+      "problem": "英文为“More than one cuckoo?”（不止一只），中文“不是一只”把否定词译反；下句“这让孩子扫兴”也因此失去逻辑，读者会觉得前后矛盾。",
+      "suggestion": "改为“布谷鸟不止一只？”",
+      "batch": 2
+    },
+    {
+      "id": "058101852cd641",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "还要别人抬起水花要温柔，",
+      "problem": "英文“And made us tenderly lift their sprays”，意为“让我们温柔地抬起它们的花枝”；“sprays”指花枝而非“水花”，“made us”也不是“别人”，且整行“还要别人……要温柔”语法不通。",
+      "suggestion": "改为“让我们温柔地抬起它们的花枝，”",
+      "batch": 2
+    },
+    {
+      "id": "98f065e7720b4f",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "都因那个漫不经心的他的‘缘’：",
+      "problem": "英文“It is through him with blitheful brow”写的是“眉宇开朗的他”，中文把“brow”译成“缘”，句子无法读通，单引号也像是残留标记。",
+      "suggestion": "改为“都因那个眉宇开朗的他：”",
+      "batch": 2
+    },
+    {
+      "id": "5d77771bc099fe",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "全是为 这个？",
+      "problem": "“为”与“这个”之间多出空格；英文“And this is what has busied you / So long a while?”显示“这个”是强调对象，空格是格式残留。",
+      "suggestion": "改为“全是为这个？”",
+      "batch": 2
+    },
+    {
+      "id": "3901f928f989db",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "您 不像／长庚星 难得露面／战神 那么耀眼",
+      "problem": "同一摘录内三处主语与谓语之间插入空格，明显是英文换行或强调标记残留；同诗后文“昴宿星团 那么慈祥”也有同样问题。",
+      "suggestion": "删除空格，改为“您不像”“长庚星难得露面”“战神那么耀眼”。",
+      "batch": 2
+    },
+    {
+      "id": "9a5e6468aa61c8",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "布鲁盖尔 的名画，《节日》，",
+      "problem": "画家名与“的”之间多出空格；同一首诗末尾作“布鲁盖尔的名画”，前后不一致，空格是残留。",
+      "suggestion": "改为“布鲁盖尔的名画，《节日》，”",
+      "batch": 2
+    },
+    {
+      "id": "6bd36150ea8ed1",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "波卡洪塔斯 的身体，可爱，像白杨……",
+      "problem": "专名“波卡洪塔斯”与“的”之间多出空格；英文为“Pocahontas' body”，不应有空格。",
+      "suggestion": "改为“波卡洪塔斯的身体，可爱，像白杨……”",
+      "batch": 2
+    },
+    {
+      "id": "3863f4edec49bb",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "“是哪个巨大的弱智之徒，……把我们塞进一个玩笑，交给意外摆布？",
+      "problem": "摘录以开引号起头，结尾没有收引号；该诗每个诗节都用开引号而只在全诗末尾收束，截取单节后引号明显不成对。",
+      "suggestion": "摘录末尾补收引号，或改选含收引号的完整段落。",
+      "batch": 2
+    },
+    {
+      "id": "ce962d7cc68ce7",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "“并以自命为神的眼光……说我有污点！",
+      "problem": "首行开引号在摘录内没有对应收引号；原文该段引语延续到后面的诗节，单看摘录像缺引号。",
+      "suggestion": "补收引号，或把摘录结束点移到引语收束处。",
+      "batch": 2
+    },
+    {
+      "id": "ac85d8e72c9a81",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "“哟！密莉亚，亲爱的，这可真希奇！／谁料得到我会在城里碰见你？",
+      "problem": "开引号在摘录内未闭合，收引号在下一行“这么阔？”之后（未显示），首页摘录看起来引号不成对。",
+      "suggestion": "把下一行“而且哪来这么漂亮的衣裳，这么阔？”纳入摘录，或删去开引号。",
+      "batch": 2
+    },
+    {
+      "id": "5d77771bc099fe",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "然后对我说：／“这么长时间你的辛劳，／全是为 这个？",
+      "problem": "人物对话的开引号在摘录末尾仍未闭合，读者会看到有头无尾的引号。",
+      "suggestion": "补上收引号，或把下一行“哦可怜你累得又老又瘦”一并纳入。",
+      "batch": 2
+    },
+    {
+      "id": "2e28250f3135f4",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "“假如他和我两个……好好儿干上几杯！",
+      "problem": "整段摘录处在开引号之内，结尾没有收引号；该诗引语跨节延续，截取本节后引号失衡。",
+      "suggestion": "补收引号，或改选引语完整的一节。",
+      "batch": 2
+    },
+    {
+      "id": "c8c0486e336169",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "答道：“看到了。那个搭船来的人，／那船顺海峡而来，绕圣阿尔班角。",
+      "problem": "第二行开引号在摘录内没有收引号，收引号在下一行“这么平常的小伙子……”之后（未显示）。",
+      "suggestion": "把下一行纳入摘录，或删去这处开引号。",
+      "batch": 2
+    },
+    {
+      "id": "98f065e7720b4f",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "—啊，我记起了！……当年不爱我；如今他爱我，在召唤！”",
+      "problem": "摘录从人物引语中间开始，首行以破折号起头，结尾却出现孤立的收引号；页面上看不到对应的开引号。",
+      "suggestion": "从““我怎么会又在此地出现？”开始摘录，使引号成对。",
+      "batch": 2
+    },
+    {
+      "id": "e23dc896aea5ed",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "“为什么要睦邻？不是因为／别人家里养着牛？这里没牛。",
+      "problem": "摘录最后一行以开引号起头的问句结束，没有收引号；收引号在摘录之外。",
+      "suggestion": "把下一行“筑墙前我就得问个明白：”纳入，或删去开引号。",
+      "batch": 2
+    },
+    {
+      "id": "ce962d7cc68ce7",
+      "severity": "medium",
+      "category": "边界",
+      "fragment": "“并以自命为神的眼光／挑我的缺陷，",
+      "problem": "英文“As to read my defects with a god-glance”是承前的不定式短语；中文首行以“并”开头，主语和主句都在上一节，摘录从半句开始。",
+      "suggestion": "从上一行“所有的同伴，”或本节开头“我从未设想一种生物”起摘。",
+      "batch": 2
+    },
+    {
+      "id": "098808c6a84ce1",
+      "severity": "medium",
+      "category": "边界",
+      "fragment": "影界的骄傲，好莱坞艳星。",
+      "problem": "首行是承前一句“她就是婀比夏格，出名的美女，”的表语，单独成段后没有主语；英文该节也以“The picture pride of Hollywood.”承接上节，摘录从半句开始。",
+      "suggestion": "把“她就是婀比夏格，出名的美女，”纳入摘录，或改从“多少人得意之极一跌千寻”起。",
+      "batch": 2
+    },
+    {
+      "id": "07a2e087e2797b",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "天不责怪他。那人与我们／始终在一起。”",
+      "problem": "英文“Must scathe him not”意为“我们不可伤害他”，中文把主语换成“天”、动词换成“责怪”，变成“天不责怪他”，施动者和否定内容都错位。",
+      "suggestion": "改为“我们不可伤害他。那人与我们／始终在一起。”",
+      "batch": 2
+    },
+    {
+      "id": "8a9c91d3fe4364",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "只有克服它，我们才能蔑视／真理被折磨得尖叫的恐惧，",
+      "problem": "英文“are we to scan / The racked and shrieking hideousness of Truth”意为“才能审视真理被折磨得尖叫的丑态”；“scan”译成“蔑视”、“hideousness”译成“恐惧”，语义明显偏离。",
+      "suggestion": "改为“才能审视／真理被折磨得尖叫的丑态，”",
+      "batch": 2
+    },
+    {
+      "id": "48bd1b6537e68f",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "把你的松针翻卷起来。／把你大堆的松针",
+      "problem": "英文“Whirl your pointed pines”“Splash your great pines”把海浪比作“尖耸的松树/巨松”，中文两处都译成“松针”，核心意象从松树变成松针。",
+      "suggestion": "改为“把你尖耸的松树翻卷起来。／把你大堆的松树……”",
+      "batch": 2
+    },
+    {
+      "id": "869d084b3512e5",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "那意大利修道工坐在轨道边，",
+      "problem": "英文“The dago shovelman”指意大利铲工/土方工，“修道工”不是规范词，读者会误解为修道院工人；同一诗后文也重复“修道工”。",
+      "suggestion": "改为“那意大利铲工坐在轨道边，”（后文同步改）。",
+      "batch": 2
+    },
+    {
+      "id": "cf1dde37e9241f",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "年轻，心灵手巧，／手脚干净",
+      "problem": "英文“young, agile, clear-eyed / And clean-limbed”是外貌描写，“心灵手巧”“手脚干净”分别译成手巧和品行干净，连续两个定语都偏离原意。",
+      "suggestion": "改为“年轻，敏捷，目光清澈，／四肢匀称”。",
+      "batch": 2
+    },
+    {
+      "id": "aae74d4e5b4fd7",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "用你紫色的心／带来夏天，带来成熟的果实。",
+      "problem": "英文“bring summer and ripe fruits / in their purple hearts”中的“their”指成熟的果实，不是梨树；中文“你紫色的心”把所属对象换成了梨树。",
+      "suggestion": "改为“在它们紫色的心里／带来夏天，带来成熟的果实。”",
+      "batch": 2
+    },
+    {
+      "id": "2eefe26b11ec4e",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "你的脸像雨一样美，",
+      "problem": "英文该节以“for your face is as fair as rain”开头，“for”承接上文的理由；中文去掉连接词，把半句包装成独立完整句，摘录起点与英文不对应。",
+      "suggestion": "从上一行“像你闪光的头发？”起摘，或保留“因为”以显示承接关系。",
+      "batch": 2
+    },
+    {
+      "id": "c72afff447bae0",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "它们在整个四月纵情欢唱，",
+      "problem": "英文“Pipe, as they can when April wears”指“四月将尽时”尽情鸣唱，中文“整个四月”把时间范围译错。",
+      "suggestion": "改为“四月将尽时它们纵情欢唱，”",
+      "batch": 2
+    },
+    {
+      "id": "08ca0413b43967",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "向西，朝拉普拉塔河 滑行，",
+      "problem": "“河”与“滑行”之间多了一个半角空格，中文短语被空格拆断；英文为“Slide westward toward the River Plate,”，此处没有停顿。",
+      "suggestion": "删去空格，作“向西，朝拉普拉塔河滑行，”。",
+      "batch": 3
+    },
+    {
+      "id": "fb11b07cc636b5",
+      "severity": "high",
+      "category": "空格",
+      "fragment": "每劈一下，树木就 琤鸣响，",
+      "problem": "“就”后多出空格，且“琤鸣响”疑脱一字（应为“琤琤鸣响”或“琤琤作响”）；英文“After whose stroke the wood rings”即“树木鸣响”，现文读不通。",
+      "suggestion": "改为“每劈一下，树木就琤琤鸣响，”并删除空格。",
+      "batch": 3
+    },
+    {
+      "id": "50778881601287",
+      "severity": "high",
+      "category": "标点",
+      "fragment": "是否出于堕落.我盼望与他交谈？",
+      "problem": "句中用半角英文句点“.”代替逗号；英文“Was it perversity, that I longed to talk to him?”用的是逗号。另外，perversity 译成“堕落”偏差较大（宜作“反常”或“悖理”）。",
+      "suggestion": "改为“是否出于反常，我盼望与他交谈？”。",
+      "batch": 3
+    },
+    {
+      "id": "8d8d796f4e0770",
+      "severity": "medium",
+      "category": "非诗歌内容",
+      "fragment": "一\n我们是空心人",
+      "problem": "摘录首行是章节序号“一”单独成行，不是诗句；英文对应段“We are the hollow men…”没有这一行，读者会看到孤立的编号。",
+      "suggestion": "剔除章节序号，摘录从“我们是空心人”起。",
+      "batch": 3
+    },
+    {
+      "id": "532c85949c0364",
+      "severity": "medium",
+      "category": "非诗歌内容",
+      "fragment": "一\n正当我的手指在键上",
+      "problem": "章节序号“一”混入摘录；英文“Just as my fingers on these keys”无序号。",
+      "suggestion": "删除首行“一”。",
+      "batch": 3
+    },
+    {
+      "id": "250dc07e104ef7",
+      "severity": "medium",
+      "category": "非诗歌内容",
+      "fragment": "二\n我有三个心灵，",
+      "problem": "章节序号“二”单独成行；英文“I was of three minds,”无序号，且下一节正是“三”，可见是编号而非诗行。",
+      "suggestion": "删除首行“二”。",
+      "batch": 3
+    },
+    {
+      "id": "34671e60e8f44e",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "而群众明白了她为什么蒙上布带。”",
+      "problem": "摘录以孤立的收引号“””结尾，本段内没有对应开引号（引文在摘录之前已开始）；英文对应句“But the multitude saw why she wore the bandage.\"”同样只在此收束，首页单看会以为引号残缺。",
+      "suggestion": "把摘录起点上移到开引号处，或删去末尾引号。",
+      "batch": 3
+    },
+    {
+      "id": "991f83d3bda25b",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "狮子的美，野天鹅的翼，翅翼的暴风。”",
+      "problem": "同上，摘录以孤立收引号结尾，段内无开引号；英文“the storm of the wings.\"”的引文起于摘录之前。",
+      "suggestion": "扩展摘录起点以包含开引号，或删去末尾引号。",
+      "batch": 3
+    },
+    {
+      "id": "830254d53b09a1",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "静思凝神。）",
+      "problem": "摘录末尾出现孤立右括号“）”，段内无左括号；英文“deliberated.)”的括号开在摘录之前，首页只显示半个括号。",
+      "suggestion": "把起点上移到“（”处，或删去末尾“）”。",
+      "batch": 3
+    },
+    {
+      "id": "938a9688a7fb35",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "“从来没人来赢取你，",
+      "problem": "开引号在本段内没有闭合，末行以“？”结束，读者会以为引文被截断；英文引文延续到“Have you no memories, O Darkly Bright?\"”。",
+      "suggestion": "延长摘录到收引号处，或去掉开引号。",
+      "batch": 3
+    },
+    {
+      "id": "063c895cc3e43a",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "麇集的世界，麇集的梦，",
+      "problem": "英文为“The swarm of thoughts, the swarm of dreams”，thoughts 是“思想”或“念头”，中文误作“世界”，意思改变。",
+      "suggestion": "改为“麇集的思想，麇集的梦，”。",
+      "batch": 3
+    },
+    {
+      "id": "5943ef62dd7dd5",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "而如今瞧这些渣滓和发霉的赃物。",
+      "problem": "英文“See now the slug and the mildew plunder.”中 slug 是“蛞蝓”，plunder 是动词“劫掠”或“掠夺”；中文误读成“渣滓”和“赃物”，全句意思走失，“发霉的赃物”也不成话。",
+      "suggestion": "改为“而如今瞧，蛞蝓和霉菌正在劫掠。”一类的直译。",
+      "batch": 3
+    },
+    {
+      "id": "4faa46fbbb311e",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "我从母亲的沉睡中落到这个状态，",
+      "problem": "英文“From my mother's sleep I fell into the State”的 the State 指“国家”或“国家机器”，是全诗的关键双关；中文译成“这个状态”，“这个”无指代，意思明显偏移。",
+      "suggestion": "改为“我从母亲的沉睡中落入了国家”或“落进国家机器”。",
+      "batch": 3
+    },
+    {
+      "id": "01aae71a772ce8",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "她从桌子对面朝我微笑，说我英俊，",
+      "problem": "英文“She laughs at me across the table, saying / I am beautiful.”说话人是“她”，说的是“我很美”；中文改成“说我英俊”，说话人或主语错位。",
+      "suggestion": "改为“她从桌子对面朝我笑，说她很美”一类。",
+      "batch": 3
+    },
+    {
+      "id": "3fde77c5659a87",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "全都沿着小径走向墓地，",
+      "problem": "英文“And all along the path to the cemetery / The round dark heads of men crowd silently”中 all along 是“沿路”，不是“全都走向”；中文多出“走向”，且“全都”悬空无所指。",
+      "suggestion": "改为“沿通往墓地的小路，/男人们黑色的圆头沉默地聚集，”。",
+      "batch": 3
+    },
+    {
+      "id": "e4c19e5e6e10d3",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "地窖中黑人的利益在世界\n关着的门上看到迟延的判决。",
+      "problem": "英文“Mark tardy judgment on the world's closed door”的 mark 是“标示”或“留下（印记）”，中文作“看到”，变成“利益看见判决”，主语和动词都不通。",
+      "suggestion": "改为“在世界紧闭的门上标示出迟到的判决”。",
+      "batch": 3
+    },
+    {
+      "id": "99532ea4a45003",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "为雪地里的聆听者吹送，",
+      "problem": "英文“For the listener, who listens in the snow,”是“至于那位雪中聆听者”，中文误加“吹送”（把上一节的风带进来），首行成了无主语残句，且与英文不符。",
+      "suggestion": "改为“为那雪中的聆听者，”或“至于那雪中聆听者，”。",
+      "batch": 3
+    },
+    {
+      "id": "e380d6ea89be43",
+      "severity": "medium",
+      "category": "边界",
+      "fragment": "是一个人，水手和大海是一体。",
+      "problem": "摘录从半句起：英文“Are one and the sailor and the sea are one.”承接上一行“船长和水手是一个人”，中文首行“是一个人，”突兀，读者看不到主语。",
+      "suggestion": "把起点上移一行（“船长和水手”），或改从“水手和大海是一体”起。",
+      "batch": 3
+    },
+    {
+      "id": "4c8058858e3819",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "决不会打破任何东西。",
+      "problem": "英文“without breaking anything.”是附在上一句后的状语（“而不打破任何东西”），中文译成完整判断句“决不会…”，语气和句法都变了。",
+      "suggestion": "改为“不打破任何东西。”，或补足上文使其成为完整句。",
+      "batch": 3
+    },
+    {
+      "id": "b7e18c6789d1ca",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "《快邮》",
+      "problem": "英文标题为“The Couriers”，意为“信使”或“送信人”；“快邮”是快递业务，标题误译。",
+      "suggestion": "改为《信使》。",
+      "batch": 3
+    },
+    {
+      "id": "a8bab6fc44040f",
+      "severity": "medium",
+      "category": "乱码错字",
+      "fragment": "裂成咝咝发闹的白色的野性浪花，",
+      "problem": "“咝咝发闹”不成词；英文“in wild white sibilant spray”是“咝咝作响的白色飞沫”，“发闹”应为“发响”或“作响”。",
+      "suggestion": "改为“裂成咝咝作响的白色野性浪花，”。",
+      "batch": 3
+    },
+    {
+      "id": "b5c52c85e130e6",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "胆战心惊啊，当你进入伊斯塔西华特尔的火山口，",
+      "problem": "英文“And exhausting, penetrating the lava-crater of a tiny Ixtaccihuatl”的 exhausting 是“累人”或“耗人”，中文作“胆战心惊”，情绪译错。",
+      "suggestion": "改为“累人啊，当你进入……”。",
+      "batch": 3
+    },
+    {
+      "id": "2129536ec1e14e",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "冬天使我们温暖，用健忘的雪",
+      "problem": "该条英文整节给的是“What are the roots that clutch…”（《荒原》另一段），与本段不对应；本段英文应为“Winter kept us warm, covering / Earth in forgetful snow, feeding / A little life with dried tubers.”，双语页会配错英文。",
+      "suggestion": "校正该条英文节索引，改用“Winter kept us warm…”一节。",
+      "batch": 3
+    },
+    {
+      "id": "8d8d796f4e0770",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "一\n我们是空心人",
+      "problem": "该条英文整节给的是“Shape without form, shade without colour, / Paralysed force, gesture without motion;”，属《空心人》第四节；本段对应第一节“We are the hollow men…”，英文配节错误（与前面的章节序号问题为两回事）。",
+      "suggestion": "校正英文节索引，改为第一节“We are the hollow men…”。",
+      "batch": 3
+    },
+    {
+      "id": "890c1c6b7b2cdb",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "不再丢失最后的一口芳香。",
+      "problem": "英文“hardly looses even a last breath of perfume”意为“几乎不散出最后一丝香气”，中文“不再丢失”意思相反，像是仍保留香气。",
+      "suggestion": "改为“几乎不散出最后一丝香气”。",
+      "batch": 3
+    },
+    {
+      "id": "7a0ffa0ebc01be",
+      "severity": "low",
+      "category": "标点",
+      "fragment": "依我看，都，来得朴素。",
+      "problem": "“都”与“来得”之间多一逗号，副词和谓语被逗号隔断，读来不顺；英文“Come simply, so, it seems to me.”此处无停顿。",
+      "suggestion": "改为“依我看，都来得朴素。”或“依我看，来得都朴素。”",
+      "batch": 3
+    },
+    {
+      "id": "9eec9460aac1fd",
+      "severity": "high",
+      "category": "乱码错字",
+      "fragment": "在一个漫长你的夏夜—",
+      "problem": "“漫长你的夏夜”语序错乱，多出一个“你”；英文为 'All a long summer night—'，并无“你的”。",
+      "suggestion": "改为“在一个漫长的夏夜—”或“在你那漫长的夏夜—”。",
+      "batch": 4
+    },
+    {
+      "id": "a9c45d612d7b6a",
+      "severity": "high",
+      "category": "标点",
+      "fragment": "（因为除我之外还有谁能懂得密友们和他们所有的忧伤与欢乐呢？",
+      "problem": "摘录第二行以“（”开头，但整段没有收括号；收括号在未显示的下一行“除我之外又有谁是伙伴们的诗人呢？）”里，页面会留下一个孤立的开括号，且括号内容被截断。",
+      "suggestion": "把下一行一并收入摘录，或删去这行括号、改从“我在春天歌唱时……”起截取。",
+      "batch": 4
+    },
+    {
+      "id": "601a4fd21b2180",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "你不愿被爱？—那么就让你的心",
+      "problem": "英文为 'Thou wouldst be loved?—then let thy heart...'，意为“你愿被爱吗？”，中文多了一个“不”，把意思说反了。",
+      "suggestion": "改为“你愿被爱？—那么就让你的心……”。",
+      "batch": 4
+    },
+    {
+      "id": "abef75a25d1f4f",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "一旦晨曦不再伫留／伫留在我蠕虫般长长的手指，",
+      "problem": "英文为 'When once the twilight locks no longer / Locked in the long worm of my finger'，twilight 是暮色、黄昏，不是“晨曦”；作品名也写作《一旦晨曦不再伫留》，等于把黄昏误标成黎明。",
+      "suggestion": "标题与首行改用“暮色/黄昏”，如“一旦暮色不再锁住／锁在我蠕虫般长长的手指里”。",
+      "batch": 4
+    },
+    {
+      "id": "b40c68d92b8685",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "赛璐珞 的气味",
+      "problem": "“赛璐珞”与“的”之间多了一个半角空格，中文被拆断；英文 'Flavoured of celluloid...' 此处没有停顿。",
+      "suggestion": "删去空格，改为“赛璐珞的气味”。",
+      "batch": 4
+    },
+    {
+      "id": "0563d1b096f773",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "杰克寒霜 何时降临？",
+      "problem": "“杰克寒霜”与“何时”之间多出半角空格，把专名和问句拆开；英文 'When cometh Jack Frost?' 无停顿。",
+      "suggestion": "删去空格，改为“杰克寒霜何时降临？”。",
+      "batch": 4
+    },
+    {
+      "id": "ae8cd631e996b6",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "留存足迹的加利利 船坞",
+      "problem": "“加利利”与“船坞”之间多出半角空格，专名与普通名词被拆开；英文 'the shipyards of Galilee's footprints'。",
+      "suggestion": "删去空格，改为“加利利的船坞”或“留存足迹的加利利船坞”。",
+      "batch": 4
+    },
+    {
+      "id": "3f67568b55bde7",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "悄悄说： 我爱你",
+      "problem": "全角冒号后多了一个半角空格，中文标点后不应留空格；英文 'Whispering I love you' 无停顿。",
+      "suggestion": "删去空格，改为“悄悄说：我爱你”。",
+      "batch": 4
+    },
+    {
+      "id": "7fa24c050f8107",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "申辩、并解答",
+      "problem": "顿号后紧接连词“并”，两种并列手段重复；英文 'justify me and answer' 只用一个 and。",
+      "suggestion": "改为“申辩并解答”或“申辩、解答”。",
+      "batch": 4
+    },
+    {
+      "id": "066d56191f2f01",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "我麻木的心儿所能感知，／……／我的知觉所能期冀。",
+      "problem": "英文 'My sear'd and blighted heart hath known' 与 'I feel hath flown'：前句是“曾知晓”，后句是“我感到它已飞逝”。中文改成“所能感知”“所能期冀”，把“已经飞逝”译反成“仍可期冀”，全诗的挽歌意思被抽掉。",
+      "suggestion": "改为“我枯竭的心曾知晓”／“我感到它已飞逝”。",
+      "batch": 4
+    },
+    {
+      "id": "f835ff15e0f30a",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "它只不过是欲望的诱惑：",
+      "problem": "英文 'It is but agony of desire:'，agony 是“痛苦、煎熬”，不是“诱惑”，程度和意思都变了。",
+      "suggestion": "改为“它不过是欲望的煎熬：”。",
+      "batch": 4
+    },
+    {
+      "id": "4ded3e14ce78e5",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "有某些质—某些无形体的东西，",
+      "problem": "英文 'some incorporate things'，incorporate 是“有形体、具体成形”的，中文“无形体”正好相反，且与下文“从物质和光中涌出”自相矛盾。",
+      "suggestion": "改为“某些有形体的东西”或“某些具体成形之物”。",
+      "batch": 4
+    },
+    {
+      "id": "cc3fecb8a49a95",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "随那叫做“激情”的热病",
+      "problem": "英文 'With the fever called \"Living\"'，Living 指“活着、生命”，中文译成“激情”，把全诗的关键反讽（把“活着”本身称作热病）改掉了。",
+      "suggestion": "改为“那叫做‘活着’的热病”。",
+      "batch": 4
+    },
+    {
+      "id": "3d88db9c8e727b",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "谁又不能打破？",
+      "problem": "英文 'Who do not break?' 是说鸥鸟和鹰“从不折断/屈服”，中文“谁又不能打破？”变成反问“谁不能打破”，主语和否定都反了；上句 'For the muscular and the victorious' 的“给强健者与胜利者”也被并成两个孤立形容词。",
+      "suggestion": "改为“哪里有更大的爱，／给那强健者和胜利者，／甚于鸥鸟和凶猛的鹰——／它们从不折断？”",
+      "batch": 4
+    },
+    {
+      "id": "da82a66d8b86be",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "而在内心，或空空的通道，／我们也没有更多的话要说。",
+      "problem": "英文 'But our speaking does not thrive / In the bosom, or the empty channels.' 意为“但我们的话语在胸中、在空空的通道里并不生长”，中文换成“没有更多的话要说”，并颠倒了后两行的对应关系。",
+      "suggestion": "改为“但我们的话语在胸中，／或空空的通道里，并不生长。”",
+      "batch": 4
+    },
+    {
+      "id": "6babea757b8441",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "随后音叉迎着太阳分化；",
+      "problem": "英文 'Before the pitch was forking to a sun;' 是“在音叉/音高分叉向太阳之前”，下一行也是 'Before...'；中文用“随后”把时间关系倒置。",
+      "suggestion": "改为“在音叉迎着太阳分化之前；”。",
+      "batch": 4
+    },
+    {
+      "id": "d70e1c0e0b37fd",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "你切开的肉质，你畅饮的血",
+      "problem": "英文 'This flesh you break, this blood you let'，let 是“放出（血）”，不是“畅饮”；且末行 'My wine you drink' 才是“饮”，中文让血和酒都成了“畅饮”。",
+      "suggestion": "改为“你切开的肉身，你放出的血”。",
+      "batch": 4
+    },
+    {
+      "id": "05bcb0206d8990",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "我的喉口一套上蠕虫样的绳索，就去威吓",
+      "problem": "英文 'Sooner drop with the worm of the ropes round my throat / Than bully ill love...' 是“我宁可喉口套上绳索倒下，也不愿去欺凌……”，中文“一……就去……”把比较取舍译成了顺承动作。",
+      "suggestion": "改为“我宁可喉口套上蠕虫般的绳索倒下，也不愿去威吓……”。",
+      "batch": 4
+    },
+    {
+      "id": "bb1aa206a5fe34",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "用最短的称呼叫唤我",
+      "problem": "英文 'call me ... by my nighest name'，nighest 是“最亲近的”，不是“最短的”；中文把“最亲切的名字”误读成“最短的称呼”。",
+      "suggestion": "改为“用我最亲近的称呼叫唤我”。",
+      "batch": 4
+    },
+    {
+      "id": "470e9348d67b1c",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "死亡之河在我握住的可怜的手心流淌，",
+      "problem": "英文 'Veined his poor hand I held, and I saw' 是说“我握着的那只可怜的手青筋暴露”，并无“死亡之河”；中文把 veined（青筋/血管遍布）扩写成了“死亡之河……流淌”。",
+      "suggestion": "改为“我握着的那只可怜的手青筋暴露，我看见……”。",
+      "batch": 4
+    },
+    {
+      "id": "ae8cd631e996b6",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "在情意绵绵的夜晚独自醒来，晨光",
+      "problem": "英文 'Waking alone in a multitude of loves when morning's light' 是“在众多的爱中独自醒来”，multitude of loves 并非“情意绵绵的夜晚”；同段 'old as loaves and fishes' 也被译成“仿佛面包和游鱼”，把“和……一样古老”改成比喻。",
+      "suggestion": "改为“在众多的爱中独自醒来，晨光……”；下句改为“和面包与鱼一样古老”。",
+      "batch": 4
+    },
+    {
+      "id": "0cfd175ae7aa3d",
+      "severity": "medium",
+      "category": "非诗歌内容",
+      "fragment": "法兰西／一个伟大的年份和地点，",
+      "problem": "“法兰西”是诗题（作品名已作《法兰西（合众国的第十八个年头）》），不是诗行；英文该节直接从 'A great year and place' 开始，中文诗库却多出这一行标题，摘录把它当正文显示。",
+      "suggestion": "删去“法兰西”这一行，从“一个伟大的年份和地点”起截取。",
+      "batch": 4
+    },
+    {
+      "id": "59b3ff3273ea09",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "灵魂将永远飘荡！",
+      "problem": "英文 'the spirit flown forever!' 意为“灵魂已永远飞走/逝去”，中文“将永远飘荡”变成未来时的游荡，语气和方向都偏了。",
+      "suggestion": "改为“灵魂已永远飞逝！”。",
+      "batch": 4
+    },
+    {
+      "id": "304f1834ea551e",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "去点燃万千的星云。",
+      "problem": "英文 'the first vision that set fire to the stars'，stars 是“星星”，不是“星云”；且 that 引导定语从句（那点燃群星的幻影），中文“去点燃”变成目的状语。",
+      "suggestion": "改为“忍受那最初点燃群星的幻影”。",
+      "batch": 4
+    },
+    {
+      "id": "bbe9c7e7a1cf07",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "安的雕像是位七旬的老人。",
+      "problem": "英文 'And sculptured Ann is seventy years of stone.' 是说“雕刻的安是七十年的石头/石像”，中文把 stone 丢掉，变成“雕像是位七旬的老人”，石像成了活人。",
+      "suggestion": "改为“雕刻的安是七十年的石头”或“安的石像已七十岁”。",
+      "batch": 4
+    },
+    {
+      "id": "8dcd02714e6eb0",
+      "severity": "high",
+      "category": "乱码错字",
+      "fragment": "孩上，不要出去呀！",
+      "problem": "首行“孩上”应为“孩子”，英文为“O child, do not go out!”，是录入/OCR错字，首页会直接显示错字。",
+      "suggestion": "改为“孩子，不要出去呀！”",
+      "batch": 5
+    },
+    {
+      "id": "58eb1e3431f1d4",
+      "severity": "medium",
+      "category": "乱码错字",
+      "fragment": "无限的天穹静止的临于头上",
+      "problem": "“静止的临于”中“的”应为“地”；英文“The infinite sky is motionless overhead”也说明这里是状语。",
+      "suggestion": "改为“静止地临于头上”",
+      "batch": 5
+    },
+    {
+      "id": "1dc257fcaea801",
+      "severity": "high",
+      "category": "非诗歌内容",
+      "fragment": "合唱：／我的心呀在高原，这儿没有我的心",
+      "problem": "摘录第一行是“合唱：”这一段落标记，英文对应处同样是“Chorus”，不是诗句；首页把它当成正文行显示。",
+      "suggestion": "删去“合唱：”，从“我的心呀在高原”起句",
+      "batch": 5
+    },
+    {
+      "id": "58c673c006e7d2",
+      "severity": "high",
+      "category": "非诗歌内容",
+      "fragment": "所罗门—《传道书》第七章第十六节／呵，你们这些好人",
+      "problem": "首行是题引出处，不是诗行；英文正文从“O ye wha are sae guid yoursel'”开始，可见此行是摘录时混入的题记。",
+      "suggestion": "删除题引行，或将其排除在摘录之外",
+      "batch": 5
+    },
+    {
+      "id": "7a3230d1ae6a2c",
+      "severity": "high",
+      "category": "非诗歌内容",
+      "fragment": "露西·格瑞／我多次听说过露西·格瑞；",
+      "problem": "摘录首行重复了诗题；英文该节从“Oft I had heard of Lucy Gray:”开始，首行“露西·格瑞”是标题混入正文。",
+      "suggestion": "删去首行“露西·格瑞”",
+      "batch": 5
+    },
+    {
+      "id": "42622e307dc797",
+      "severity": "high",
+      "category": "非诗歌内容",
+      "fragment": "第二部／我不会用离奇事件打动人心",
+      "problem": "“第二部”是章节标题（英文“Part Second”），被当成诗行单独展示，首页会出现孤立的“第二部”。",
+      "suggestion": "删除“第二部”这一行",
+      "batch": 5
+    },
+    {
+      "id": "3d0d76fc66e046",
+      "severity": "high",
+      "category": "非诗歌内容",
+      "fragment": "一／我的双眼曾因含泪不流而迷蒙",
+      "problem": "首行“一”是组诗小节序号；英文该节直接从“Mine eyes were dim with tears unshed”开始，没有对应行。",
+      "suggestion": "删除序号行“一”",
+      "batch": 5
+    },
+    {
+      "id": "53bea8fd37be53",
+      "severity": "high",
+      "category": "非诗歌内容",
+      "fragment": "一／阴冷的大地在低处安眠",
+      "problem": "首行“一”是小节序号；英文从“The cold earth slept below”开始，没有对应内容。",
+      "suggestion": "删除序号行“一”",
+      "batch": 5
+    },
+    {
+      "id": "5e53a73e26bedf",
+      "severity": "high",
+      "category": "归属",
+      "fragment": "《致海登，观其所绘《拿破仑在圣赫勒拿岛》》",
+      "problem": "作品名书名号嵌套：外层《…》内又出现《…》，首页会显示为“《致海登，观其所绘《拿破仑在圣赫勒拿岛》》”，明显是格式错误。",
+      "suggestion": "内层改用单书名号〈拿破仑在圣赫勒拿岛〉，或去掉内层书名号",
+      "batch": 5
+    },
+    {
+      "id": "b035a01b2cee3f",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "《无 常》",
+      "problem": "二字标题“无常”被空格拆开，首页显示为《无 常》，像断词。",
+      "suggestion": "改为《无常》",
+      "batch": 5
+    },
+    {
+      "id": "695714f002b262",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "《死 亡》",
+      "problem": "标题“死亡”被空格拆开，首页显示为《死 亡》。",
+      "suggestion": "改为《死亡》",
+      "batch": 5
+    },
+    {
+      "id": "53bea8fd37be53",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "《无 题》",
+      "problem": "标题“无题”被空格拆开，首页显示为《无 题》；同一批另有《无题》《无题—1814年4月》，体例不一致。",
+      "suggestion": "改为《无题》",
+      "batch": 5
+    },
+    {
+      "id": "2dd225db61a9b5",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "“我们从醒的时候游戏到白日终止。／“我们与黄金色的曙光游戏",
+      "problem": "第二行行首多出一个开引号：英文该行为“We play with the golden dawn, we play with the silver moon.”，并无引号；结果全段两开一合，引号不成对。",
+      "suggestion": "删去“我们与黄金色的曙光”行首的“",
+      "batch": 5
+    },
+    {
+      "id": "4e527dcf6506b1",
+      "severity": "low",
+      "category": "空格",
+      "fragment": "《玛丽・莫里逊》",
+      "problem": "作品名用了日文中点“・”（U+30FB）而不是间隔号“·”，同批《邓肯·葛雷》用的却是“·”，显示不一致。",
+      "suggestion": "统一改为间隔号“·”",
+      "batch": 5
+    },
+    {
+      "id": "c6c23a77aebf0e",
+      "severity": "low",
+      "category": "空格",
+      "fragment": "《约翰・安特生，我的爱人》",
+      "problem": "同上，作品名中的“・”是日文中点，与正文“约翰·安特生”不一致。",
+      "suggestion": "统一改为“·”",
+      "batch": 5
+    },
+    {
+      "id": "a0fd44c8fbf49e",
+      "severity": "low",
+      "category": "空格",
+      "fragment": "《汤姆・奥桑特 一个故事》",
+      "problem": "作品名用“・”作间隔号，且正题与副题“一个故事”之间用半角空格分隔，体例与《汤姆·奥桑特——一个故事》不一致。",
+      "suggestion": "改为“·”，副题用破折号或间隔号连接",
+      "batch": 5
+    },
+    {
+      "id": "7a3230d1ae6a2c",
+      "severity": "low",
+      "category": "空格",
+      "fragment": "《露西・格瑞》",
+      "problem": "作品名用日文中点“・”，而同一摘录正文里写的是“露西·格瑞”，同一页面内两种符号并存。",
+      "suggestion": "作品名改为“露西·格瑞”",
+      "batch": 5
+    },
+    {
+      "id": "cc7fcec966d1b1",
+      "severity": "low",
+      "category": "空格",
+      "fragment": "《咏乔治・博蒙特爵士所作风景画一帧》",
+      "problem": "作品名中的“・”是日文中点，非中文间隔号。",
+      "suggestion": "统一改为“·”",
+      "batch": 5
+    },
+    {
+      "id": "7a09800922cdbc",
+      "severity": "low",
+      "category": "空格",
+      "fragment": "《乔治和萨拉・格林》",
+      "problem": "作品名中的“・”是日文中点，非中文间隔号。",
+      "suggestion": "统一改为“·”",
+      "batch": 5
+    },
+    {
+      "id": "3d0d76fc66e046",
+      "severity": "low",
+      "category": "空格",
+      "fragment": "《致玛丽•伍尔斯顿克拉夫特•葛德文》",
+      "problem": "作品名用项目符号“•”（U+2022）作间隔号，与其他作品名的“·”不一致，字形偏大。",
+      "suggestion": "统一改为“·”",
+      "batch": 5
+    },
+    {
+      "id": "80131ac1c4d4f7",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“你说有两个在康韦住着，／有两个到了海上”；英文却给“Then did the little Maid reply, / \"Seven boys and girls are we;”",
+      "problem": "英文整节与中文不对应：中文对应的是“You say that two at Conway dwell, / And two are gone to sea,”，给成了下一节，双语页会错位。",
+      "suggestion": "按中文行重新对齐英文（应为“You say that two at Conway dwell,”起）",
+      "batch": 5
+    },
+    {
+      "id": "097b15e077ba33",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“你只向山谷咕咕倾诉”；英文给“Thrice welcome, darling of the Spring!”",
+      "problem": "英文整节是下一节；中文对应的是“Though babbling only to the Vale, / Of sunshine and of flowers,”，双语页左右不符。",
+      "suggestion": "重新对齐到“Though babbling only to the Vale”",
+      "batch": 5
+    },
+    {
+      "id": "83afdccaae1203",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“她望见谷地里青碧的牧场”；英文给“She looks, and her heart is in heaven: but they fade,”",
+      "problem": "英文是下一节；中文对应“Green pastures she views in the midst of the dale,”，对照错位。",
+      "suggestion": "重新对齐到“Green pastures she views”",
+      "batch": 5
+    },
+    {
+      "id": "7a09800922cdbc",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“森严险怪的山岭，如今／蔼然眺望着墓地”；英文给“But deeper lies the heart of peace”",
+      "problem": "英文是下一节；中文对应“Now do those sternly-featured hills / Look gently on this grave;”，双语页错位。",
+      "suggestion": "重新对齐到“Now do those sternly-featured hills”",
+      "batch": 5
+    },
+    {
+      "id": "a0fd44c8fbf49e",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“你老婆早就预告，总有一朝”；英文给“The Souter tauld his queerest stories;”",
+      "problem": "英文取自同一节的节首，而非摘录所在位置；中文对应的是“She prophesied that late or soon, / Thou wad be found, deep drown'd in Doon,”。",
+      "suggestion": "按摘录行偏移重新对齐英文",
+      "batch": 5
+    },
+    {
+      "id": "fdd633d13c4817",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“不用怕妖不用怕鬼”；英文给“Fair and lovely as thou art,”",
+      "problem": "英文是下一节；中文对应“Ghaist nor bogle shalt thou fear, / Thou'rt to Love and Heav'n sae dear,”，双语页会明显对不上。",
+      "suggestion": "重新对齐到“Ghaist nor bogle shalt thou fear”",
+      "batch": 5
+    },
+    {
+      "id": "ae3a438c301ce8",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“像明艳无瑕的太阳；／你何尝那样完美无疵？”；英文给“Heed not tho' none should call thee fair;”",
+      "problem": "英文给成了第二节；中文对应“Bright suns without a spot; / But thou art no such perfect thing:”，属整节错位。",
+      "suggestion": "重新对齐到“Bright suns without a spot”",
+      "batch": 5
+    },
+    {
+      "id": "979abf64172c9d",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“他会碰上福气，也会遭遇恶运”；英文给“This waly boy will be nae coof:”",
+      "problem": "中文对应的是“He'll hae misfortunes great an' sma'”一节，英文却给了下一节，整节错位。",
+      "suggestion": "按中文内容对齐到“He'll hae misfortunes great an' sma'”",
+      "batch": 5
+    },
+    {
+      "id": "d2b7b716a472ac",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“天呀，老爷们才不关心／这些掘土挖沟的畜生”；英文给“I see how folk live that hae riches;”",
+      "problem": "英文与中文不在同一节；中文对应“For delvers, ditchers, an' sic cattle”一段，双语页会错位。",
+      "suggestion": "重新对齐到“For delvers, ditchers”一节",
+      "batch": 5
+    },
+    {
+      "id": "89f69a226997b1",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文四行献词“我的亲爱的、尊敬的朋友…”；英文只给“Or Job's pathetic plaint, and wailing cry;”",
+      "problem": "英文仅一行且与中文献词无关（该行是诗中间某节的末行），整节英文取错。",
+      "suggestion": "按中文起始行“My lov'd, my honour'd, much respected friend!”重新取英文节",
+      "batch": 5
+    },
+    {
+      "id": "836ba3293a66f5",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "中文“从山泉奔注而下。我再次看到”；英文给“And now, with gleams of half-extinguished thought,”",
+      "problem": "英文取自《廷腾寺》后段，中文却是开篇数行（对应“These plots of cottage-ground, these orchard-tufts”），整段错位。",
+      "suggestion": "重新对齐到诗的开篇英文",
+      "batch": 5
+    },
+    {
+      "id": "7dec968a607979",
+      "severity": "low",
+      "category": "归属",
+      "fragment": "《无题》“儿童乃是成人的父亲；／我可以指望：我一世光阴／自始至终贯穿着对自然的虔敬。”",
+      "problem": "这三行与另一条摘录 a17164b4e70260《永生的信息》完全相同；前者题为《无题》，而该诗实为华兹华斯《我心雀跃》（此三行也作《永生的信息》题引），同一文本占用两条首页摘录，且《无题》标题可疑。",
+      "suggestion": "核实《无题》对应的原诗标题；若为同一文本，删除其中一条",
+      "batch": 5
+    },
+    {
+      "id": "3646e842b709d4",
+      "severity": "high",
+      "category": "标点",
+      "fragment": "安宁！”是她生前唯一的哀鸣。",
+      "problem": "末行以孤立的收引号（”）开头：引语的开引号在前文（英文为 'Inheritor of more than earth can give,…mine epitaph were—Peace!'，该行未进入摘录），首页单独显示时引号不成对；同时摘录从半句“而是安息”起，上一行“不论死者发现的确实并非睡眠！”（en_before: Whether the dead find, oh, not sleep! but rest,）未显示。",
+      "suggestion": "从引语起点“无欲的安详和不受非议的沉默，…”起摘，或删去行首孤立引号，末行改为“安宁！——是她生前唯一的哀鸣。”",
+      "batch": 6
+    },
+    {
+      "id": "b88fa46df99459",
+      "severity": "high",
+      "category": "空格",
+      "fragment": "我 们常因此伤心，流血；",
+      "problem": "“我们”被空格拆成“我 们”，读者一眼可见；对应英文 It breaks in our bosom and then we bleed。",
+      "suggestion": "删除空格，改为“我们常因此伤心，流血；”",
+      "batch": 6
+    },
+    {
+      "id": "1efd8b543a97fb",
+      "severity": "high",
+      "category": "空格",
+      "fragment": "中间站着个手持王 杖的动物—",
+      "problem": "“王杖”被空格拆开；对应英文 Between them stands another sceptred thing—。",
+      "suggestion": "删除空格，改为“手持王杖的动物”",
+      "batch": 6
+    },
+    {
+      "id": "d9f7d60b83a31c",
+      "severity": "high",
+      "category": "空格",
+      "fragment": "另一 种脉搏。你们难道没听见",
+      "problem": "“另一种”被空格拆开；对应英文 And other pulses. Hear ye not the hum。",
+      "suggestion": "删除空格，改为“另一种脉搏”",
+      "batch": 6
+    },
+    {
+      "id": "ef01c9c7b79b4f",
+      "severity": "high",
+      "category": "空格",
+      "fragment": "石竹花、玫 瑰、紫罗兰，要去点缀",
+      "problem": "“玫瑰”被空格拆开；对应英文 Roses and pinks and violets。",
+      "suggestion": "删除空格，改为“玫瑰”",
+      "batch": 6
+    },
+    {
+      "id": "dc442190781feb",
+      "severity": "high",
+      "category": "空格",
+      "fragment": "什么比夜 莺的窝巢更隐秘幽深？",
+      "problem": "“夜莺”被空格拆开；对应英文 More secret than a nest of nightingales?",
+      "suggestion": "删除空格，改为“夜莺”",
+      "batch": 6
+    },
+    {
+      "id": "c615bab21ff6bb",
+      "severity": "high",
+      "category": "空格",
+      "fragment": "切不可参与结伙行 劫的战争，但是，",
+      "problem": "“行劫”被空格拆开成“行 劫”；对应英文 Lift not your hands in the banded war。",
+      "suggestion": "删除空格，改为“结伙行劫”",
+      "batch": 6
+    },
+    {
+      "id": "8c4c61c2463f15",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "陷入阴影，像努力 追求真理的精灵，",
+      "problem": "“努力追求”之间多一个空格（英文 a Spirit that strove / For truth），排版脏点明显。",
+      "suggestion": "删除空格，改为“像努力追求真理的精灵”",
+      "batch": 6
+    },
+    {
+      "id": "2827b250a034b6",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "就能够了结这一桩“错误 ”。",
+      "problem": "收引号前多一个空格（“错误 ”），引号内空格显眼；对应英文 That will at once put an end to mistake。",
+      "suggestion": "删除空格，改为“这一桩“错误”。",
+      "batch": 6
+    },
+    {
+      "id": "9c980f9023a817",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "你们的 “理性与判断”和你们的“热情与嗜欲”开战。",
+      "problem": "开引号前多一个空格（“你们的 “理性与判断””），同句后半“你们的“热情与嗜欲””无空格，前后不一致。",
+      "suggestion": "删除空格，统一为“你们的“理性与判断””",
+      "batch": 6
+    },
+    {
+      "id": "3fa1bf433a64e8",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "四 / “像携带着五月阵雨的云朵，",
+      "problem": "行首开引号在摘录内没有对应收引号：英文 'Like a cloud big with a May shower,…' 起的整段引语延续到下一节（'The spell is done…'）才收；首页显示为未闭合引号，且“四”为章节序号单独成行。",
+      "suggestion": "补足到引语结束，或删去行首引号并去掉“四”，只取完整一节。",
+      "batch": 6
+    },
+    {
+      "id": "fae0aba4288729",
+      "severity": "medium",
+      "category": "边界",
+      "fragment": "愿上帝保佑女王！ / 三 / 她是你的纯洁的灵魂，",
+      "problem": "摘录把第二节末行“愿上帝保佑女王！”、章节序号“三”、第三节前三行硬拼在一起（英文依次为 God save the Queen! / She is Thine own pure soul…），首尾又重复同一副歌，读者会看到章节号夹在诗句中间、像内容错乱。",
+      "suggestion": "去掉第二节残留与“三”，只取第三节：她是你的纯洁的灵魂，/整个宇宙都赖以成形，/愿上帝保佑女王！",
+      "batch": 6
+    },
+    {
+      "id": "116b5f34808650",
+      "severity": "medium",
+      "category": "边界",
+      "fragment": "自你不辞而别，展翅远行？ / 二 / 像我这样的人该怎样才能",
+      "problem": "摘录跨两节并夹带章节序号“二”（英文为第1节末 Wherefore hast thou left me now / Many a day and night? 与第2节首 How shall ever one like me / Win thee back again?），前后不是连续诗句。",
+      "suggestion": "删去“二”，只保留一节（例如第2节四行），不要把两节拼成一段。",
+      "batch": 6
+    },
+    {
+      "id": "b430a9825fd2fa",
+      "severity": "medium",
+      "category": "非诗歌内容",
+      "fragment": "二 / 美的精灵啊，你在哪里？是你以",
+      "problem": "章节序号“二”作为独立一行出现在摘录开头，首页会把它当作诗句显示（源数据把“一、二、三…”存成诗行）。同类批量出现共 16 条：872,874,876,877,878,883,885,886,888,894,897,907,908,909,910,916（889、905、913 另含中段序号，已单列）。",
+      "suggestion": "生成摘录时过滤纯章节序号行，或在页面渲染成小节分隔/小标题而非诗句。",
+      "batch": 6
+    },
+    {
+      "id": "3f3659e4ba68f2",
+      "severity": "medium",
+      "category": "归属",
+      "fragment": "《死 亡》",
+      "problem": "两字作品名中间插入空格（源书标题疏排残留），首页显示“— 雪莱，《死 亡》”，读者会读成标题被拆词；同批共 33 条：871,878,886,890,904,907,910,934,939,947,964,965,966,967,968,969,970,971,972,974,975,977,978,979,980,981,982,983,984,985,987,989,995。",
+      "suggestion": "统一去除标题内空格（《死亡》《无题》《日落》…），如需疏排交给 CSS 处理。",
+      "batch": 6
+    },
+    {
+      "id": "a998720fbebcc0",
+      "severity": "medium",
+      "category": "归属",
+      "fragment": "《写在乔叟的故事《花与叶》的末页上》",
+      "problem": "书名号嵌套：外层《…》里再套《花与叶》，中文规范内层应用〈〉，显示时层级不清（英文为 Chaucer's Tale 'The Floure and the Leafe'）。",
+      "suggestion": "改为《写在乔叟的故事〈花与叶〉的末页上》",
+      "batch": 6
+    },
+    {
+      "id": "3b78891f573347",
+      "severity": "medium",
+      "category": "归属",
+      "fragment": "《坐下来重读《里亚王》有感》",
+      "problem": "书名号嵌套（《里亚王》套在外层书名号内），英文为 On Sitting Down to Read King Lear Once Again。",
+      "suggestion": "改为《坐下来重读〈里亚王〉有感》",
+      "batch": 6
+    },
+    {
+      "id": "396a80059baada",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "从十一月直到四月，",
+      "problem": "与英文原文不符：原文为 From November to May（五月），中文写成“四月”，月份译错，对照双语诗页即可看出。",
+      "suggestion": "改为“从十一月直到五月，”",
+      "batch": 6
+    },
+    {
+      "id": "34cf7f4fd459cf",
+      "severity": "medium",
+      "category": "乱码错字",
+      "fragment": "听着！你金字塔般的海上巉鸮岩，",
+      "problem": "“巉鸮岩”不成词（“鸮”是猫头鹰），英文为 Hearken, thou craggy ocean pyramid! 应为“巉岩”，疑“鸮”为误植或 OCR 窜入。",
+      "suggestion": "改为“金字塔般的海上巉岩”",
+      "batch": 6
+    },
+    {
+      "id": "866716caef8696",
+      "severity": "low",
+      "category": "乱码错字",
+      "fragment": "虚幻，虚，然而甘美！",
+      "problem": "“虚”单字不成词，读来像漏字；英文对应 —Delusion too sweet though vain!（虚幻而虚妄，却太甘美），疑“虚妄/虚空”被截成“虚”。",
+      "suggestion": "补足为“虚幻，虚妄，然而甘美！”",
+      "batch": 6
+    },
+    {
+      "id": "89982764d1eda1",
+      "severity": "low",
+      "category": "乱码错字",
+      "fragment": "永不安份的思想—尘世的奴仆？",
+      "problem": "“安份”为常见别字，规范写法是“安分”；英文为 Ye restless thoughts。",
+      "suggestion": "改为“永不安分的思想”",
+      "batch": 6
+    },
+    {
+      "id": "198400120a1478",
+      "severity": "low",
+      "category": "标点",
+      "fragment": "站立在广大世界的涯岸上，思考⋯⋯",
+      "problem": "省略号用了数学符号“⋯⋯”(U+22EF)，不是中文省略号“……”；全批仅此一处，字形与其它标点不一致。",
+      "suggestion": "改为“思考……”",
+      "batch": 6
+    },
+    {
+      "id": "c24952f3dbb35e",
+      "severity": "low",
+      "category": "归属",
+      "fragment": "《给—》",
+      "problem": "作品名以单个破折号收尾，首页显示“— 济慈，《给—》”，读者会以为标题被截断；英文为 To—['Time's sea']。",
+      "suggestion": "改为《给——》或《致——》，也可加副题说明。",
+      "batch": 6
+    },
+    {
+      "id": "b6b4e3791d7be1",
+      "severity": "low",
+      "category": "其他",
+      "fragment": "第一个精灵",
+      "problem": "首行“第一个精灵”是诗中说话人标记（英文 First Spirit.），被当普通诗行显示，单独成行且带句点，视觉上像标题混入正文。",
+      "suggestion": "渲染为斜体/小号说话人标签，或从该行之后起摘。",
+      "batch": 6
+    },
+    {
+      "id": "2e8cd264c4fed8",
+      "severity": "low",
+      "category": "边界",
+      "fragment": "哦，安静的午夜里温柔的送香者！",
+      "problem": "摘录只有一行，中文以感叹号收成完整句，但英文 O soft embalmer of the still midnight, 用逗号且句子继续（Shutting with careful fingers…），属中文补标点后把半句包装成完整句。",
+      "suggestion": "保留逗号并多取一两行，或改为“哦，安静的午夜里温柔的送香者，”",
+      "batch": 6
+    },
+    {
+      "id": "116ed7fcefb6e9",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "被我失落在沙滩上—",
+      "problem": "摘录首行从“被”字起，缺了原诗首行“我有一枚金几尼”；英文对应为“I had a guinea golden -”，而中文该行实际对应英文第二行“I lost it in the sand -”，整段中英错位一行，首页单独看像从半句开始。",
+      "suggestion": "补回首行“我有一枚金几尼，”并从该行起摘，或修正中文诗行缺失，使中英逐行对应。",
+      "batch": 7
+    },
+    {
+      "id": "4bca4119de6ab1",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "“草地上我遇到一位姑娘，……有一对狂放的眼珠。",
+      "problem": "摘录以开引号开头，结尾没有收引号；单独展示时引号不成对，下一行又另起一个开引号。",
+      "suggestion": "在摘录末行补收引号，或改选包含收引号的完整段落。",
+      "batch": 7
+    },
+    {
+      "id": "8a052ed30ff7c7",
+      "severity": "medium",
+      "category": "标点",
+      "fragment": "“快走！快走！矮个子希尔德布兰……却没有半点慈悲心—唉！赶快走！",
+      "problem": "整段是引语，摘录以开引号起却无收引号，单独展示时引号悬空。",
+      "suggestion": "摘录末尾补收引号，或改从完整引语段落起止。",
+      "batch": 7
+    },
+    {
+      "id": "471b048298d8dc",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "《幻 想》",
+      "problem": "作品名“幻想”被空格拆成“幻 想”，首页署名显示为“— 约翰·济慈，《幻 想》”。",
+      "suggestion": "去掉空格，改为《幻想》。",
+      "batch": 7
+    },
+    {
+      "id": "1b8893d9a4ce9f",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "《为什么，他们把我关在天 堂门外？》",
+      "problem": "“天堂”被空格拆开，作品名显示为“天 堂门外”。",
+      "suggestion": "改为《为什么，他们把我关在天堂门外？》。",
+      "batch": 7
+    },
+    {
+      "id": "3135dae9e071a6",
+      "severity": "medium",
+      "category": "归属",
+      "fragment": "《1》《2》《3》……《92》",
+      "problem": "本批 82 条莎士比亚十四行诗的作品名都是纯数字，首页署名显示为“— 威廉·莎士比亚，《18》”，读者看不出这是《十四行诗》第18首。涉及 id：3135dae9e071a6、9f572f62e40bd1、0003cafc918547、e828e7a67defdd、0efb9a817bd159、c984f1f7620259、80d0d7354a9259、2cd49bc78c210d、c788da8bf32491、d39d042841488f、80c8e0b1fdff1b、b37a0848eef9e6、1a09edbf29fe3c、60f9ff9612309a、de01cc4ba3ecfc、fc907ad408ded5、857bd1f6ceef8c、141da7d8f8dcc0、1c35a2388e24d6、461c0c7b897a15、d851025395f92f、c5422812adc246、10673e352ed1ea、3757f2a7521755、1b92205252f366、586621a638f586、36c0213246bcb2、89971fe8e82137、b5207a54b33064、f87205a0532474、1c31499e927fa3、9b1f50b18891c4、2ebdcbe0e028e0、5122a5fd3893ed、f68d013a5577d2、bd72529c486ba9、48258acf188ad5、0cd7e97943f64a、c99311f68d759b、4b314e0914eebb、5c9e486e82c568、5b9c8997f67150、a4737e5771d9c3、fea098ceee0f5f、2329f4b3435922、cece29cad9ebd1、314d206b2abdd5、0b18ac4f9bc9b5、1b1f255c688ef8、ebeef7175edab4、506291ff1c4e10、1ba084908e7c54、53bf50c479bc2e、18273a5e32091b、dbc8a56fc08c2d、ab2972d6b3f280、132e0772fa18b9、50ad71588ddf17、e03ddf9c1f55df、19361b1e0d602c、d5354585e03593、8f4b8798566932、ada0c6bc137b1c、8c86ad5eaba8ef、ea1f4c6d4dd4d9、e95e921ec963c7、cb944d948e821e、56c424eaf81841、34e9ad045a0d48、fef14ac34bc75e、30390b8c81ad25、5c1cd687f5c73b、ddbd903d9775bb、7bcb4623eca6f6、977dfeee12aa26、99954ae05a2847、f2d6157066c23c、d129b88ab4a853、e5e4b2e762b2fd、661f88b8651109、ba95c819002d19、705f6f00e60a16",
+      "suggestion": "统一改成《十四行诗第18首》或《莎士比亚十四行诗·18》等可读作品名。",
+      "batch": 7
+    },
+    {
+      "id": "4b314e0914eebb",
+      "severity": "high",
+      "category": "乱码错字",
+      "fragment": "心不让眼晴把它自由地观赏。",
+      "problem": "“眼晴”应为“眼睛”，是明显错字（同段前文即作“眼睛”）。",
+      "suggestion": "改为“眼睛”。",
+      "batch": 7
+    },
+    {
+      "id": "1ba084908e7c54",
+      "severity": "high",
+      "category": "乱码错字",
+      "fragment": "后一分钟挤去了前一分种，",
+      "problem": "“分种”应为“分钟”，与同句“一分钟”不一致，是明显错字。",
+      "suggestion": "改为“前一分钟”。",
+      "batch": 7
+    },
+    {
+      "id": "633b74ff526f9a",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "然后，制动器沉默！",
+      "problem": "英文为“And then the Brake is still!”；此处 brake 指蕨丛/灌木丛，不是机械“制动器”，中文读来突兀且意思错误。",
+      "suggestion": "改译为“然后，蕨丛静了下来！”或“接着，灌木丛一片沉寂！”。",
+      "batch": 7
+    },
+    {
+      "id": "0efb9a817bd159",
+      "severity": "high",
+      "category": "英文对照",
+      "fragment": "花儿提出了香精，那就到冬天，",
+      "problem": "英文为“But flowers distilled though they with winter meet”；distilled 是“提炼”，中文“提出了香精”动词错误，读不通（同书第六首即用“提炼出香精”）。",
+      "suggestion": "改为“花儿提炼出香精，那就到冬天，”。",
+      "batch": 7
+    },
+    {
+      "id": "1f81e3791d17c3",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "如果他在门口留下一枚针球果",
+      "problem": "英文为“If He leave a Bur at the door”；bur 是刺果/牛蒡球，中文“针球果”不是规范词，像生造。",
+      "suggestion": "改为“如果他在门口留下一枚刺果”。",
+      "batch": 7
+    },
+    {
+      "id": "fef14ac34bc75e",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "你浅浅一帮就能够使我浮泛，",
+      "problem": "英文为“Your shallowest help will hold me up afloat”；“一帮”是量词误用/错字，无法表达“浅浅的助力”。",
+      "suggestion": "改为“你浅浅的助力就能使我浮起”或“你浅浅一臂就能托住我”。",
+      "batch": 7
+    },
+    {
+      "id": "2dd814ffabaa09",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "会告诉我“彼得”的许诺— / 而我，曾想知道他的苦恼—",
+      "problem": "首行从“会”字起，缺主语“他/基督”，是半句起摘；且“for wonder at his woe”意为“惊于他的苦难”，不是“曾想知道他的苦恼”，意思被改成“想了解”。",
+      "suggestion": "从上一行“在天上那漂亮的教室里—”起摘，并把该行改译为“而我，惊于他的苦难—”。",
+      "batch": 7
+    },
+    {
+      "id": "813f11f7fc2eab",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "以至我在那里，若是偶有失误— / 或是做了保姆叫做“该死”的事情—",
+      "problem": "英文为“So if I get lost - there - ever - / Or do what the Nurse calls 'die' -”；get lost 是“迷失/走失”，die 是“死”，中文译成“偶有失误”和“该死”，把“死亡”误成咒骂，意思明显走偏。",
+      "suggestion": "改为“如果我在那里走失—／或是做保姆所说的‘死’这件事—”。",
+      "batch": 7
+    },
+    {
+      "id": "5a33b32db06f45",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "还在港口桅杆圆球",
+      "problem": "英文为“On Ball of Mast in Bosporus”；Bosporus 是博斯普鲁斯（海峡），中文泛化成“港口”，专有地名丢失。",
+      "suggestion": "改为“还在博斯普鲁斯的桅杆圆球上”。",
+      "batch": 7
+    },
+    {
+      "id": "d59bfdf27366dc",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "我的，凭公正挑选的权利！",
+      "problem": "英文为“Mine - by the Right of the White Election!”；White Election 是“白色选民/上帝的挑选”，译成“公正挑选”丢掉了“白”的宗教含义。",
+      "suggestion": "改为“我的，凭白色选民的权利！”或加注说明。",
+      "batch": 7
+    },
+    {
+      "id": "1d1ca1fb5af0f3",
+      "severity": "medium",
+      "category": "边界",
+      "fragment": "直到喀什米尔的每一朵花！",
+      "problem": "摘录从“直到”起，上一行“我愿带去生长在从艾默斯特镇”未显示；英文同样从“From Amherst to Cashmere!”起，是半句，首页单独看开头悬空。",
+      "suggestion": "从“我愿带去生长在从艾默斯特镇”起摘，或改为“从艾默斯特到喀什米尔的每一朵花！”。",
+      "batch": 7
+    },
+    {
+      "id": "d5ecd4c1dc8693",
+      "severity": "low",
+      "category": "标点",
+      "fragment": "些微的，面包。",
+      "problem": "逗号插在定语“些微的”和中心词“面包”之间，读起来像把词拆开；英文为“It asked a crumb - of Me.”",
+      "suggestion": "改为“些微的面包。”或“些微的——面包。”",
+      "batch": 7
+    },
+    {
+      "id": "7776c34a70080e",
+      "severity": "low",
+      "category": "标点",
+      "fragment": "对黑暗中成长的，族类—",
+      "problem": "“成长的”与“族类”之间多出逗号，把定语和中心词拆开；英文为“To Races - nurtured in the Dark -”。",
+      "suggestion": "改为“对黑暗中成长的族类—”。",
+      "batch": 7
+    },
+    {
+      "id": "4969537dc0b89e",
+      "severity": "high",
+      "category": "乱码错字",
+      "fragment": "多少个脸儿标，多少个心肠忠厚，",
+      "problem": "“标”单用不成词，疑脱一“致”字；英文为“And many the handsome of face and the handsome of heart”，此处应为“脸儿标致”，现在读来像句子断了。",
+      "suggestion": "补为“多少个脸儿标致，多少个心肠忠厚”。",
+      "batch": 8
+    },
+    {
+      "id": "e98b92829c2157",
+      "severity": "high",
+      "category": "空格",
+      "fragment": "哪里能立下 说了；",
+      "problem": "“立下”与“说了”之间夹一空格，且“立下 说了”本身不成句；英文为“We cannot stop to tell”，疑原文夹注（stop to）被删后只剩“立下 说了”。",
+      "suggestion": "补回被删的词并去掉空格，如“哪里能停下来说呢；”。",
+      "batch": 8
+    },
+    {
+      "id": "bfcedbc4cd735d",
+      "severity": "high",
+      "category": "乱码错字",
+      "fragment": "她眼晴哀悼着他们，漾着哀思，",
+      "problem": "“眼晴”是“眼睛”的错字（晴/睛）；同一首诗其余两处均作“眼睛”，只有这里错。",
+      "suggestion": "改为“她眼睛哀悼着他们”。",
+      "batch": 8
+    },
+    {
+      "id": "fc973046cbdfdb",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "呼吸是用不了多久的炉灶。",
+      "problem": "英文为“Breath's a ware that will not keep”（呼吸是件不能久存的货物），“炉灶”与 ware/keep 不对应，比喻突兀，读来费解。",
+      "suggestion": "改译作“呼吸是件存不久的货物/东西”。",
+      "batch": 8
+    },
+    {
+      "id": "422cae06d0a048",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "啊，我真看见你头痛，你可能别缠着我？",
+      "problem": "英文为“'Oh, sick I am to see you, will you never let me be?”；sick 指“看见你就难受”，不是“看见你头痛”，中文把说话人的厌烦误成了对方的头痛。",
+      "suggestion": "改为“啊，看见你我就难受，你能不能别缠着我？”。",
+      "batch": 8
+    },
+    {
+      "id": "b6ae3639a1b879",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "是蝙蝠和夜莺的窠巢盘踞在顶梁，",
+      "problem": "英文为“The bats and owlets builders in the roof!”；owlets 是猫头鹰，不是夜莺（nightingale），鸟名译错。",
+      "suggestion": "改为“蝙蝠和小猫头鹰的窠巢盘踞在顶梁”。",
+      "batch": 8
+    },
+    {
+      "id": "9c9bd6413b0a78",
+      "severity": "low",
+      "category": "重复",
+      "fragment": "风风又吹来雨雨。",
+      "problem": "英文为“And the wind brings up the rain”，原无重叠；“风风……雨雨”像字符重复，虽勉强成句，但“风风”“雨雨”都不是常语，读者容易看作排版错误。",
+      "suggestion": "改为“风又吹来了雨”一类正常句子。",
+      "batch": 8
+    },
+    {
+      "id": "0a3ab26a27d5e1",
+      "severity": "medium",
+      "category": "英文对照",
+      "fragment": "从远方飘来了一阵熏风",
+      "problem": "英文为“Into my heart an air that kills / From yon far country blows”；“an air that kills”是致人死命、令人心碎的气息，“熏风”把关键语义改成了暖风。",
+      "suggestion": "译出“夺命/致命的气息”，如“从远方吹来一阵夺命的气息”。",
+      "batch": 8
+    },
+    {
+      "id": "e4030642342e55",
+      "severity": "medium",
+      "category": "乱码错字",
+      "fragment": "姆河夜霭吹扬，",
+      "problem": "英文为“And mist blew off from Teme”；Teme 在本集其他地方均译“泰姆”（如“若 姆，或考夫”“沿翁尼、 姆与克仑”），此处只剩“姆河”，且本行比对应的“禄如镇晨烟升起”少一字，应为“泰姆河”。",
+      "suggestion": "补为“泰姆河夜霭吹扬”。",
+      "batch": 8
+    },
+    {
+      "id": "c437bf28247e5c",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "姑许我七十 可俟，",
+      "problem": "“七十”与“可俟”之间多一空格，把诗句拆开；英文为“Now, of my threescore years and ten”。",
+      "suggestion": "删去空格：“姑许我七十可俟”。",
+      "batch": 8
+    },
+    {
+      "id": "65b48e5ab2e637",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "我愿你秋天拉磨节 到来",
+      "problem": "“拉磨节”与“到来”之间多一空格，句子被拆断；英文为“And I wish you luck, come Lammastide”。",
+      "suggestion": "删去空格：“我愿你秋天拉磨节到来”。",
+      "batch": 8
+    },
+    {
+      "id": "8cb48959d61568",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "眺望那染色的 郡县，",
+      "problem": "“染色的”与“郡县”之间多一空格；英文为“And see the coloured counties”。",
+      "suggestion": "删去空格：“眺望那染色的郡县”。",
+      "batch": 8
+    },
+    {
+      "id": "49eb077d1b7989",
+      "severity": "medium",
+      "category": "空格",
+      "fragment": "夏日偃卧 在寥落的山头，",
+      "problem": "“偃卧”与“在”之间多一空格；英文为“On the idle hill of summer”。",
+      "suggestion": "删去空格：“夏日偃卧在寥落的山头”。",
+      "batch": 8
+    },
+    {
+      "id": "b148f4b890666b",
+      "severity": "medium",
+      "category": "归属",
+      "fragment": "《一 一八八七》",
+      "problem": "作品名把序号“一”和年份“一八八七”并排，读者容易读成“一一八八七”；英文题名是“I 1887”，同类作品作“《三 新兵》”等，只有这里序号与题名都是数字。",
+      "suggestion": "改为“《一·一八八七》”，或删去序号作“《一八八七》”，以分隔号或删项消除歧义。",
+      "batch": 8
+    },
+    {
+      "id": "6748f1a3e21379",
+      "severity": "medium",
+      "category": "归属",
+      "fragment": "《93》",
+      "problem": "作品名只有编号，首页显示为“— 威廉·莎士比亚，《93》”，像占位符而不像作品名；本批 98 条纯阿拉伯数字题名（莎士比亚 60 条、勃朗宁 38 条）和 46 条纯中文数字题名（豪斯曼）都是这一格式。",
+      "suggestion": "补出作品类型和序号，如“《十四行诗 第93首》”“《葡萄牙人十四行诗 第1首》”“《西罗普郡少年 第2首》”。",
+      "batch": 8
+    },
+    {
+      "id": "5188aebcb720ef",
+      "severity": "low",
+      "category": "标点",
+      "fragment": "“你的香是哪儿来的，假如不是从",
+      "problem": "摘录以开引号起句，到末行仍未收引号，首页单独展示时像缺了后引号；同类共 6 条：1225（5188aebcb720ef）、1286（65b48e5ab2e637）、1304（30c4ca34d73c11）、1312（422cae06d0a048）、1321（fa74802975acd2）、1330（d29f29a750ebba）。",
+      "suggestion": "让摘录边界避开引号，或把摘录延长到引语结束，或在末尾补收引号。",
+      "batch": 8
+    },
+    {
+      "id": "f59aa5d13c998e",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "是幻想—并不是男友还是女伴，",
+      "problem": "英文为“Instead of men and women, years ago”，指“男人和女人/常人”，不是“男友还是女伴”；且“不是……还是……”搭配不当。",
+      "suggestion": "改为“并不是男伴或女伴”，或按原文作“并不是男人和女人”。",
+      "batch": 8
+    },
+    {
+      "id": "2accbd433984b0",
+      "severity": "low",
+      "category": "英文对照",
+      "fragment": "《二十八 威尔士人进行曲》",
+      "problem": "英文题名“THE WELSH MARCHES”中 Marches 指威尔士边境地区（诗中“塞汶河边”“盘据我胸中”都写边境战事），不是“进行曲”，题名把边境误成了乐曲。",
+      "suggestion": "改为“《威尔士边境》”一类。",
+      "batch": 8
+    },
+    {
+      "id": "92f5fb5d7ba1a2",
+      "severity": "low",
+      "category": "乱码错字",
+      "fragment": "在自身内敛藏，埋进在爱情的",
+      "problem": "“埋进在”介词叠用，不合语法；英文为“Shut in upon itself ... In this close hand of Love”。",
+      "suggestion": "改为“埋进爱情的掌握内”或“埋在爱情的掌握内”。",
+      "batch": 8
+    }
+  ]
+}

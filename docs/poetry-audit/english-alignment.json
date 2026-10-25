@@ -1,0 +1,55 @@
+{
+  "reviewed": 117,
+  "agents": {
+    "A": {
+      "reviewed": 59,
+      "findings": {
+        "751f377979135b": "shifted_next",
+        "2129536ec1e14e": "shifted_prev",
+        "8d8d796f4e0770": "shifted_prev",
+        "86f2c38fb31558": "mismatch",
+        "589e2f36471dd3": "shifted_next",
+        "979abf64172c9d": "shifted_next",
+        "58c673c006e7d2": "missing",
+        "d2b7b716a472ac": "mismatch",
+        "89f69a226997b1": "shifted_prev",
+        "7dec968a607979": "missing",
+        "ae3a438c301ce8": "shifted_prev",
+        "478c93de873b75": "shifted_prev",
+        "42622e307dc797": "shifted_prev",
+        "836ba3293a66f5": "shifted_prev",
+        "cc7fcec966d1b1": "missing",
+        "2ea07a091800f4": "missing",
+        "301151831cc215": "missing",
+        "5e53a73e26bedf": "missing",
+        "d4482718c9d913": "missing",
+        "49ffe12ee27afc": "missing",
+        "3a4ded5dfda1cc": "missing",
+        "3f80a4f25d4203": "missing",
+        "55bb02b5fcb837": "missing",
+        "919de280c47893": "missing",
+        "1411c28d57df67": "missing",
+        "5c8a9e35d2e1cb": "missing",
+        "ec6956417470cb": "missing",
+        "cdbfc272d2b4a2": "missing",
+        "d98e4d2ee007f6": "missing"
+      }
+    },
+    "B": {
+      "reviewed": 58,
+      "findings": {
+        "98aa737b8b8fd6": "mismatch",
+        "1d1ca1fb5af0f3": "shifted_prev",
+        "d5f2b5c37d1cbd": "shifted_prev",
+        "849a8f67a838d2": "shifted_prev",
+        "c96b5eb9fa765c": "shifted_prev",
+        "63a4a8d6a1ccef": "shifted_prev"
+      }
+    }
+  },
+  "objective": {
+    "shifted": 28,
+    "empty": 20,
+    "heading": 3
+  }
+}
