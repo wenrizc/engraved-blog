@@ -452,3 +452,14 @@ test('photo uploads strip private metadata and rasterize SVG scripts', async ({
   ).metadata();
   expect(svg.format).toBe('png');
 });
+
+test('publish endpoint is exposed but refuses a non-git project root', async ({ page, admin }) => {
+  await page.goto(admin.url);
+  await expect(page.locator('#publish-site')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(
+    true
+  );
+  const response = await page.request.post(`${admin.url}/api/publish`, { data: {} });
+  expect(response.status()).toBe(500);
+  expect((await response.text()).toLowerCase()).toContain('git');
+});

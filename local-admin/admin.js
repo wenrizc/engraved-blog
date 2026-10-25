@@ -1027,6 +1027,33 @@ $('import-interviews').addEventListener('click', async () => {
     button.disabled = false;
   }
 });
+async function publishToSite() {
+  if (state.busy) return;
+  if (state.dirty) {
+    const saved = await save();
+    if (!saved) return;
+  }
+  const draft = $('draft').value === 'true';
+  const warning = draft ? '当前内容仍是草稿：源文件会提交，但不会出现在公开站点。\n\n' : '';
+  const confirmed = window.confirm(
+    `${warning}将执行：检查并构建站点 → 只提交 src/content 与 src/assets/photos → push 到 main。\n\n这会把当前分支上已有的本地提交一并推送。继续？`
+  );
+  if (!confirmed) return;
+  setBusy(true, '构建并发布…');
+  setStatus('正在检查并构建站点，随后提交内容并 push 到 main，请稍候…');
+  try {
+    const result = await api('/api/publish', {});
+    setStatus(result.message);
+    $('save-state').textContent = result.pushed ? '已发布到线上' : '构建完成';
+    $('save-state').classList.remove('dirty');
+  } catch (error) {
+    setStatus(error.message, true);
+  } finally {
+    setBusy(false);
+  }
+}
+$('publish-site').addEventListener('click', publishToSite);
+
 let selection;
 try {
   selection = JSON.parse(localStorage.getItem('wenri-admin-selection'));

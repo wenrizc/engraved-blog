@@ -61,6 +61,14 @@ button.primary {
 button.primary:hover:not(:disabled) {
   background: #733429;
 }
+button.publish {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--surface);
+}
+button.publish:hover:not(:disabled) {
+  background: var(--accent-soft);
+}
 button.danger {
   background: var(--accent-soft);
   color: #94382d;

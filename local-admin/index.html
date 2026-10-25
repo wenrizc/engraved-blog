@@ -15,6 +15,14 @@
       <div class="header-actions">
         <span id="save-state" class="save-state" role="status">正在加载…</span>
         <button type="button" id="toggle-preview">预览</button>
+        <button
+          type="button"
+          id="publish-site"
+          class="publish"
+          title="构建站点、提交 content 目录并 push 到 main"
+        >
+          发布上线
+        </button>
         <button type="submit" form="editor" id="save-entry" class="primary">
           保存 Markdown <kbd>⌘ / Ctrl S</kbd>
         </button>
@@ -59,7 +67,7 @@
         <div id="entries" class="entry-list" aria-label="内容列表"></div>
         <p id="summary" class="summary"></p>
         <p class="library-note">
-          内容保存在项目 Markdown 文件中。<br />保存后重新构建网站即可发布。
+          内容保存在项目 Markdown 文件中。<br />保存后可点“发布上线”自动构建、提交内容并推送。
         </p>
       </aside>
       <section class="workspace" id="workspace" aria-label="编辑工作区">

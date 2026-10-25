@@ -54,8 +54,26 @@ Requests validate the host and browser origin, and write endpoints require JSON 
 2. Select or create Article, Photography, or Interview content in the library. New content starts as a draft.
 3. Write in the editor and use split or reading preview to check the current unsaved content.
 4. For Photography, select or drop images, arrange them, choose a cover, and add captions. Click `保存 Markdown` (Ctrl / Cmd + S) to upload pending images and save the whole entry.
-5. Run `npm run build`.
-6. Commit and push to GitHub.
+5. Click **发布上线** to run `npm run build`, commit only `src/content` and `src/assets/photos`, and push `main`; or run the build and Git steps manually.
+
+## 发布上线（自动构建、提交、推送）
+
+The header’s **发布上线** button is a local convenience wrapper around the normal release steps:
+
+1. Run `npm run lint` and `npm run build` (`astro check && astro build`). A failed check aborts before any commit.
+2. Stage only `src/content/` and `src/assets/photos/`.
+3. If those paths changed, create a commit such as `content: publish from local admin 2026-10-25 18:00`; unrelated staged files are not included.
+4. Push `main` to `origin`. This also pushes any earlier local commits on `main` (for example code changes), so review `git log origin/main..main` before publishing.
+5. GitHub Actions (`pages.yml`) builds and deploys the site after the push.
+
+Prerequisites and limits:
+
+- Current branch must be `main`, and the project root must be the Git top level.
+- Local Git credentials must be able to push to `origin`; the server disables interactive prompts, so a missing credential helper fails instead of hanging.
+- A non-fast-forward push fails; pull/rebase first, then publish again.
+- Draft Markdown is still committed as source, but `draft: true` content is not public.
+- The admin has no authentication. Anyone who can open it on the trusted LAN can publish, so keep `ADMIN_HOST=127.0.0.1` unless you accept that risk.
+- The button does not deploy directly; it relies on the GitHub Actions workflow triggered by the push.
 
 ## Writing and Photo Management
 

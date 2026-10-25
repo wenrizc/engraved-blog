@@ -1,4 +1,6 @@
 import http from 'node:http';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import { createHash, randomUUID } from 'node:crypto';
 import { unified } from 'unified';
@@ -34,11 +36,130 @@ const markdownRenderer = unified()
   .use(rehypeStringify);
 const revisionOf = (markdown) => createHash('sha256').update(markdown).digest('hex');
 const thumbnails = new Map();
+const execFileAsync = promisify(execFile);
+const publishPaths = ['src/content', 'src/assets/photos'];
+let publishing = false;
 let mutations = Promise.resolve();
 function mutate(action) {
   const result = mutations.then(action);
   mutations = result.catch(() => {});
   return result;
+}
+
+function sanitized(value) {
+  return String(value || '').replaceAll(root, '[project]');
+}
+
+function tail(value, limit = 4000) {
+  const text = sanitized(value).trim();
+  return text.length > limit ? text.slice(-limit) : text;
+}
+
+function commandError(error, command) {
+  const detail = [error.stderr, error.stdout, error.message].filter(Boolean).join('\n');
+  const failure = new Error(detail.trim() || `${command} 执行失败。`);
+  failure.statusCode = 500;
+  return failure;
+}
+
+async function run(command, args, timeout = 120000) {
+  const env = { ...process.env, GIT_TERMINAL_PROMPT: '0' };
+  // The desktop harness can inject GIT_CONFIG_COUNT with empty keys, which
+  // makes every git command fail before it starts. Drop only those transient
+  // include-style overrides; the user's repository config is unaffected.
+  for (const key of Object.keys(env)) {
+    if (/^GIT_CONFIG_(COUNT|KEY_\d+|VALUE_\d+)$/.test(key)) delete env[key];
+  }
+  try {
+    const result = await execFileAsync(command, args, {
+      cwd: root,
+      env,
+      timeout,
+      maxBuffer: 20 * 1024 * 1024,
+      windowsHide: true
+    });
+    return result;
+  } catch (error) {
+    throw commandError(error, command);
+  }
+}
+
+async function publishSite() {
+  if (publishing) {
+    const error = new Error('已有发布任务正在执行，请稍候。');
+    error.statusCode = 409;
+    throw error;
+  }
+  publishing = true;
+  try {
+    const branch = (await run('git', ['rev-parse', '--abbrev-ref', 'HEAD'], 30000)).stdout.trim();
+    if (branch !== 'main') throw new Error(`当前分支是 ${branch}，发布仅支持 main。`);
+    const top = (await run('git', ['rev-parse', '--show-toplevel'], 30000)).stdout.trim();
+    if (path.resolve(top) !== path.resolve(root)) {
+      throw new Error('ADMIN_PROJECT_ROOT 不是 Git 仓库根目录。');
+    }
+
+    const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+    const lint = await run(npm, ['run', 'lint'], 3 * 60 * 1000);
+    const build = await run(npm, ['run', 'build'], 15 * 60 * 1000);
+    const status = (
+      await run(
+        'git',
+        ['status', '--porcelain', '--untracked-files=all', '--', ...publishPaths],
+        30000
+      )
+    ).stdout.trim();
+
+    let committed = false;
+    let commit = '';
+    if (status) {
+      await run('git', ['add', '-A', '--', ...publishPaths], 30000);
+      const stagedRaw = (
+        await run('git', ['diff', '--cached', '--name-only', '-z', '--', ...publishPaths], 30000)
+      ).stdout;
+      const stagedFiles = stagedRaw.split('\0').filter(Boolean);
+      if (stagedFiles.length) {
+        const stamp = new Date()
+          .toLocaleString('sv-SE', { timeZone: 'Asia/Shanghai' })
+          .slice(0, 16)
+          .replace('T', ' ');
+        const message = `content: publish from local admin ${stamp}`;
+        await run('git', ['commit', '--only', '-m', message, '--', ...stagedFiles], 60000);
+        commit = (await run('git', ['rev-parse', '--short', 'HEAD'], 30000)).stdout.trim();
+        committed = true;
+      }
+    }
+
+    const ahead = Number(
+      (await run('git', ['rev-list', '--count', 'origin/main..HEAD'], 30000)).stdout.trim() || '0'
+    );
+    let pushed = false;
+    if (ahead > 0) {
+      try {
+        await run('git', ['push', 'origin', 'main'], 5 * 60 * 1000);
+        pushed = true;
+      } catch (error) {
+        const prefix = committed && commit ? `已提交 ${commit}，但 push 失败：` : 'push 失败：';
+        const failure = new Error(prefix + error.message);
+        failure.statusCode = 500;
+        throw failure;
+      }
+    }
+
+    return {
+      branch,
+      committed,
+      commit,
+      pushed,
+      ahead,
+      build: tail(`${lint.stdout}\n${lint.stderr}\n${build.stdout}\n${build.stderr}`),
+      message: pushed
+        ? `已构建、${committed ? `提交 ${commit}、` : ''}推送 main${committed ? '' : '（包含已有本地提交）'}。GitHub Actions 将开始重建线上站点。`
+        : '构建完成，内容没有变化，也没有待推送的本地提交。'
+    };
+  } finally {
+    publishing = false;
+  }
 }
 
 function send(res, status, body, type = 'application/json; charset=utf-8') {
@@ -449,6 +570,10 @@ async function route(req, res) {
       return json(res, 200, {
         deleted: await mutate(() => deleteEntry(payload.type, payload.slug))
       });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/publish') {
+      await readRequest(req);
+      return json(res, 200, await mutate(() => publishSite()));
     }
     if (req.method === 'POST' && url.pathname === '/api/interviews/import') {
       const payload = JSON.parse((await readRequest(req)).toString('utf8'));
