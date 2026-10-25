@@ -1,0 +1,195 @@
+{
+  "lineReplacements": [
+    {
+      "poemId": "0fc4b30998f0b6",
+      "old": "一旦晨曦不再伫留",
+      "new": "一旦暮色不再锁住",
+      "note": "finding abef75a25d1f4f；英文依据 When once the twilight locks no longer：twilight=暮色（非“晨曦”），locks=锁住（非“伫留”）"
+    },
+    {
+      "poemId": "0fc4b30998f0b6",
+      "old": "伫留在我蠕虫般长长的手指，",
+      "new": "锁在我蠕虫般长长的手指里，",
+      "note": "finding abef75a25d1f4f；英文依据 Locked in the long worm of my finger：Locked=锁在……里（非“伫留”）"
+    },
+    {
+      "poemId": "5cfd5a5ddf89be",
+      "old": "甚过鸥鸟和凶猛的鹰，",
+      "new": "甚于鸥鸟和凶猛的鹰——",
+      "note": "finding 3d88db9c8e727b；英文依据 Than in the gull and the fierce eagle / Who do not break?：Who 引导定语从句修饰鸥与鹰，破折号标出从句"
+    },
+    {
+      "poemId": "5cfd5a5ddf89be",
+      "old": "谁又不能打破？",
+      "new": "它们从不折断？",
+      "note": "finding 3d88db9c8e727b；英文依据 Who do not break?=它们从不折断（非反问“谁又不能打破”）；问号随原句收束保留"
+    },
+    {
+      "poemId": "e055834bb8e529",
+      "old": "而在内心，或空空的通道，",
+      "new": "但我们的话语在胸中，",
+      "note": "finding da82a66d8b86be；英文依据 But our speaking does not thrive / In the bosom：speaking=话语，In the bosom=在胸中"
+    },
+    {
+      "poemId": "e055834bb8e529",
+      "old": "我们也没有更多的话要说。",
+      "new": "或空空的通道里，并不生长。",
+      "note": "finding da82a66d8b86be；英文依据 or the empty channels / our speaking does not thrive：thrive=生长（非“没有更多的话要说”）"
+    },
+    {
+      "poemId": "7d822446b28aac",
+      "old": "随后音叉迎着太阳分化；",
+      "new": "在音高迎着太阳分化之前；",
+      "note": "finding 6babea757b8441；英文依据 Before the pitch was forking to a sun：Before=在……之前（非“随后”），pitch=音高"
+    },
+    {
+      "poemId": "a01080a2f0712b",
+      "old": "你切开的肉质，你畅饮的血",
+      "new": "你切开的肉身，你放出的血",
+      "note": "finding d70e1c0e0b37fd；英文依据 This flesh you break, this blood you let：flesh=肉身，let=放出（血），非“畅饮”；“饮”对应末行 My wine you drink"
+    },
+    {
+      "poemId": "b2c216bb139de7",
+      "old": "我的喉口一套上蠕虫样的绳索，就去威吓",
+      "new": "我宁可喉口套上蠕虫般的绳索倒下，",
+      "note": "finding 05bcb0206d8990；英文依据 Sooner drop with the worm of the ropes round my throat：Sooner…=宁可……（非“一……就……”）"
+    },
+    {
+      "poemId": "b2c216bb139de7",
+      "old": "带补丁场景处害病的爱。",
+      "new": "也不愿去威吓带补丁场景处害病的爱。",
+      "note": "finding 05bcb0206d8990；英文依据 Than bully ill love in the clouted scene：Than=也不愿，与上句构成取舍"
+    },
+    {
+      "poemId": "3cfef596ca3da3",
+      "old": "在情意绵绵的夜晚独自醒来，晨光",
+      "new": "在众多的爱中独自醒来，晨光",
+      "note": "finding ae8cd631e996b6；英文依据 Waking alone in a multitude of loves when morning's light：in a multitude of loves=在众多的爱中（非“情意绵绵的夜晚”）"
+    },
+    {
+      "poemId": "3cfef596ca3da3",
+      "old": "无比神奇纯洁而古老，仿佛面包和游鱼，",
+      "new": "无比神奇纯洁，和面包与鱼一样古老，",
+      "note": "finding ae8cd631e996b6；英文依据 old as loaves and fishes=和面包与鱼一样古老（非比喻“仿佛”）"
+    },
+    {
+      "poemId": "030ef436f4fd5b",
+      "old": "忍受最初的幻影去点燃万千的星云。",
+      "new": "忍受那最初点燃群星的幻影。",
+      "note": "finding 304f1834ea551e；英文依据 Suffer the first vision that set fire to the stars：that 引导定语从句（非目的“去点燃”），stars=群星（非“星云”）"
+    },
+    {
+      "poemId": "8345a993cf2f76",
+      "old": "安的雕像是位七旬的老人。",
+      "new": "雕刻的安是七十年的石头。",
+      "note": "finding bbe9c7e7a1cf07；英文依据 And sculptured Ann is seventy years of stone：sculptured=雕刻的，stone=石头（原译丢失）"
+    },
+    {
+      "poemId": "74b754dc111863",
+      "old": "“布谷鸟不是一只？”",
+      "new": "“布谷鸟不止一只？”",
+      "note": "finding 1f9e921065911d；英文依据 More than one cuckoo?=不止一只（肯定），非“不是一只”"
+    },
+    {
+      "poemId": "d2b88c869276ed",
+      "old": "还要别人抬起水花要温柔，",
+      "new": "让我们温柔地抬起它们的花枝，",
+      "note": "finding 058101852cd641；英文依据 And made us tenderly lift their sprays：made us=让我们（非“别人”），sprays=花枝（非“水花”）"
+    },
+    {
+      "poemId": "3ecffb12c19cf1",
+      "old": "都因那个漫不经心的他的‘缘’：",
+      "new": "都因那个眉宇开朗的他：",
+      "note": "finding 98f065e7720b4f；英文依据 It is through him with blitheful brow：brow=眉宇（非“缘”），并去掉残留单引号"
+    },
+    {
+      "poemId": "244aed03a5a02f",
+      "old": "它们在整个四月纵情欢唱，",
+      "new": "四月将尽时它们纵情欢唱，",
+      "note": "finding c72afff447bae0；英文依据 as they can when April wears：when April wears=四月将尽时（非“整个四月”）"
+    },
+    {
+      "poemId": "68f90c6f4221f1",
+      "old": "呼吸是用不了多久的炉灶。",
+      "new": "呼吸是件存不久的货物。",
+      "note": "finding fc973046cbdfdb；英文依据 Breath's a ware that will not keep：ware=货物/东西（非“炉灶”），will not keep=存不久"
+    },
+    {
+      "poemId": "759dc5fff112e6",
+      "old": "“啊，我真看见你头痛，你可能别缠着我？",
+      "new": "“啊，看见你我就难受，你能不能别缠着我？",
+      "note": "finding 422cae06d0a048；英文依据 Oh, sick I am to see you, will you never let me be?：sick I am to see you=看见你就难受（非对方“头痛”）"
+    },
+    {
+      "poemId": "1ed7c4d2d4cf75",
+      "old": "从远方飘来了一阵熏风",
+      "new": "从远方吹来一阵夺命的气息",
+      "note": "finding 0a3ab26a27d5e1；英文依据 Into my heart an air that kills / From yon far country blows：an air that kills=夺命的气息（非“熏风”）"
+    },
+    {
+      "poemId": "77ec14293ab11a",
+      "old": "是蝙蝠和夜莺的窠巢盘踞在顶梁，",
+      "new": "是蝙蝠和小猫头鹰的窠巢盘踞在顶梁，",
+      "note": "finding b6ae3639a1b879；英文依据 The bats and owlets builders in the roof：owlets=小猫头鹰（非“夜莺”）"
+    },
+    {
+      "poemId": "7fc79a933e88c5",
+      "old": "是幻想—并不是男友还是女伴，",
+      "new": "是幻想—并不是男人和女人，",
+      "note": "finding f59aa5d13c998e；英文依据 Instead of men and women：men and women=男人和女人（非“男友还是女伴”），并修“不是……还是……”搭配"
+    },
+    {
+      "poemId": "b06342bee276dc",
+      "old": "只有克服它，我们才能蔑视",
+      "new": "只有克服它，我们才能审视",
+      "note": "finding 8a9c91d3fe4364；英文依据 are we to scan：scan=审视（非“蔑视”）"
+    },
+    {
+      "poemId": "b06342bee276dc",
+      "old": "真理被折磨得尖叫的恐惧，",
+      "new": "真理被折磨得尖叫的丑态，",
+      "note": "finding 8a9c91d3fe4364；英文依据 The racked and shrieking hideousness of Truth：hideousness=丑态/可怖之状（非“恐惧”）"
+    },
+    {
+      "poemId": "20d91b81eb8ff4",
+      "old": "我的朋友吴启；年轻，心灵手巧，",
+      "new": "我的朋友吴启；年轻，敏捷，目光清澈，",
+      "note": "finding cf1dde37e9241f；英文依据 My friend Wu Kee; young, agile, clear-eyed：agile=敏捷，clear-eyed=目光清澈"
+    },
+    {
+      "poemId": "20d91b81eb8ff4",
+      "old": "手脚干净，他的肌肉",
+      "new": "四肢匀称，他的肌肉",
+      "note": "finding cf1dde37e9241f；英文依据 And clean-limbed, his muscles ripple：clean-limbed=四肢匀称（非“手脚干净”）"
+    },
+    {
+      "poemId": "4f1763ff1056e2",
+      "old": "而如今瞧这些渣滓和发霉的赃物。",
+      "new": "而如今瞧，蛞蝓和霉斑正在劫掠。",
+      "note": "finding 5943ef62dd7dd5；英文依据 See now the slug and the mildew plunder：slug=蛞蝓，plunder=劫掠（动词），非“渣滓/赃物”"
+    },
+    {
+      "poemId": "0f8e77103bcdf9",
+      "old": "关着的门上看到迟延的判决。",
+      "new": "关着的门上标示出迟到的判决。",
+      "note": "finding e4c19e5e6e10d3；英文依据 Mark tardy judgment on the world's closed door：mark=标示/留下印记（非“看到”），tardy=迟到的"
+    },
+    {
+      "poemId": "237ccd4b0faf5a",
+      "old": "从十一月直到四月，",
+      "new": "从十一月直到五月，",
+      "note": "finding 396a80059baada；英文依据 From November to May：May=五月（非“四月”）"
+    }
+  ],
+  "skipped": [
+    {
+      "id": "2accbd433984b0",
+      "reason": "题名误译：The Welsh Marches 的 Marches 指威尔士边境，非“进行曲”；该错误在 poem 的 title 字段（“二十八 威尔士人进行曲”），不在 lines.zh 中，无法做整行替换，需移交标题/元数据补丁。"
+    },
+    {
+      "id": "ae3a438c301ce8",
+      "reason": "英文整节错位：中文 stanza 1 配了第二节英文，正确英文（Bright suns without a spot 等）在 stanza 0 末；属英文对齐问题，不是本行翻译错误，交由英文对齐/poemStanzas 补丁。"
+    }
+  ],
+  "notes": "本组 25 条 finding 中 23 条落实为 30 处同位置整行替换，2 条跳过（1 条题名误译、1 条英文整节错位）。所有 old 均由 poetry-poems.json 对应 poem 的 lines.zh 按行号直接取出，未经手抄；new 均为单行中文、不含换行、非空，且保持原行句末标点与大致字数/结构。未改标题与 en 行。\n\n校验（python3）：JSON 可解析；30 条 old 在对应 poem 的 lines.zh 中均恰好匹配 1 次（无重名行）；new 行数与 old 相同（均为 1 行）；new 均非空且不等于 old；每条 poemId 均存在于 poetry-poems.json；skipped 中 2 条 id 均属于原 25 条任务。\n\n补充说明：\n- abef75a25d1f4f 的“晨曦/暮色”为全篇性问题，本补丁按 finding 范围只改首两行；poem 第 37 行（index 36）“一旦晨曦的螺杆被转动”（When once the twilight screws were turned）同样把 twilight 译作“晨曦”，未在 problem 引用范围内，故未强改，建议由标题/全文一致性补丁处理。\n- e4c19e5e6e10d3 采用最小改动：仅将“看到”改为“标示出”并沿用 finding 建议的“迟到”；上一行“地窖中黑人的利益在世界”结构可通（the world's closed door），故保留不动。\n- 3d88db9c8e727b 依 suggestion 把定语从句用破折号引出（“甚于……鹰——／它们从不折断？”），未改整节语序。\n- ae8cd631e996b6 第 5 行（index 4）删去重复的“而古老”，由“和面包与鱼一样古老”承担 old as loaves and fishes 的比较义。\n- f59aa5d13c998e 采用 finding 建议的“男人和女人”，同时消除“不是……还是……”搭配错误。\n"
+}

@@ -1,0 +1,175 @@
+{
+  "lineReplacements": [
+    {
+      "poemId": "c139b0cf6df0f4",
+      "old": "你不愿被爱？—那么就让你的心",
+      "new": "你愿被爱？—那么就让你的心",
+      "note": "finding 601a4fd21b2180；英文依据：Thou wouldst be loved?—then let thy heart（wouldst 为肯定式，原译误加“不”字致反义）"
+    },
+    {
+      "poemId": "805c44eb5363d8",
+      "old": "我麻木的心儿所能感知，",
+      "new": "我枯焦的心曾知晓，",
+      "note": "finding 066d56191f2f01；英文依据：My sear'd and blighted heart hath known（hath known 为“曾知晓”，非“所能感知”）"
+    },
+    {
+      "poemId": "805c44eb5363d8",
+      "old": "我的知觉所能期冀。",
+      "new": "我感到它已飞逝。",
+      "note": "finding 066d56191f2f01；英文依据：I feel hath flown（hath flown 为“已飞逝”，原译误作“所能期冀”）"
+    },
+    {
+      "poemId": "c129abfb81da68",
+      "old": "它只不过是欲望的诱惑：",
+      "new": "它不过是欲望的煎熬：",
+      "note": "finding f835ff15e0f30a；英文依据：It is but agony of desire（agony 为痛苦、煎熬，非“诱惑”）"
+    },
+    {
+      "poemId": "3579714649b7f9",
+      "old": "有某些质—某些无形体的东西，",
+      "new": "有某些质—某些有形体的东西，",
+      "note": "finding 4ded3e14ce78e5；英文依据：There are some qualities—some incorporate things（incorporate 为有形体/成形的）"
+    },
+    {
+      "poemId": "98e429e120ebd8",
+      "old": "随那叫做“激情”的热病，那热病曾烧在我心中。",
+      "new": "随那叫做“活着”的热病，那热病曾烧在我心中。",
+      "note": "finding cc3fecb8a49a95；英文依据：With the fever called \"Living\"（Living 为“活着”，非“激情”）"
+    },
+    {
+      "poemId": "7352a1de586d65",
+      "old": "呵，金碗碎了！—灵魂将永远飘荡！",
+      "new": "呵，金碗碎了！—灵魂已永远飞逝！",
+      "note": "finding 59b3ff3273ea09；英文依据：the spirit flown forever!（flown 为“已飞逝”，原译误作“将永远飘荡”）"
+    },
+    {
+      "poemId": "652120889ec494",
+      "old": "然后，制动器沉默！",
+      "new": "然后，蕨丛静了下来！",
+      "note": "finding 633b74ff526f9a；英文依据：And then the Brake is still!（brake 指蕨丛/灌木丛，非机械“制动器”）"
+    },
+    {
+      "poemId": "8c8289bbee82bb",
+      "old": "而我，曾想知道他的苦恼—",
+      "new": "而我，惊于他的苦难—",
+      "note": "finding 2dd814ffabaa09；英文依据：And I—for wonder at his woe—（for wonder at 为“惊于”，非“曾想知道”）"
+    },
+    {
+      "poemId": "dd0f66b2fac0e5",
+      "old": "以至我在那里，若是偶有失误—",
+      "new": "如果我在那里走失—",
+      "note": "finding 813f11f7fc2eab；英文依据：So if I get lost—there—ever—（get lost 为“走失”，非“偶有失误”）"
+    },
+    {
+      "poemId": "dd0f66b2fac0e5",
+      "old": "或是做了保姆叫做“该死”的事情—",
+      "new": "或是做保姆所说的‘死’这件事—",
+      "note": "finding 813f11f7fc2eab；英文依据：Or do what the Nurse calls \"die\"—（die 指“死”，原译误作咒骂“该死”）"
+    },
+    {
+      "poemId": "bcd77166e151b3",
+      "old": "还在港口桅杆圆球",
+      "new": "还在博斯普鲁斯的桅杆圆球",
+      "note": "finding 5a33b32db06f45；英文依据：On Ball of Mast in Bosporus—（Bosporus 为专名博斯普鲁斯，原译泛化为“港口”；下接“塔尖，和玻璃窗上”故行末不加“上”）"
+    },
+    {
+      "poemId": "6e65bf6a5f8d66",
+      "old": "全都沿着小径走向墓地，",
+      "new": "沿通往墓地的小路，",
+      "note": "finding 3fde77c5659a87；英文依据：And all along the path to the cemetery（all along 为“沿路”，非“全都走向”）"
+    },
+    {
+      "poemId": "274c86a6611094",
+      "old": "胆战心惊啊，当你进入伊斯塔西华特尔的火山口，",
+      "new": "累人啊，当你进入伊斯塔西华特尔的火山口，",
+      "note": "finding b5c52c85e130e6；英文依据：And exhausting, penetrating the lava-crater of a tiny Ixtaccihuatl（exhausting 为“累人/耗人”，非“胆战心惊”）"
+    },
+    {
+      "poemId": "93959d231ef0b9",
+      "old": "不再丢失最后的一口芳香。",
+      "new": "几乎不散出最后一丝香气。",
+      "note": "finding 890c1c6b7b2cdb；英文依据：hardly looses even a last breath of perfume（hardly 否定 + looses“散出”，原译误作“不再丢失”）"
+    },
+    {
+      "poemId": "2f2100f8817427",
+      "old": "把你的松针翻卷起来。",
+      "new": "把你尖耸的松树翻卷起来。",
+      "note": "finding 48bd1b6537e68f；英文依据：Whirl your pointed pines.（pointed pines 指松树，非松针）"
+    },
+    {
+      "poemId": "2f2100f8817427",
+      "old": "把你大堆的松针",
+      "new": "把你大堆的松树",
+      "note": "finding 48bd1b6537e68f；英文依据：Splash your great pines（great pines 指松树，非松针；下一行“往我们的礁石上泼过来”接续）"
+    },
+    {
+      "poemId": "46ee45ad8c4cae",
+      "old": "用你紫色的心",
+      "new": "在它们紫色的心里",
+      "note": "finding aae74d4e5b4fd7；英文依据：in their purple hearts（their 指成熟的果实，不指梨树；下接“带来夏天，带来成熟的果实。”）"
+    },
+    {
+      "poemId": "300e023d3a5970",
+      "old": "爱情最不堪忍受的， 别离，为食。",
+      "new": "爱情最难忍受的谨慎为食。",
+      "note": "finding d68e84f7255e75；英文依据：That which love worst endures, discretion.（discretion 为“谨慎/审慎”，非“别离”；并删去逗号后的半角空格）"
+    },
+    {
+      "poemId": "898a9af2c8de09",
+      "old": "偿还给造化；对她也对我有好处，死了；",
+      "new": "偿还给造化；她的好处和我的幸福都已死去；",
+      "note": "finding 4240028adf18dd；英文依据：To Nature, and to her's, and my good is dead（my good 与 her's 并列作 is dead 的主语）"
+    },
+    {
+      "poemId": "a9aed10eebfddf",
+      "old": "那意大利修道工坐在轨道边，",
+      "new": "那意大利养路工坐在轨道边，",
+      "note": "finding 869d084b3512e5；英文依据：The dago shovelman sits by the railroad track（shovelman 为铲工/养路工，“修道工”非规范词）"
+    },
+    {
+      "poemId": "a9aed10eebfddf",
+      "old": "意大利修道工吃完干涩的午饭，",
+      "new": "意大利养路工吃完干涩的午饭，",
+      "note": "finding 869d084b3512e5；英文依据：The dago shovelman finishes the dry bread and bologna（按 finding“同步后文”要求统一改称养路工）"
+    },
+    {
+      "poemId": "a6e5cb9795f0a5",
+      "old": "麇集的世界，麇集的梦，",
+      "new": "麇集的思想，麇集的梦，",
+      "note": "finding 063c895cc3e43a；英文依据：The swarm of thoughts, the swarm of dreams（thoughts 为“思想/念头”，非“世界”）"
+    },
+    {
+      "poemId": "26c0cd8f3761d5",
+      "old": "我从母亲的沉睡中落到这个状态，",
+      "new": "我从母亲的沉睡中落入了国家，",
+      "note": "finding 4faa46fbbb311e；英文依据：From my mother's sleep I fell into the State（State 大写指国家/国家机器，原译“这个状态”失双关）"
+    },
+    {
+      "poemId": "aec343563429ef",
+      "old": "什么神灵能赛过那些紧握着我的手、在我走近时用我喜爱的声音及时、响亮而用最短的称呼叫唤我的人们呢？",
+      "new": "什么神灵能赛过那些紧握着我的手、在我走近时用我喜爱的声音及时、响亮而用最亲近的名字叫唤我的人们呢？",
+      "note": "finding bb1aa206a5fe34；英文依据：call me promptly and loudly by my nighest name（nighest 为“最亲近的”，非“最短的”）"
+    },
+    {
+      "poemId": "22edee59479da1",
+      "old": "花儿提出了香精，那就到冬天，",
+      "new": "花儿提炼出香精，那就到冬天，",
+      "note": "finding 0efb9a817bd159；英文依据：But flowers distilled though they with winter meet（distilled 为“提炼”，同书第六首作“提炼出香精”）"
+    }
+  ],
+  "skipped": [
+    {
+      "id": "116ed7fcefb6e9",
+      "reason": "中文首节缺整行：poem 0eae31db2fcdfb 的 zh 首节仅 7 行，缺“我有一枚金几尼，”一行（en 首节 8 行），属缺行/英文对齐问题，非本行误译，按规则 4 交给英文对齐补丁。"
+    },
+    {
+      "id": "89f69a226997b1",
+      "reason": "英文整节错位：poem e0ffba8539a2fd 的 stanzas 中 en 被切成 129/1/14/51/0… 的错位节，stanza 1 仅 “Or Job's pathetic plaint” 一行，与中文献词四行不对应；需重排英文节，非中文行翻译错误，按规则 4 跳过。"
+    },
+    {
+      "id": "01aae71a772ce8",
+      "reason": "英文 “saying / I am beautiful” 可读作她说“我（说话者）很美”，也可读作她自夸；中文“说我英俊”并非可证误译，先不改。"
+    }
+  ],
+  "notes": "共 25 条 finding：生成 27 条 lineReplacements（23 条 finding，其中 066d56191f2f01、813f11f7fc2eab、48bd1b6537e68f、869d084b3512e5 各涉及 2 行），跳过 2 条（116ed7fcefb6e9 中文缺整行、89f69a226997b1 英文整节错位），均只做同位置整行替换，未增删任何 zh 行。校验（python3）：JSON 可解析；27/27 条 old 均在该 poem 的 lines.zh 中逐字命中（唯一匹配，无歧义）；new 均为单行、非空、不含换行；每条 new != old；poemId 均存在于 poetry-poems.json；未修改 src/data 下任何源文件。范围说明：2dd814ffabaa09 的“半句起摘”（引文从“会告诉我‘彼得’的许诺—”起，缺上一行主语）属 quoteLines 类问题，本补丁只修其误译行，起摘位置需另出 quoteLines 补丁。另发现同诗同类未确认项，未擅自改动，建议另行确认：98e429e120ebd8 ZH05“那被叫做‘激情’的热病”（同 finding cc3fecb8a49a95 的 Living）；3579714649b7f9 ZH10“它就是无形体的静”（corporate Silence，与本条 incorporate 同源）；aec343563429ef ZH79“用最短的名称叫唤着我”（nighest name，与本条同一误译）。\n手动剔除 01aae71a772ce8（语义歧义，避免误改）。"
+}

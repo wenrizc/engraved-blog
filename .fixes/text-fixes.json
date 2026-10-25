@@ -1,0 +1,349 @@
+{
+  "lineReplacements": [
+    {
+      "poemId": "349566ab02c238",
+      "old": "是否出于堕落.我盼望与他交谈？",
+      "new": "是否出于堕落，我盼望与他交谈？",
+      "note": "finding id 50778881601287：半角句点“.”改为逗号，与前后两行“是否出于…，”句式一致；perversity 译作“堕落”属译词准确性问题，不在本类补丁范围"
+    },
+    {
+      "poemId": "7799ef858aaf3d",
+      "old": "裂成咝咝发闹的白色的野性浪花，",
+      "new": "裂成咝咝作响的白色的野性浪花，",
+      "note": "finding id a8bab6fc44040f：乱码错字“咝咝发闹”→“咝咝作响”（sibilant spray）；保留原句“白色的野性浪花”语序"
+    },
+    {
+      "poemId": "199dc72fab3f34",
+      "old": "依我看，都，来得朴素。",
+      "new": "依我看，都来得朴素。",
+      "note": "finding id 7a0ffa0ebc01be：删去“都”后多余逗号，恢复副词直接修饰谓语"
+    },
+    {
+      "poemId": "882d2fe5d3d01f",
+      "old": "在一个漫长你的夏夜—",
+      "new": "在一个漫长的夏夜—",
+      "note": "finding id 9eec9460aac1fd：乱码错字：语序错乱且多出“你”，“漫长你的夏夜”→“漫长的夏夜”"
+    },
+    {
+      "poemId": "fab4333fc77516",
+      "old": "孩上，不要出去呀！",
+      "new": "孩子，不要出去呀！",
+      "note": "finding id 8dcd02714e6eb0：乱码错字“孩上”→“孩子”（O child, do not go out!）"
+    },
+    {
+      "poemId": "7bda90ce1e37ed",
+      "old": "无限的天穹静止的临于头上，不息的海水在足下汹涌。孩子们会集在无边无际的世界的海边，叫着，跳着。",
+      "new": "无限的天穹静止地临于头上，不息的海水在足下汹涌。孩子们会集在无边无际的世界的海边，叫着，跳着。",
+      "note": "finding id 58eb1e3431f1d4：结构助词误用：状语“静止的临于”→“静止地临于”"
+    },
+    {
+      "poemId": "2f9e3533815d89",
+      "old": "“我们与黄金色的曙光游戏，我们与银白色的月亮游戏。”",
+      "new": "我们与黄金色的曙光游戏，我们与银白色的月亮游戏。”",
+      "note": "finding id 2dd225db61a9b5：删去该行行首多余开引号，使“我们从醒的时候…”与“…月亮游戏。”成对；不影响行数与其余文字"
+    },
+    {
+      "poemId": "83da38dc5f4cc0",
+      "old": "听着！你金字塔般的海上巉鸮岩，",
+      "new": "听着！你金字塔般的海上巉岩，",
+      "note": "finding id 34cf7f4fd459cf：乱码错字“巉鸮岩”→“巉岩”，删去窜入的“鸮”"
+    },
+    {
+      "poemId": "633af68b2ed6a1",
+      "old": "永不安份的思想—尘世的奴仆？",
+      "new": "永不安分的思想—尘世的奴仆？",
+      "note": "finding id 89982764d1eda1：别字“安份”→“安分”"
+    },
+    {
+      "poemId": "21c6942591061d",
+      "old": "站立在广大世界的涯岸上，思考⋯⋯",
+      "new": "站立在广大世界的涯岸上，思考……",
+      "note": "finding id 198400120a1478：数学省略号“⋯⋯”（U+22EF）改为中文省略号“……”"
+    },
+    {
+      "poemId": "a22d539831a12f",
+      "old": "心不让眼晴把它自由地观赏。",
+      "new": "心不让眼睛把它自由地观赏。",
+      "note": "finding id 4b314e0914eebb：乱码错字“眼晴”→“眼睛”，与同诗前两行一致"
+    },
+    {
+      "poemId": "e77e0b71eff1c5",
+      "old": "后一分钟挤去了前一分种，",
+      "new": "后一分钟挤去了前一分钟，",
+      "note": "finding id 1ba084908e7c54：乱码错字“分种”→“分钟”，与同句“一分钟”一致"
+    },
+    {
+      "poemId": "631a25b441aa78",
+      "old": "些微的，面包。",
+      "new": "些微的面包。",
+      "note": "finding id d5ecd4c1dc8693：删去割裂定语与中心词的逗号：“些微的，面包”→“些微的面包”"
+    },
+    {
+      "poemId": "390416d69e6122",
+      "old": "对黑暗中成长的，族类—",
+      "new": "对黑暗中成长的族类—",
+      "note": "finding id 7776c34a70080e：删去割裂定语与中心词的逗号：“成长的，族类”→“成长的族类”"
+    },
+    {
+      "poemId": "6f5fad31f91ab4",
+      "old": "多少个脸儿标，多少个心肠忠厚，",
+      "new": "多少个脸儿标致，多少个心肠忠厚，",
+      "note": "finding id 4969537dc0b89e：乱码错字脱字“脸儿标”→“脸儿标致”"
+    },
+    {
+      "poemId": "b0752f11186886",
+      "old": "哪里能立下 说了；",
+      "new": "哪里能停下来说呢；",
+      "note": "finding id e98b92829c2157：空格与残句一并改通：“立下 说了”→“停下来说呢”（We cannot stop to tell）"
+    },
+    {
+      "poemId": "d49454b05c71e9",
+      "old": "她眼晴哀悼着他们，漾着哀思，",
+      "new": "她眼睛哀悼着他们，漾着哀思，",
+      "note": "finding id bfcedbc4cd735d：乱码错字“眼晴”→“眼睛”，同诗其余各处均作“眼睛”"
+    },
+    {
+      "poemId": "ce4778d1fb25b3",
+      "old": "姆河夜霭吹扬，",
+      "new": "泰姆河夜霭吹扬，",
+      "note": "finding id e4030642342e55：脱字：补“泰”作“泰姆河”（Teme），与英文 Teme 及本行字数对应"
+    },
+    {
+      "poemId": "7fcc3b43c6bea7",
+      "old": "在自身内敛藏，埋进在爱情的",
+      "new": "在自身内敛藏，埋进爱情的",
+      "note": "finding id 92f5fb5d7ba1a2：介词叠用改通：“埋进在”→“埋进”，与下一行“掌握内…”顺接"
+    },
+    {
+      "poemId": "aa454305d4bbd2",
+      "old": "小小的花呀 要是 我能够弄懂",
+      "new": "小小的花呀——要是我能够弄懂",
+      "note": "finding id 9d7739da1c0b0e：行内两个半角空格以破折号替代，恢复原句语气：“小小的花呀——要是我能够弄懂”"
+    },
+    {
+      "poemId": "3a11bbdcce3b29",
+      "old": "这样的材料可加工琢磨，）",
+      "new": "这样的材料可加工琢磨）",
+      "note": "finding id 00c79054734f6c：删去中文括号内末尾逗号：“，）”→“）”，符合中文标点习惯"
+    }
+  ],
+  "skipped": [
+    {
+      "id": "1d6ba68c0b61dd",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "5d77771bc099fe",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "3901f928f989db",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "9a5e6468aa61c8",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "6bd36150ea8ed1",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "ac85d8e72c9a81",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "5d77771bc099fe",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "c8c0486e336169",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "98f065e7720b4f",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "e23dc896aea5ed",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "08ca0413b43967",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "fb11b07cc636b5",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "34671e60e8f44e",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "991f83d3bda25b",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "830254d53b09a1",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "938a9688a7fb35",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "a9c45d612d7b6a",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "b40c68d92b8685",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "0563d1b096f773",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "ae8cd631e996b6",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "3f67568b55bde7",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "b035a01b2cee3f",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "695714f002b262",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "53bea8fd37be53",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "4e527dcf6506b1",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "c6c23a77aebf0e",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "a0fd44c8fbf49e",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "7a3230d1ae6a2c",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "cc7fcec966d1b1",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "7a09800922cdbc",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "3d0d76fc66e046",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "3646e842b709d4",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "b88fa46df99459",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "1efd8b543a97fb",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "d9f7d60b83a31c",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "ef01c9c7b79b4f",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "dc442190781feb",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "c615bab21ff6bb",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "8c4c61c2463f15",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "2827b250a034b6",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "9c980f9023a817",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "3fa1bf433a64e8",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "4bca4119de6ab1",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "8a052ed30ff7c7",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "471b048298d8dc",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "1b8893d9a4ce9f",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    },
+    {
+      "id": "c437bf28247e5c",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "65b48e5ab2e637",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "8cb48959d61568",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "49eb077d1b7989",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "5188aebcb720ef",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "204393209c97cd",
+      "reason": "category=空格：展示层统一清洗"
+    },
+    {
+      "id": "379d84fb9d2323",
+      "reason": "category=空格：仅中文词间或标点旁多余空格，展示层 normalize_zh_line（apply 脚本）统一清洗，不写数据补丁"
+    },
+    {
+      "id": "e6226591d63ee1",
+      "reason": "category=空格：作品名/标题内空格属展示层字距问题，且标题不在 poem 的 lines.zh 行内，按规则跳过"
+    }
+  ],
+  "notes": "共处理 75 条 text-tasks：21 条整行替换，54 条跳过。跳过构成：38 条 category=空格（含 13 条作品名/标题内空格、25 条词间空格，其中任务 1 与 6 同诗，6 归入引号边界），16 条标点类摘录引号/括号边界（5、6、7、8、9、13、14、15、16、20、38、48、52、53、68、70）。空格类不写补丁的依据：scripts/apply_poetry_fixes.py 的 normalize_zh_line 会删除汉字间及标点旁空格，仅 e98b92829c2157“立下 说了”因整句不成句、9d7739da1c0b0e 因需补破折号而例外给出整行修正。所有替换均为同位置整行替换，不增删行；每行 old 在该诗 lines.zh 中唯一出现（无重复行，故未使用“全诗同句统一替换”说明）。另：50778881601287 的 perversity 译“堕落”、a8bab6fc44040f 的“白色的野性浪花”语序、4969537dc0b89e 所在诗行“镇上的，田间的，管账的，赶车的，都有，”等属译词/风格问题，未在本文件扩展修改。校验：json.loads 可解析；21 条 old 均逐字命中对应 poem 的 lines.zh（且与 stanzas 展平后一致、与同 poemId 的 quote lines 一致）；new 均无换行、非空、与 old 不同，行数不变（1→1）；normalize_zh_line(new) == new，确保应用清洗后不再变形。校验结果：JSON 可解析；21 条 old 逐字命中对应 poem 的 lines.zh 且各仅出现 1 次，stanzas 展平后同样唯一，并同步命中同 poemId 的 quote.lines；new 均非空、无换行、与 old 不同，行数 1→1 不变；normalize_zh_line(new) 与 new 完全相同，应用清洗后不会二次变形；21+54=75 覆盖全部任务。另用 scripts/apply_poetry_fixes.py --check 预演（含已有的 translations-1.json）：lineReplacements 77 条、errors 0，本文件无报错。说明：text-tasks 中 1 号与 6 号（5d77771bc099fe）共用同一 quote id、分别对应空格与引号边界两个 finding，因此 skipped 有 54 条但仅 53 个不同 id，两条 skipped 理由不同、均保留。"
+}

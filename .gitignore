@@ -32,3 +32,9 @@ __pycache__/
 
 # source books are local inputs and are not published with the site
 /data/
+
+# poetry repair working files (patches are committed, backups/raw batches are not)
+.audit-quotes/
+.fixes/backup/
+.fixes/*-tasks*.json
+.fixes/boundaries-extra.json
